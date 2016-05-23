@@ -36,17 +36,47 @@ passport.deserializeUser(function (obj, done) {
 });
 
 
+var db = require("./db");
+
+
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        if ((username === 'admin') && (password === 'tajne')) {
-            console.log("Udane logowanie...");
-            return done(null, {
-                username: username,
-                password: password
-            });
-        } else {
-            return done(null, false);
-        }
+        
+        db.User.find({
+            username: username,
+            password: password
+        }, function (err, user) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(user);
+                console.log("Znaleziono uzytkownika: "+user[0].username + " : " + user[0].isAdmin);
+                console.log("Udane logowanie administratora...");
+                done(null, {
+                    username: user[0].username,
+                    password: user[0].password,
+                    isAdmin: true
+                });
+            }
+        });
+        
+//        if ((username === 'admin') && (password === 'tajne')) {
+//            console.log("Udane logowanie administratora...");
+//            return done(null, {
+//                username: username,
+//                password: password,
+//                isAdmin: true
+//            });
+//        } else if ((username === 'user') && (password === 'tajne')) {
+//            console.log("Udane logowanie zwykłego użytkownika ...");
+//            return done(null, {
+//                username: username,
+//                password: password,
+//                isAdmin: false
+//            });
+//        } else {
+//            return done(null, false);
+//        }
     }
 ));
 
@@ -64,18 +94,20 @@ app.use(passport.session());
 app.use(express.static('public'));
 
 
-var db = require("./db");
-
-
 var routes = require('./routes');
 app.get('/', routes.index);
 app.get('/login', routes.login);
+app.post('/newUser', routes.newUser);
 app.post('/login',
     passport.authenticate('local', {
         failureRedirect: '/login'
     }),
     function (req, res) {
-        res.redirect('/authorized.html');
+        if(req.user.isAdmin) {
+            
+        } else {
+            res.redirect('/authorized.html');
+        }
     }
 );
 app.get('/logout', routes.logout);

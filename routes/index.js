@@ -1,5 +1,7 @@
 var exports = module.exports = {};
 
+var db = require("../db");
+
 exports.index = function (req, res) {
     var body = '<html><body>';
     var username;
@@ -22,9 +24,26 @@ exports.login = function (req, res) {
     body += '<div><label>Hasło:</label>';
     body += '<input type="password" name="password"/></div>';
     body += '<div><input type="submit" value="Zaloguj"/></div></form>';
+    body += '<a href="/register.html">Utwórz użytkwonika</a>';
     body += '</body></html>';
     res.send(body);
 };
+
+exports.newUser = function(req, res) {
+    var user = new db.User({
+        username: req.body.username,
+        password: req.body.password,
+        isAdmin: (req.body.isAdmin == 'on' ? true : false)
+    });
+
+    user.save(function (err){
+        if(err){
+            console.log(err);
+        }else{
+            res.redirect("/login");
+        }
+    });
+}
 
 exports.logout = function (req, res) {
     console.log('Wylogowanie...');

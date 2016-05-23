@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test pasport.socketio</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <h1>Tworzenie nowego użytkownika</h1>
+    <form action="/newUser" method="post">
+        <input type="text" name="username" />
+        <input type="password" name="password" />
+        <input type="checkbox" name="isAdmin" />
+        <input type="submit" value="Utwórz użytkownika" />
+    </form>
+</body>
+
+</html>
