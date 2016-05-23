@@ -1,0 +1,29 @@
+{
+  "name": "node_ssl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "connect-redis": "^3.0.2",
+    "cookie-parser": "^1.4.1",
+    "cookie-session": "^2.0.0-alpha.1",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "mongo": "^0.1.0",
+    "mongodb": "^2.1.19",
+    "mongoose": "^4.4.17",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport.socketio": "^3.6.1",
+    "path": "^0.12.7",
+    "redis": "^2.6.0-2",
+    "socket.io": "^1.4.6"
+  }
+}
