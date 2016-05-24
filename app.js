@@ -55,7 +55,7 @@ passport.use(new LocalStrategy(
                 done(null, {
                     username: user[0].username,
                     password: user[0].password,
-                    isAdmin: true
+                
                 });
             }
         });
