@@ -24,8 +24,8 @@ exports.login = function (req, res) {
     body += '<div><label>Hasło:</label>';
     body += '<input type="password" name="password"/></div>';
     body += '<div><input type="submit" value="Zaloguj"/></div></form>';
-    body += '<a href="/registerAdmin.html">Utwórz administratora<br/></a>';
-    body += '<a href="/register.html">Utwórz sędziego</a>';
+    body += '<a href="/registerAdmin.html">Utwórz administratora</a>';
+
     body += '</body></html>';
     res.send(body);
 };
