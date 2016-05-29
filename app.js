@@ -51,7 +51,7 @@ passport.use(new LocalStrategy(
             } else {
                 console.log(user);
                 console.log("Znaleziono uzytkownika: "+user[0].username + " : " + user[0].isAdmin);
-                console.log("Udane logowanie administratora...");
+                console.log("Udane logowanie...");
                 done(null, {
                     username: user[0].username,
                     password: user[0].password,
