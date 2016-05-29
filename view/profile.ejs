@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test pasport.socketio</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <h1>Profil użytkownika</h1>
+    <form action="/editProfile" method="post">
+        <label for="firstName">Imię</label>
+        <% if(typeof loggedUser.firstName != 'undefined') { %>
+            <input type="text" name="firstName" value="<%= loggedUser.firstName %>" /><br/>
+        <% } else { %>
+            <input type="text" name="firstName" /><br/>
+        <% } %>
+        
+        <label for="lastName">Nazwisko</label>
+        <% if(typeof loggedUser.lastName != 'undefined') { %>
+            <input type="text" name="lastName" value="<%= loggedUser.lastName %>" /><br/>
+        <% } else { %>
+            <input type="text" name="lastName" /><br/>
+        <% } %>
+        
+        <label for="username">Nazwa użytkownika</label>
+        <input type="text" name="username" value="<%= loggedUser.username %>" /><br/>
+        
+        <label for="password">Hasło</label>
+        <input type="password" name="password" /><br/>
+        
+        <label for="isAdmin">Administrator</label>
+        <input type="checkbox" name="isAdmin" <%= (loggedUser.isAdmin) ? "checked" : "" %>/><br/>
+        
+        <input type="submit" value="Aktualizuj profil" />
+    </form>
+</body>
+
+</html>

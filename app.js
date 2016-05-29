@@ -26,6 +26,10 @@ var passportSocketIo = require('passport.socketio');
 var LocalStrategy = require('passport-local').Strategy;
 
 
+app.set('views', __dirname + '/view');
+app.set('view engine', 'ejs');
+
+
 // Konfiguracja passport.js
 passport.serializeUser(function (user, done) {
     done(null, user);
@@ -49,13 +53,12 @@ passport.use(new LocalStrategy(
             if (err) {
                 console.log(err);
             } else {
+                console.log("Znaleziono uzytkownika:");
                 console.log(user);
-                console.log("Znaleziono uzytkownika: "+user[0].username + " : " + user[0].isAdmin);
                 console.log("Udane logowanie...");
                 done(null, {
                     username: user[0].username,
-                    password: user[0].password,
-                
+                    password: user[0].password
                 });
             }
         });
@@ -98,16 +101,29 @@ var routes = require('./routes');
 app.get('/', routes.index);
 app.get('/login', routes.login);
 app.post('/newUser', routes.newUser);
+app.get('/profile', routes.profile);
+app.get('/administrator', routes.administrator);
+app.post("/editProfile", routes.editProfile);
 app.post('/login',
     passport.authenticate('local', {
         failureRedirect: '/login'
     }),
     function (req, res) {
-        if(req.user.isAdmin) {
+        db.User.findOne({
+            username: req.user.username
+        }, function (err, ent) {
+            req.session.loggedUser = ent;
             
-        } else {
-            res.redirect('/authorized.html');
-        }
+            if (err) {
+                    res.redirect('/login');
+            } else {
+                if(req.session.loggedUser.isAdmin) {
+                    res.redirect('/administrator');
+                } else {
+                    res.redirect('/authorized.html');
+                }
+            }
+        });
     }
 );
 app.get('/logout', routes.logout);

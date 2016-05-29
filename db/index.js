@@ -9,6 +9,8 @@ mongoose.connect('mongodb://localhost/wyscigiDB', {
 var User = mongoose.model('User', { 
     username: String,
     password: String,
+    firstName: String,
+    lastName: String,
     isAdmin: Boolean
 });
 
