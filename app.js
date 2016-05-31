@@ -181,7 +181,26 @@ sio.sockets.on('connection', function (socket) {
                 socket.emit("horsesRes", ent)
             }
         });
-    })
+    });
+    
+    socket.on("horseDeleteByIDReq", function(data) {
+//        console.log(data);
+        db.Horse.findById(data.horseId, function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent.remove(function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        socket.emit("horseDeleteByIDRes", {
+                            status: "OK"
+                        });
+                    }
+                });
+            };
+        });
+    });
 });
 
 server.listen(3000, function () {

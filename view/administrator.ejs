@@ -14,8 +14,9 @@
     var socket = io.connect('//' + window.location.host, {secure: true});
     socket.emit("horsesReq");
     socket.on("horsesRes", function(data) {
-        console.log(JSON.stringify(data));
+        console.log(data);
         var horsesList = $("#horsesList table");
+        horsesList.empty();
         
         for (var i=0; i<data.length; i++) {
             var row = $("<tr />");
@@ -23,9 +24,22 @@
             row.append("<td>" + data[i].gender +"</td>");
             row.append("<td>" + data[i].owner +"</td>");
             row.append("<td>" + data[i].dateOfBirth +"</td>");
+            var deleteButton = $("<td>");
+            deleteButton.text("Usuń");
+            deleteButton.attr("horseId", data[i]._id)
+            deleteButton.click(function(e) {
+                socket.emit("horseDeleteByIDReq", {
+                    horseId: $(this).attr("horseId")
+                });
+            });
+            row.append(deleteButton);
             horsesList.append(row);
         }
-    })
+    });
+        
+    socket.on("horseDeleteByIDRes", function(data) {
+        socket.emit("horsesReq");
+    });
     </script>
     
     <div class="message">
@@ -72,7 +86,12 @@
             </tr>
             <tr>
                 <td><label for="gender">Płeć</label></td>
-                <td><input type="text" name="gender" /></td>
+                <td>
+                    <select name="gender">
+                        <option value="MALE">Chłopiec</option>
+                        <option value="FEMALE">Dziewczyna</option>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td><label for="owner">Właściciel</label></td>
