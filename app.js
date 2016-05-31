@@ -101,6 +101,7 @@ var routes = require('./routes');
 app.get('/', routes.index);
 app.get('/login', routes.login);
 app.post('/newUser', routes.newUser);
+app.post('/newHorse', routes.newHorse)
 app.get('/profile', routes.profile);
 app.get('/administrator', routes.administrator);
 app.post("/editProfile", routes.editProfile);

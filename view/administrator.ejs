@@ -8,6 +8,13 @@
 </head>
 
 <body>
+    
+    <div class="message">
+        <% if(typeof message != 'undefined') { %>
+            <%= message %>
+        <% }%>
+    </div>
+    
     <h1>Dodaj sędziego</h1>
     <form action="/newUser" method="post">
         <table>
@@ -37,13 +44,30 @@
     
     
     
-    
-        <h1>Dodaj konia</h1>
-    <form action="/newUser" method="post">
-        <input type="text" name="username" /><br/>
-        <input type="text" name="gender" /><br/>
-        <input type="text" name="breeder" /><br/>
-        <input type="submit" value="Dodaj konia" />
+    <h1>Dodaj konia</h1>
+    <form action="/newHorse" method="post">
+        <table>
+            <tr>
+                <td><label for="username">Nazwa użytkownika</label></td>
+                <td><input type="text" name="username" /></td>
+            </tr>
+            <tr>
+                <td><label for="gender">Płeć</label></td>
+                <td><input type="text" name="gender" /></td>
+            </tr>
+            <tr>
+                <td><label for="owner">Właściciel</label></td>
+                <td><input type="text" name="owner" /></td>
+            </tr>
+            <tr>
+                <td><label for="dateOfBirth">Data urodzenia</label></td>
+                <td><input type="text" name="dateOfBirth" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Dodaj konia" /></td>
+            </tr>
+        </table>
     </form>
 </body>
 

@@ -30,6 +30,25 @@ exports.login = function (req, res) {
     res.send(body);
 };
 
+exports.newHorse = function(req, res) {
+    var horse = new db.Horse({
+        name:        req.body.name,
+        gender:      req.body.gender,
+        owner:       req.body.owner,
+        dateOfBirth: req.body.dateOfBirth
+    });
+    
+    horse.save(function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("administrator", {
+                message: "Poprawnie zapisano konia w bazie danych"
+            });
+        }
+    });
+}
+
 exports.newUser = function(req, res) {
     var user = new db.User({
         username: req.body.username,
