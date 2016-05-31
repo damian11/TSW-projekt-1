@@ -14,19 +14,10 @@ var User = mongoose.model('User', {
     isAdmin: Boolean
 });
 
-//var user = new User({
-//    username:'Jan',
-//    password: 'jan',
-//    isAsmin: true
-//    
-//});
-
-//user.save(function (err){
-//    if(err){
-//        console.log(err);
-//    }else{
-//        console.log('aaa');
-//    }
-//});
+var Horse = mongoose.model("Horse", {
+    name: String,
+    gender: String,
+    owner: String
+});
 
 module.exports.User = User;

@@ -10,11 +10,28 @@
 <body>
     <h1>Dodaj sędziego</h1>
     <form action="/newUser" method="post">
-        <input type="text" name="username" />
-        <input type="text" name="firstname" />
-        <input type="text" name="lastname" />
-        <input type="password" name="password" />
-        <input type="submit" value="Dodaj sędziego" />
+        <table>
+            <tr>
+                <td><label for="username">Nazwa użytkownika</label></td>
+                <td><input type="text" name="username" /></td>
+            </tr>
+            <tr>
+                <td><label for="firstname">Imię</label></td>
+                <td><input type="text" name="firstname" /></td>
+            </tr>
+            <tr>
+                <td><label for="lastname">Nazwisko</label></td>
+                <td><input type="text" name="lastname" /></td>
+            </tr>
+            <tr>
+                <td><label for="password">Hasło</label></td>
+                <td><input type="text" name="password" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Dodaj sędziego" /></td>
+            </tr>
+        </table>
     </form>
     </form>
     
@@ -23,9 +40,9 @@
     
         <h1>Dodaj konia</h1>
     <form action="/newUser" method="post">
-        <input type="text" name="username" />
-       <input type="text" name="gender" />
-        <input type="text" name="breeder" />
+        <input type="text" name="username" /><br/>
+        <input type="text" name="gender" /><br/>
+        <input type="text" name="breeder" /><br/>
         <input type="submit" value="Dodaj konia" />
     </form>
 </body>
