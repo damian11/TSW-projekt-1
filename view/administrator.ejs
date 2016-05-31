@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test pasport.socketio</title>
+    <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
 </head>
@@ -14,6 +15,16 @@
     socket.emit("horsesReq");
     socket.on("horsesRes", function(data) {
         console.log(JSON.stringify(data));
+        var horsesList = $("#horsesList table");
+        
+        for (var i=0; i<data.length; i++) {
+            var row = $("<tr />");
+            row.append("<td>" + data[i].horseName +"</td>");
+            row.append("<td>" + data[i].gender +"</td>");
+            row.append("<td>" + data[i].owner +"</td>");
+            row.append("<td>" + data[i].dateOfBirth +"</td>");
+            horsesList.append(row);
+        }
     })
     </script>
     
@@ -56,8 +67,8 @@
     <form action="/newHorse" method="post">
         <table>
             <tr>
-                <td><label for="username">Nazwa użytkownika</label></td>
-                <td><input type="text" name="username" /></td>
+                <td><label for="horseName">Nazwa</label></td>
+                <td><input type="text" name="horseName" /></td>
             </tr>
             <tr>
                 <td><label for="gender">Płeć</label></td>
@@ -78,7 +89,7 @@
         </table>
     </form>
     
-    <div id="horsesList"></div>
+    <div id="horsesList"><table></table></div>
 </body>
 
 </html>

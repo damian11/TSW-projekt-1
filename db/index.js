@@ -19,7 +19,7 @@ var User = mongoose.model('User', {
 });
 
 var Horse = mongoose.model("Horse", {
-    name: String,
+    horseName: String,
     gender: String,
     owner: String,
     dateOfBirth: Date

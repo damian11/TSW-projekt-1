@@ -32,7 +32,7 @@ exports.login = function (req, res) {
 
 exports.newHorse = function(req, res) {
     var horse = new db.Horse({
-        name:        req.body.name,
+        horseName:   req.body.horseName,
         gender:      req.body.gender,
         owner:       req.body.owner,
         dateOfBirth: req.body.dateOfBirth
