@@ -39,6 +39,34 @@ var JuryGroup = mongoose.model("JuryGroup", {
     }
 });
 
+var HorseGroup = mongoose.model("HorseGroup", {
+    name: String,
+    competition: {
+        type: String,
+        ref: "Competition"
+    }
+});
+
+var HorseMark = mongoose.model("HorseMark", {
+    type: Number,
+    head: Number,
+    body: Number,
+    legs: Number,
+    movement: Number,
+    competition: {
+        type: String,
+        ref: "Competition"
+    },
+    horse: {
+        type: String,
+        ref: "Horse"
+    },
+    jury: {
+        type: String,
+        ref: "User"
+    }
+});
+
 //var comp1 = new Competition({
 //    name: "comp1"
 //});
