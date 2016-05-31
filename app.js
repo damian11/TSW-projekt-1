@@ -171,6 +171,16 @@ sio.sockets.on('connection', function (socket) {
     socket.on('reply', function (data) {
         console.log(data);
     });
+    
+    socket.on("horsesReq", function() {
+        db.Horse.find({}, function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                socket.emit("horsesRes", ent)
+            }
+        });
+    })
 });
 
 server.listen(3000, function () {

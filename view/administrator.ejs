@@ -5,9 +5,17 @@
     <meta charset="UTF-8">
     <title>Test pasport.socketio</title>
     <script src="/socket.io/socket.io.js"></script>
+    
 </head>
 
 <body>
+    <script>
+    var socket = io.connect('//' + window.location.host, {secure: true});
+    socket.emit("horsesReq");
+    socket.on("horsesRes", function(data) {
+        console.log(JSON.stringify(data));
+    })
+    </script>
     
     <div class="message">
         <% if(typeof message != 'undefined') { %>
@@ -69,6 +77,8 @@
             </tr>
         </table>
     </form>
+    
+    <div id="horsesList"></div>
 </body>
 
 </html>

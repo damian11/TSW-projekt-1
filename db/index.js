@@ -97,3 +97,8 @@ var HorseMark = mongoose.model("HorseMark", {
 //>
 
 module.exports.User = User;
+module.exports.Horse = Horse;
+module.exports.Competition = Competition;
+module.exports.JuryGroup = JuryGroup;
+module.exports.HorseGroup = HorseGroup;
+module.exports.HorseMark = HorseMark;
