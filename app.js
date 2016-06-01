@@ -200,7 +200,9 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("juryReq", function(){
-        db.User.find({},function(err, ent){
+        db.User.find({
+            isAdmin: false
+        },function(err, ent){
             if(err){
                 console.log(err);
             }else{
