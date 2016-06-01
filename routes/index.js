@@ -192,6 +192,16 @@ exports.administrator = function (req, res) {
 
 exports.newCompetition = function (req, res) {
     if (req.session.loggedUser.isAdmin) {
+        res.render("newCompetitionStep1");
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
+}
+
+exports.newCompetitionStep2 = function (req, res) {
+    if (req.session.loggedUser.isAdmin) {
         var competition = new db.Competition({
             name: req.body.name,
             date: req.body.date,
@@ -202,7 +212,7 @@ exports.newCompetition = function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                res.render("newCompetitionStep1", {
+                res.render("newCompetitionStep2", {
                     loggedUser: req.session.loggedUser,
                     competition: competition
                 });

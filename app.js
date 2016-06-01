@@ -92,6 +92,7 @@ app.post('/newHorse', routes.newHorse)
 app.get('/profile', routes.profile);
 app.get('/administrator', routes.administrator);
 app.get("/newCompetition", routes.newCompetition);
+app.post("/newCompetitionStep2", routes.newCompetitionStep2);
 app.post("/editProfile", routes.editProfile);
 app.post('/login',
     passport.authenticate('local', {
