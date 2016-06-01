@@ -29,8 +29,12 @@
             row.append("<td>" + data[i].gender +"</td>");
             row.append("<td>" + data[i].owner +"</td>");
             row.append("<td>" + data[i].dateOfBirth +"</td>");
-            var deleteButton = $("<td>");
             
+            var editButton = $("<td>");
+            var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
+            row.append(editButton);
+                
+            var deleteButton = $("<td>");    
             deleteButton.text("Usuń");
             deleteButton.attr("horseId", data[i]._id)
             deleteButton.click(function(e) {
@@ -48,16 +52,12 @@
     });
         
         
-      
-
-
-
     socket.emit("juryReq");
     socket.on("juryRes", function(data){
        
         var juryList = $("#juryList table");
-        ///juryList.empty();
-              console.log(JSON.stringify(data));
+            juryList.empty();
+//              console.log(JSON.stringify(data));
             for (var i=0; i<data.length; i++) {
             var row = $("<tr />");
             row.append("<td>" + data[i].username +"</td>");

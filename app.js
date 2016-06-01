@@ -46,40 +46,26 @@ var db = require("./db");
 passport.use(new LocalStrategy(
     function (username, password, done) {
         
-        db.User.find({
+        db.User.findOne({
             username: username,
             password: password
-        }, function (err, user) {
+        }, function (err, ent) {
             if (err) {
                 console.log(err);
+                return done(err);
             } else {
-                console.log("Znaleziono uzytkownika:");
-                console.log(user);
-                console.log("Udane logowanie...");
-                done(null, {
-                    username: user[0].username,
-                    password: user[0].password
-                });
+                if (ent) {
+                    console.log("Udane logowanie:");
+                    console.log(ent);
+                    return done(null, {
+                        username: ent.username,
+                        password: ent.password
+                    });
+                } else {
+                    return done(null, false, {message: "Błąd logowania"});
+                }
             }
         });
-        
-//        if ((username === 'admin') && (password === 'tajne')) {
-//            console.log("Udane logowanie administratora...");
-//            return done(null, {
-//                username: username,
-//                password: password,
-//                isAdmin: true
-//            });
-//        } else if ((username === 'user') && (password === 'tajne')) {
-//            console.log("Udane logowanie zwykłego użytkownika ...");
-//            return done(null, {
-//                username: username,
-//                password: password,
-//                isAdmin: false
-//            });
-//        } else {
-//            return done(null, false);
-//        }
     }
 ));
 

@@ -156,7 +156,7 @@ exports.logout = function (req, res) {
     res.redirect('/login');
 };
 exports.administrator = function (req, res) {
-    if (req.user.isAdmin) {
+    if (req.session.loggedUser.isAdmin) {
         res.render("administrator", {
             loggedUser: req.session.loggedUser
         });
