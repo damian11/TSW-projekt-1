@@ -59,10 +59,18 @@ exports.newUser = function(req, res) {
     //Create
     user.save(function (err){
         if(err){
-            console.log(err);
-        }else{
-            res.redirect("/login");
+              console.log(err);
+          
+          
+        }else if(isAdmin = true){
+              res.redirect("/administrator");
+           
+        }else {
+             res.redirect("/login");
+          
+            
         }
+        
     });
     
 //    //Read

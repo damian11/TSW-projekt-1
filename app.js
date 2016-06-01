@@ -206,7 +206,7 @@ sio.sockets.on('connection', function (socket) {
             if(err){
                 console.log(err);
             }else{
-                console.log(ent);
+               socket.emit("juryRes", ent)
             }
         });
     })

@@ -24,6 +24,7 @@
             row.append("<td>" + data[i].owner +"</td>");
             row.append("<td>" + data[i].dateOfBirth +"</td>");
             var deleteButton = $("<td>");
+            
             deleteButton.text("Usuń");
             deleteButton.attr("horseId", data[i]._id)
             deleteButton.click(function(e) {
@@ -44,15 +45,24 @@
       
 
 
-    var socket = io.connect('//' + window.location.host, {secure: true});
+
     socket.emit("juryReq");
     socket.on("juryRes", function(data){
-        console.log(JSON.stringify(data));
-    })
-        
-   
-        
-        
+       
+        var juryList = $("#juryList table");
+        ///juryList.empty();
+              console.log(JSON.stringify(data));
+            for (var i=0; i<data.length; i++) {
+            var row = $("<tr />");
+            row.append("<td>" + data[i].username +"</td>");
+            row.append("<td>" + data[i].firstName +"</td>");
+            row.append("<td>" + data[i].lastName +"</td>");
+            row.append("<td>" + data[i].password +"</td>");
+            var deleteButton = $("<td>");
+
+                }
+         });
+
         
         
     </script>
@@ -71,12 +81,12 @@
                 <td><input type="text" name="username" /></td>
             </tr>
             <tr>
-                <td><label for="firstname">Imię</label></td>
-                <td><input type="text" name="firstname" /></td>
+                <td><label for="firstName">Imię</label></td>
+                <td><input type="text" name="firstName" /></td>
             </tr>
             <tr>
                 <td><label for="lastname">Nazwisko</label></td>
-                <td><input type="text" name="lastname" /></td>
+                <td><input type="text" name="lastName" /></td>
             </tr>
             <tr>
                 <td><label for="password">Hasło</label></td>
@@ -89,9 +99,7 @@
         </table>
     </form>
         <div id="juryList"><table></table></div>
-    
-    </form>
-    
+        
     
     
     <h1>Dodaj konia</h1>
