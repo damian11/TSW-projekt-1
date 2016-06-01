@@ -29,7 +29,7 @@
             row.append("<td>" + data[i].gender +"</td>");
             row.append("<td>" + data[i].owner +"</td>");
             row.append("<td>" + data[i].dateOfBirth +"</td>");
-            var deleteButton = $("</td>");
+            var deleteButton = $("<td>");
             
             deleteButton.text("Usuń");
             deleteButton.attr("horseId", data[i]._id)
@@ -65,7 +65,7 @@
             row.append("<td>" + data[i].lastName +"</td>");
             row.append("<td>" + data[i].password +"</td>");
             var deleteButton = $("<td>");
-
+                    juryList.append(row);
                 }
          });
 

@@ -156,8 +156,14 @@ exports.logout = function (req, res) {
     res.redirect('/login');
 };
 exports.administrator = function (req, res) {
-    res.render("administrator", {
-        loggedUser: req.session.loggedUser
-    });
+    if (req.user.isAdmin) {
+        res.render("administrator", {
+            loggedUser: req.session.loggedUser
+        });
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
 }
 
