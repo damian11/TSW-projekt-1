@@ -31,22 +31,44 @@ exports.login = function (req, res) {
 };
 
 exports.newHorse = function(req, res) {
-    var horse = new db.Horse({
-        horseName:   req.body.horseName,
-        gender:      req.body.gender,
-        owner:       req.body.owner,
-        dateOfBirth: req.body.dateOfBirth
-    });
-    
-    horse.save(function(err) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render("administrator", {
-                message: "Poprawnie zapisano konia w bazie danych"
-            });
-        }
-    });
+    if (req.body.horseId != " undefined") {
+        db.Horse.findById(req.body.horseId, function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent.horseName = req.body.horseName;
+                ent.gender = req.body.gender;
+                ent.owner = req.body.owner;
+                ent.dateOfBirth = req.body.dateOfBirth;
+                ent.save(function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.render("administrator", {
+                            message: "Poprawnie zaktualizowano konia w bazie danych"
+                        });
+                    }
+                });
+            }
+        });
+    } else {
+        var horse = new db.Horse({
+            horseName:   req.body.horseName,
+            gender:      req.body.gender,
+            owner:       req.body.owner,
+            dateOfBirth: req.body.dateOfBirth
+        });
+
+        horse.save(function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("administrator", {
+                    message: "Poprawnie zapisano konia w bazie danych"
+                });
+            }
+        });
+    }
 }
 
 exports.newUser = function(req, res) {
@@ -155,6 +177,7 @@ exports.logout = function (req, res) {
     req.logout();
     res.redirect('/login');
 };
+
 exports.administrator = function (req, res) {
     if (req.session.loggedUser.isAdmin) {
         res.render("administrator", {

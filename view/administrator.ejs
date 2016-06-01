@@ -60,6 +60,11 @@
         
     socket.on("horseReadByIDRes", function(data) {
         console.log(data.data);
+        $("#horseId").val(data.data._id);
+        $("#horseName").val(data.data.horseName);
+        $("#gender").val(data.data.gender);
+        $("#owner").val(data.data.owner);
+        $("#dateOfBirth").val(data.data.dateOfBirth);
     });
         
         
@@ -123,14 +128,15 @@
     <h1>Dodaj konia</h1>
     <form action="/newHorse" method="post">
         <table>
+            <input type="hidden" name="horseId" id="horseId" value="" />
             <tr>
                 <td><label for="horseName">Nazwa</label></td>
-                <td><input type="text" name="horseName" /></td>
+                <td><input type="text" name="horseName" id="horseName" /></td>
             </tr>
             <tr>
                 <td><label for="gender">Płeć</label></td>
                 <td>
-                    <select name="gender">
+                    <select name="gender" id="gender">
                         <option value="MALE">Ogier</option>
                         <option value="FEMALE">Klacz</option>
                     </select>
@@ -138,15 +144,15 @@
             </tr>
             <tr>
                 <td><label for="owner">Hodowca</label></td>
-                <td><input type="text" name="owner" /></td>
+                <td><input type="text" name="owner" id="owner" /></td>
             </tr>
             <tr>
                 <td><label for="dateOfBirth">Data urodzenia</label></td>
-                <td><input type="text" name="dateOfBirth" /></td>
+                <td><input type="text" name="dateOfBirth" id="dateOfBirth" /></td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" value="Dodaj konia" /></td>
+                <td><input type="submit" value="Zapisz konia" /></td>
             </tr>
         </table>
     </form>
