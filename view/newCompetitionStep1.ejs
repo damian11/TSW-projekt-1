@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test pasport.socketio</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <form action="/newCompetition" method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="name">Nazwa</label></td>
+                    <td><input type="text" name="name" id="name" /></td>
+                </tr>
+                <tr>
+                    <td><label for="date">Data</label></td>
+                    <td><input type="text" name="date" id="date" /></td>
+                </tr>
+                <tr>
+                    <td><label for="comments">Uwagi</label></td>
+                    <td><input type="text" name="comments" id="comments" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Dalej" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
+</html>

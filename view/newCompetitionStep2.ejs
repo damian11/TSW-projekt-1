@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test pasport.socketio</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <script>
+    var socket = io.connect('//' + window.location.host, {secure: true});
+    socket.emit("horsesReq");
+    socket.on("horsesRes", function(data) {
+        var horsesList = $("#horses table");
+        horsesList.empty();
+        
+        for (var i=0; i<data.length; i++) {
+            var row = $("<tr />");
+            row.append("<td>" + data[i].horseName +"</td>");
+            row.append("<td>" + data[i].gender +"</td>");
+            row.append("<td>" + data[i].owner +"</td>");
+            row.append("<td>" + data[i].dateOfBirth +"</td>");
+            
+            var addButton = $("<td>");
+            addButton.attr("horseId", data[i]._id)
+            var addIcon = $("<i class='material-icons'>add_circle_outline</i>").appendTo(addButton);
+            addButton.click(function(e) {
+                socket.emit("horseAddToCompetitionReq", {
+                    horseId: $(this).attr("horseId")
+                });
+            });
+            row.append(addButton);
+            horsesList.append(row);
+        }
+    });
+    </script>
+    
+    <input type="hidden" value="<%= competition._id %>" />
+
+    <div id="horsesInCompetition"></div>
+    <div id="horses"><table></table></div>
+    <div id="juryInCompetition"></div>
+    <div id="jury"></div>
+</body>
+</html>

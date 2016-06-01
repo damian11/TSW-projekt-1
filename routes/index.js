@@ -190,3 +190,28 @@ exports.administrator = function (req, res) {
     }
 }
 
+exports.newCompetition = function (req, res) {
+    if (req.session.loggedUser.isAdmin) {
+        var competition = new db.Competition({
+            name: req.body.name,
+            date: req.body.date,
+            comments: req.body.comments
+        });
+        
+        competition.save(function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("newCompetitionStep1", {
+                    loggedUser: req.session.loggedUser,
+                    competition: competition
+                });
+            }
+        });
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
+}
+

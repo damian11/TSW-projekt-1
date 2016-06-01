@@ -36,6 +36,10 @@ var JuryGroup = mongoose.model("JuryGroup", {
     competition: {
         type: String,
         ref: "Competition"
+    },
+    jury: {
+        type: String,
+        ref: "User"
     }
 });
 
@@ -44,6 +48,10 @@ var HorseGroup = mongoose.model("HorseGroup", {
     competition: {
         type: String,
         ref: "Competition"
+    },
+    horse: {
+        type: String,
+        ref: "Horse"
     }
 });
 
