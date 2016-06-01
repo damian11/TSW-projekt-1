@@ -184,7 +184,6 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("horseDeleteByIDReq", function(data) {
-//        console.log(data);
         db.Horse.findById(data.horseId, function(err, ent) {
             if (err) {
                 console.log(err);
@@ -201,6 +200,17 @@ sio.sockets.on('connection', function (socket) {
             };
         });
     });
+    
+    socket.on("juryReq", function(){
+        db.User.find({},function(err, ent){
+            if(err){
+                console.log(err);
+            }else{
+                console.log(ent);
+            }
+        });
+    })
+    
 });
 
 server.listen(3000, function () {

@@ -14,7 +14,6 @@
     var socket = io.connect('//' + window.location.host, {secure: true});
     socket.emit("horsesReq");
     socket.on("horsesRes", function(data) {
-        console.log(data);
         var horsesList = $("#horsesList table");
         horsesList.empty();
         
@@ -40,6 +39,22 @@
     socket.on("horseDeleteByIDRes", function(data) {
         socket.emit("horsesReq");
     });
+        
+        
+      
+
+
+    var socket = io.connect('//' + window.location.host, {secure: true});
+    socket.emit("juryReq");
+    socket.on("juryRes", function(data){
+        console.log(JSON.stringify(data));
+    })
+        
+   
+        
+        
+        
+        
     </script>
     
     <div class="message">
@@ -73,6 +88,8 @@
             </tr>
         </table>
     </form>
+        <div id="juryList"><table></table></div>
+    
     </form>
     
     
@@ -88,13 +105,13 @@
                 <td><label for="gender">Płeć</label></td>
                 <td>
                     <select name="gender">
-                        <option value="MALE">Chłopiec</option>
-                        <option value="FEMALE">Dziewczyna</option>
+                        <option value="MALE">Ogier</option>
+                        <option value="FEMALE">Klacz</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td><label for="owner">Właściciel</label></td>
+                <td><label for="owner">Hodowca</label></td>
                 <td><input type="text" name="owner" /></td>
             </tr>
             <tr>
