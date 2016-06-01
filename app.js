@@ -211,7 +211,52 @@ sio.sockets.on('connection', function (socket) {
                socket.emit("juryRes", ent)
             }
         });
-    })
+    });
+    
+    socket.on("horsesByCompetitionIDReq", function(data) {
+        var horses = [];
+        
+        db.HorseGroup.find({
+            competition: data.competitionId
+        }, function(err, data) {
+            if(err){
+                console.log(err);
+            } else {
+                if (data) {
+                    console.log(data);
+                    for(var i=0; i<data.length; i++) {
+                        db.Horse.findById(data[i].horse, function(err, horse) {
+                            if(err){
+                                console.log(err);
+                            } else {
+                                horses.push(horse);
+                                if (i == data.length-1) {
+                                    socket.emit("horsesByCompetitionIDRes", horses);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    socket.emit("horsesByCompetitionIDRes", horses);
+                }
+            }
+        });
+    });
+    
+    socket.on("horseAddToCompetitionReq", function(data) {
+        var horseComp = new db.HorseGroup({
+            competition:data.competitionId,
+            horse: data.horseId
+        });
+        
+        horseComp.save(function(err) {
+            if(err){
+                console.log(err);
+            } else {
+                socket.emit("horseAddToCompetitionRes");
+            }
+        });
+    });
     
 });
 

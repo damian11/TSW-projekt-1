@@ -29,12 +29,20 @@
             var addIcon = $("<i class='material-icons'>add_circle_outline</i>").appendTo(addButton);
             addButton.click(function(e) {
                 socket.emit("horseAddToCompetitionReq", {
+                    competitionId: '<%= competition._id %>',
                     horseId: $(this).attr("horseId")
                 });
             });
             row.append(addButton);
             horsesList.append(row);
         }
+    });
+        
+    socket.emit("horsesByCompetitionIDReq", {
+        competitionId: "<%= competition._id %>"
+    });
+        
+    socket.on("horseAddToCompetitionRes", function(data) {
     });
     </script>
     
