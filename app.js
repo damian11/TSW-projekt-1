@@ -187,6 +187,18 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
+    socket.on("horseReadByIDReq", function(data) { 
+        db.Horse.findById(data.horseId, function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                socket.emit("horseReadByIDRes", {
+                    data: ent
+                });
+            }
+        });
+    });
+    
     socket.on("juryReq", function(){
         db.User.find({},function(err, ent){
             if(err){

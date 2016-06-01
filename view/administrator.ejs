@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test pasport.socketio</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
@@ -31,7 +32,13 @@
             row.append("<td>" + data[i].dateOfBirth +"</td>");
             
             var editButton = $("<td>");
+            editButton.attr("horseId", data[i]._id)
             var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
+            editButton.click(function(e) {
+                socket.emit("horseReadByIDReq", {
+                    horseId: $(this).attr("horseId")
+                });
+            });
             row.append(editButton);
                 
             var deleteButton = $("<td>");    
@@ -49,6 +56,10 @@
         
     socket.on("horseDeleteByIDRes", function(data) {
         socket.emit("horsesReq");
+    });
+        
+    socket.on("horseReadByIDRes", function(data) {
+        console.log(data.data);
     });
         
         
