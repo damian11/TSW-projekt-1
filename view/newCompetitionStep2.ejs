@@ -38,17 +38,34 @@
         }
     });
         
+    socket.on("horseAddToCompetitionRes", function(data) {
+        window.location = "/newCompetitionStep2/" + data.competitionId;
+    });
+        
     socket.emit("horsesByCompetitionIDReq", {
         competitionId: "<%= competition._id %>"
     });
+    socket.on("horsesByCompetitionIDRes", function(data) {
+        var horsesInCompetition = $("#horsesInCompetition");
+        horsesInCompetition.empty();
         
-    socket.on("horseAddToCompetitionRes", function(data) {
+        for (var i=0; i<data.length; i++) {
+            var row = $("<tr />");
+            row.append("<td>" + data[i].horseName +"</td>");
+            row.append("<td>" + data[i].gender +"</td>");
+            row.append("<td>" + data[i].owner +"</td>");
+            row.append("<td>" + data[i].dateOfBirth +"</td>");
+            horsesInCompetition.append(row);
+        }
     });
     </script>
     
     <input type="hidden" value="<%= competition._id %>" />
 
+    <h1>Widok zawodów <%= competition.name %></h1>
+    <h2>Konie w zawodach</h2>
     <div id="horsesInCompetition"></div>
+    <h2>Dostępne konie</h2>
     <div id="horses"><table></table></div>
     <div id="juryInCompetition"></div>
     <div id="jury"></div>

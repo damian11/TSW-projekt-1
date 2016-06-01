@@ -225,3 +225,22 @@ exports.newCompetitionStep2 = function (req, res) {
     }
 }
 
+exports.GETnewCompetitionStep2 = function (req, res) {
+    if (req.session.loggedUser.isAdmin) {
+        db.Competition.findById(req.params.competitionId, function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("newCompetitionStep2", {
+                    loggedUser: req.session.loggedUser,
+                    competition: ent
+                });
+            }
+        });
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
+}
+

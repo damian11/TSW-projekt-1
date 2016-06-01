@@ -93,6 +93,7 @@ app.get('/profile', routes.profile);
 app.get('/administrator', routes.administrator);
 app.get("/newCompetition", routes.newCompetition);
 app.post("/newCompetitionStep2", routes.newCompetitionStep2);
+app.get("/newCompetitionStep2/:competitionId", routes.GETnewCompetitionStep2);
 app.post("/editProfile", routes.editProfile);
 app.post('/login',
     passport.authenticate('local', {
@@ -223,21 +224,19 @@ sio.sockets.on('connection', function (socket) {
                 console.log(err);
             } else {
                 if (data) {
-                    console.log(data);
+                    var horsesIds = [];
+                    
                     for(var i=0; i<data.length; i++) {
-                        db.Horse.findById(data[i].horse, function(err, horse) {
-                            if(err){
-                                console.log(err);
-                            } else {
-                                horses.push(horse);
-                                if (i == data.length-1) {
-                                    socket.emit("horsesByCompetitionIDRes", horses);
-                                }
-                            }
-                        });
+                        horsesIds.push(data[i].horse);
                     }
+                    
+                    db.Horse.find({
+                        _id: {$in: horsesIds}
+                    }, function(err, data) {
+                        socket.emit("horsesByCompetitionIDRes", data);
+                    });
                 } else {
-                    socket.emit("horsesByCompetitionIDRes", horses);
+                    socket.emit("horsesByCompetitionIDRes");
                 }
             }
         });
@@ -253,7 +252,9 @@ sio.sockets.on('connection', function (socket) {
             if(err){
                 console.log(err);
             } else {
-                socket.emit("horseAddToCompetitionRes");
+                socket.emit("horseAddToCompetitionRes", {
+                    competitionId: data.competitionId
+                });
             }
         });
     });
