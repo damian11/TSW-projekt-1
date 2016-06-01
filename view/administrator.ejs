@@ -7,6 +7,12 @@
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
+    
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
 </head>
 
 <body>
@@ -23,7 +29,7 @@
             row.append("<td>" + data[i].gender +"</td>");
             row.append("<td>" + data[i].owner +"</td>");
             row.append("<td>" + data[i].dateOfBirth +"</td>");
-            var deleteButton = $("<td>");
+            var deleteButton = $("</td>");
             
             deleteButton.text("Usuń");
             deleteButton.attr("horseId", data[i]._id)
@@ -72,7 +78,8 @@
             <%= message %>
         <% }%>
     </div>
-    
+    <div class="container">
+  <div class="jumbotron">
     <h1>Dodaj sędziego</h1>
     <form action="/newUser" method="post">
         <table>
@@ -135,5 +142,6 @@
     
     <div id="horsesList"><table></table></div>
 </body>
-
+    </div>
+    </div>
 </html>
