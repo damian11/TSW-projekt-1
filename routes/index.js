@@ -31,7 +31,7 @@ exports.login = function (req, res) {
 };
 
 exports.newHorse = function(req, res) {
-    if (req.body.horseId != " undefined") {
+    if ( (req.body.horseId != "undefined") && (req.body.horseId != "")) {
         db.Horse.findById(req.body.horseId, function(err, ent) {
             if (err) {
                 console.log(err);

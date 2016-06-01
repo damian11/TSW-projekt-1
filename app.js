@@ -131,7 +131,7 @@ var sio = socketIo.listen(server);
 
 
 let onAuthorizeSuccess = function (data, accept) {
-    console.log('Udane połączenie z socket.io');
+//    console.log('Udane połączenie z socket.io');
     accept(null, true);
 };
 
@@ -139,7 +139,7 @@ let onAuthorizeFail = function (data, message, error, accept) {
     if (error) {
         throw new Error(message);
     }
-    console.log('Nieudane połączenie z socket.io:', message);
+//    console.log('Nieudane połączenie z socket.io:', message);
     accept(null, false);
 };
 sio.use(passportSocketIo.authorize({
