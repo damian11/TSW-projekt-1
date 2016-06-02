@@ -215,8 +215,6 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("horsesByCompetitionIDReq", function(data) {
-        var horses = [];
-        
         db.HorseGroup.find({
             competition: data.competitionId
         }, function(err, data) {
@@ -229,6 +227,10 @@ sio.sockets.on('connection', function (socket) {
                     for(var i=0; i<data.length; i++) {
                         horsesIds.push(data[i].horse);
                     }
+                    
+//                    select *
+//                        from horse
+//                        where _id in ("54534", "543543", "543523412")
                     
                     db.Horse.find({
                         _id: {$in: horsesIds}
@@ -258,6 +260,22 @@ sio.sockets.on('connection', function (socket) {
             }
         });
     });
+    
+    socket.on("horseDeleteFromCompetitionReq", function(data) {
+        db.HorseGroup.remove({
+            competition: data.competitionId,
+            horse: data.horseId
+        }, function(err){
+            if(err){
+                console.log();
+            }else{
+                socket.emit("horseDeleteFromCompetitionRes", {
+                    competitionId: data.competitionId
+                });
+            }
+        });
+    });
+    
     
 });
 

@@ -26,7 +26,7 @@
             
             var addButton = $("<td>");
             addButton.attr("horseId", data[i]._id)
-            var addIcon = $("<i class='material-icons'>add_circle_outline</i>").appendTo(addButton);
+            $("<i class='material-icons'>add_circle_outline</i>").appendTo(addButton);
             addButton.click(function(e) {
                 socket.emit("horseAddToCompetitionReq", {
                     competitionId: '<%= competition._id %>',
@@ -37,10 +37,10 @@
             horsesList.append(row);
         }
     });
-        
     socket.on("horseAddToCompetitionRes", function(data) {
         window.location = "/newCompetitionStep2/" + data.competitionId;
     });
+        
         
     socket.emit("horsesByCompetitionIDReq", {
         competitionId: "<%= competition._id %>"
@@ -55,8 +55,22 @@
             row.append("<td>" + data[i].gender +"</td>");
             row.append("<td>" + data[i].owner +"</td>");
             row.append("<td>" + data[i].dateOfBirth +"</td>");
+                    
+            var deleteButton = $("<td>");
+            deleteButton.attr("horseId", data[i]._id)
+            $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
+            deleteButton.click(function(e) {
+                socket.emit("horseDeleteFromCompetitionReq", {
+                    competitionId: '<%= competition._id %>',
+                    horseId: $(this).attr("horseId")
+                });
+            });
+            row.append(deleteButton);
             horsesInCompetition.append(row);
         }
+    });
+    socket.on("horseDeleteFromCompetitionRes", function(data) {
+        window.location = "/newCompetitionStep2/" + data.competitionId;
     });
     </script>
     
