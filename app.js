@@ -162,32 +162,8 @@ sio.sockets.on('connection', function (socket) {
         console.log(data);
     });
     
-    socket.on("horsesReq", function(data) {
-        db.HorseGroup.find({
-            competition: data.competitionId
-        }, function (err, horseGroups) {
-            var horseGroup = [];
-            
-            for (var i=0; i<horseGroups.length; i++) {
-                horseGroup.push(horseGroups[i].horse);
-            }
-            
-            db.Horse.find({
-                _id: {$nin: horseGroup},
-                gender: data.gender
-            }, function(err, ent) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    socket.emit("horsesRes", ent)
-                }
-            });
-        });
-        
-        
-        db.Horse.find({
-            gender: data.gender
-        }, function(err, ent) {
+    socket.on('horsesReq', function(data) {
+        db.Horse.find({}, function(err, ent) {
             if (err) {
                 console.log(err);
             } else {
@@ -195,6 +171,55 @@ sio.sockets.on('connection', function (socket) {
             }
         });
     });
+
+    socket.on('availableHorsesReq', function(data) {
+        db.HorseGroup.find({
+            competition: data.competitionId
+        }, function (err, horseGroups) {
+            var horseGroup = [];
+
+            for (var i=0; i<horseGroups.length; i++) {
+                horseGroup.push(horseGroups[i].horse);
+            }
+
+            db.Horse.find({
+                _id: {$nin: horseGroup},
+                gender: data.gender
+            }, function(err, ent) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    socket.emit("availableHorsesRes", ent)
+                }
+            });
+        });
+    });
+    
+    
+    socket.on("availableJuryReq", function(data) {
+        db.JuryGroup.find({
+            competition: data.competitionId
+        }, function (err, juryGroups) {
+            var juryGroup = [];
+            
+            for (var i=0; i<juryGroups.length; i++) {
+                juryGroup.push(juryGroups[i].jury);
+            }
+            
+            db.User.find({
+                isAdmin: false,
+                _id: {$nin: juryGroup},
+                
+            }, function(err, ent) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    socket.emit("availableJuryRes", ent)
+                }
+            });
+        });
+    });
+    
     
     socket.on("horseDeleteByIDReq", function(data) {
         db.Horse.findById(data.horseId, function(err, ent) {
@@ -226,6 +251,18 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
+    socket.on("juryReadByIDReq", function(data) { 
+        db.User.findById(data.juryId, function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                socket.emit("juryReadByIDRes", {
+                    data: ent
+                });
+            }
+        });
+    });
+    
     socket.on("juryReq", function(){
         db.User.find({
             isAdmin: false
@@ -237,6 +274,8 @@ sio.sockets.on('connection', function (socket) {
             }
         });
     });
+    
+    
     
     socket.on("horsesByCompetitionIDReq", function(data) {
         db.HorseGroup.find({
@@ -300,6 +339,71 @@ sio.sockets.on('connection', function (socket) {
             }
         });
     });
+    
+    
+       socket.on("juryAddToCompetitionReq", function(data) {
+        var juryComp = new db.JuryGroup({
+            competition:data.competitionId,
+            jury: data.juryId
+        });
+        
+        juryComp.save(function(err) {
+            if(err){
+                console.log(err);
+            } else {
+                socket.emit("juryAddToCompetitionRes", {
+                    competitionId: data.competitionId,
+                    jury: data.juryId
+                });
+            }
+        });
+    });
+    
+    socket.on("juryDeleteFromCompetitionReq", function(data) {
+        db.JuryGroup.remove({
+            competition: data.competitionId,
+            jury: data.juryId
+        }, function(err){
+            if(err){
+                console.log();
+            }else{
+                socket.emit("juryDeleteFromCompetitionRes", {
+                    competitionId: data.competitionId
+                });
+            }
+        });
+    });
+    
+    
+    
+        
+    socket.on("juriesByCompetitionIDReq", function(data) {
+        db.JuryGroup.find({
+            competition: data.competitionId
+        }, function(err, dbJuries) {
+            if(err){
+                console.log(err);
+            } else {
+                if (dbJuries) {
+                    var userIds = [];
+                    
+                    for(var i=0; i<dbJuries.length; i++) {
+                        userIds.push(dbJuries[i].jury);
+                    }
+                    
+                    db.User.find({
+                        isAdmin: false,
+                        _id: {$in: userIds}
+                    }, function(err, data) {
+                        socket.emit("juriesByCompetitionIDRes", data);
+                    });
+                } else {
+                    socket.emit("juriesByCompetitionIDRes");
+                }
+            }
+        });
+    });
+    
     
     
 });

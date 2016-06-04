@@ -11,15 +11,12 @@
 
 <body>
     <script>
-        console.log($("#competitionId").val());
-        
-        
     var socket = io.connect('//' + window.location.host, {secure: true});
-    socket.emit("horsesReq", {
+    socket.emit("availableHorsesReq", {
         gender: "<%= competition.gender %>",
         competitionId: "<%= competition._id %>"
     });
-    socket.on("horsesRes", function(data) {
+    socket.on("availableHorsesRes", function(data) {
         var horsesList = $("#horses table");
         horsesList.empty();
         
@@ -44,11 +41,9 @@
         }
     });
   
-       
     socket.on("horseAddToCompetitionRes", function(data) {
         window.location = "/newCompetitionStep2/" + data.competitionId;
-    });
-        
+    });   
         
     socket.emit("horsesByCompetitionIDReq", {
         competitionId: "<%= competition._id %>"
@@ -80,6 +75,81 @@
     socket.on("horseDeleteFromCompetitionRes", function(data) {
         window.location = "/newCompetitionStep2/" + data.competitionId;
     });
+        
+    socket.emit("availableJuryReq", {
+        competitionId: "<%= competition._id %>"
+    });
+        
+    socket.on("availableJuryRes", function(data) {
+        var juryList = $("#juries table");
+        juryList.empty();
+        
+        for (var i=0; i<data.length; i++) {
+            var row = $("<tr />");
+            row.append("<td>" + data[i].username +"</td>");
+            row.append("<td>" + data[i].password +"</td>");
+            row.append("<td>" + data[i].firstName +"</td>");
+            row.append("<td>" + data[i].lastName +"</td>");
+            
+            var addButton = $("<td>");
+            addButton.attr("juryId", data[i]._id)
+            $("<i class='material-icons'>add_circle_outline</i>").appendTo(addButton);
+            addButton.click(function(e) {
+                socket.emit("juryAddToCompetitionReq", {
+                    competitionId: '<%= competition._id %>',
+                    juryId: $(this).attr("juryId")
+                });
+            });
+            row.append(addButton);
+            juryList.append(row);
+        }
+    });
+        
+    socket.on("juryAddToCompetitionRes", function(data) {
+        window.location = "/newCompetitionStep2/" + data.competitionId;
+    });
+        
+    socket.on("juryDeleteFromCompetitionRes", function(data) {
+        window.location = "/newCompetitionStep2/" + data.competitionId;
+    }); 
+    socket.emit("juriesByCompetitionIDReq", {
+        competitionId: "<%= competition._id %>"
+    });
+    socket.on("juriesByCompetitionIDRes", function(data) {
+        console.log();
+        console.log(data);
+        
+        var juriesInCompetition = $("#juriesInCompetition");
+        juriesInCompetition.empty();
+        
+        for (var i=0; i<data.length; i++) {
+            var row = $("<tr />");
+            row.append("<td>" + data[i].username +"</td>");
+            row.append("<td>" + data[i].password +"</td>");
+            row.append("<td>" + data[i].firstName+"</td>");
+            row.append("<td>" + data[i].lastName +"</td>");
+                    
+            var deleteButton = $("<td>");
+            deleteButton.attr("juryId", data[i]._id)
+            $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
+            deleteButton.click(function(e) {
+                socket.emit("juryDeleteFromCompetitionReq", {
+                    competitionId: '<%= competition._id %>',
+                    juryId: $(this).attr("juryId")
+                });
+            });
+            row.append(deleteButton);
+            juriesInCompetition.append(row);
+        }
+    });
+    socket.on("juriesDeleteFromCompetitionRes", function(data) {
+        window.location = "/newCompetitionStep2/" + data.competitionId;
+    });
+        
+
+        
+        
+        
     </script>
     
     <input type="hidden" id="competitionId" value="<%= competition._id %>" />
@@ -89,10 +159,10 @@
     <div id="horsesInCompetition"></div>
     <h2>Dostępne konie</h2>
     <div id="horses"><table></table></div>
-
-     <div id="juryInCompetition"></div>
-  
-    <div id="jury"><table></table></div>
+    <h2>sędziowie w zawodach</h2>
+    <div id="juriesInCompetition"></div>
+    <h2>Dostępni sędziowie</h2>
+    <div id="juries"><table></table></div>
    
     
 </body>
