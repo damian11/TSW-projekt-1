@@ -248,3 +248,31 @@ exports.GETnewCompetitionStep2 = function (req, res) {
     }
 }
 
+exports.competition = function(req, res) {
+    db.HorseGroup.find({
+        competition: req.params.competitionId
+    }, function(err, horseGroup) {
+        if (err) {
+            console.log(err);
+        } else {
+            var horseIds = [];
+            
+            for (var i=0; i<horseGroup.length; i++) {
+                horseIds.push(horseGroup[i].horse);
+            }
+            
+            db.Horse.find({
+                _id: {$in: horseIds}
+            }, function (err, horses) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("juryCompetition", {
+                        horses: horses
+                    });
+                }
+            });
+        }
+    });
+}
+

@@ -54,7 +54,8 @@ var HorseGroup = mongoose.model("HorseGroup", {
     horse: {
         type: String,
         ref: "Horse"
-    }
+    },
+    isActive: Boolean
 });
 
 var HorseMark = mongoose.model("HorseMark", {

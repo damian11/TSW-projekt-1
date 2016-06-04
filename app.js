@@ -111,13 +111,16 @@ app.post('/login',
                 if(req.session.loggedUser.isAdmin) {
                     res.redirect('/administrator');
                 } else {
-                    res.render('jury');
+                    res.render('jury', {
+                        loggedUser: ent
+                    });
                 }
             }
         });
     }
 );
 app.get('/logout', routes.logout);
+app.get("/jury/competition/:competitionId", routes.competition);
 
 
 var privateKey = fs.readFileSync( "cert/server-key.pem" );
@@ -407,7 +410,6 @@ sio.sockets.on('connection', function (socket) {
     
     
     socket.on("competitionActivateReq", function(data) {
-        console.log(data.competitionId)
         db.Competition.findById(data.competitionId, function(err, ent) {
             ent.isActive = true;
             ent.save(function(err) {
@@ -419,6 +421,37 @@ sio.sockets.on('connection', function (socket) {
                     });
                 }
             });
+        });
+    });
+    
+    socket.on("findCompetitionByUserIdReq", function(data) {
+        db.JuryGroup.find({
+            jury: data.userId
+        }, function(err, juryGroup) {
+//        console.log();
+//        console.log(juryGroup);
+            if (err) {
+                console.log(err);
+            } else {
+                var competitionIds = [];
+                
+                for(var i=0; i< juryGroup.length; i++) {
+                    competitionIds.push(juryGroup[i].competition);
+                }
+                
+                db.Competition.find({
+                    isActive: true,
+                    _id: {$in: competitionIds}
+                }, function(err, competitions) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        socket.emit("findCompetitionByUserIdRes", {
+                            competitions: competitions
+                        });
+                    }
+                });
+            }
         });
     });
     
