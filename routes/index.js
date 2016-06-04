@@ -75,6 +75,8 @@ exports.newUser = function(req, res) {
     var user = new db.User({
         username: req.body.username,
         password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         isAdmin: (req.body.isAdmin == 'on' ? true : false)
     });
 
@@ -206,7 +208,8 @@ exports.newCompetitionStep2 = function (req, res) {
             name: req.body.name,
             date: req.body.date,
             comments: req.body.comments,
-            gender: req.body.gender
+            gender: req.body.gender,
+            isActive: false
         });
         
         competition.save(function(err) {

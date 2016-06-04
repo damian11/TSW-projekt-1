@@ -154,7 +154,7 @@
     
     <input type="hidden" id="competitionId" value="<%= competition._id %>" />
 
-    <h1>Widok zawodów <%= competition.name %></h1>
+    <h1>Widok zawodów <%= competition.name %> - <%= (competition.isActive) ? "Aktywne" : "Nieaktywne" %></h1>
     <h2>Konie w zawodach</h2>
     <div id="horsesInCompetition"></div>
     <h2>Dostępne konie</h2>
