@@ -4,18 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Zawody</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
+    <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
     <script>
     var socket = io.connect('//' + window.location.host, {secure: true});
-    socket.on('news', function(data) {
-        console.log(JSON.stringify(data));
-        socket.emit('reply', {
-            reply: 'odzew klienta'
-        });
-    });
+//    socket.on('news', function(data) {
+//        console.log(JSON.stringify(data));
+//        socket.emit('reply', {
+//            reply: 'odzew klienta'
+//        });
+//    });
     </script>
     <div><a href="/logout">Wyloguj</a></div>
     <div><a href="/profile">Edycja profilu</a></div>

@@ -111,7 +111,7 @@ app.post('/login',
                 if(req.session.loggedUser.isAdmin) {
                     res.redirect('/administrator');
                 } else {
-                    res.redirect('/authorized.html');
+                    res.render('jury');
                 }
             }
         });
@@ -401,6 +401,24 @@ sio.sockets.on('connection', function (socket) {
                     socket.emit("juriesByCompetitionIDRes");
                 }
             }
+        });
+    });
+    
+    
+    
+    socket.on("competitionActivateReq", function(data) {
+        console.log(data.competitionId)
+        db.Competition.findById(data.competitionId, function(err, ent) {
+            ent.isActive = true;
+            ent.save(function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    socket.emit("competitionActivateRes", {
+                        competitionId: ent._id
+                    });
+                }
+            });
         });
     });
     
