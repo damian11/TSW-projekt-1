@@ -28,7 +28,8 @@ var Horse = mongoose.model("Horse", {
 var Competition = mongoose.model("Competition", {
     name: String,
     date: Date,
-    comments: String
+    comments: String,
+    gender: String
 });
 
 var JuryGroup = mongoose.model("JuryGroup", {

@@ -162,8 +162,32 @@ sio.sockets.on('connection', function (socket) {
         console.log(data);
     });
     
-    socket.on("horsesReq", function() {
-        db.Horse.find({}, function(err, ent) {
+    socket.on("horsesReq", function(data) {
+        db.HorseGroup.find({
+            competition: data.competitionId
+        }, function (err, horseGroups) {
+            var horseGroup = [];
+            
+            for (var i=0; i<horseGroups.length; i++) {
+                horseGroup.push(horseGroups[i].horse);
+            }
+            
+            db.Horse.find({
+                _id: {$nin: horseGroup},
+                gender: data.gender
+            }, function(err, ent) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    socket.emit("horsesRes", ent)
+                }
+            });
+        });
+        
+        
+        db.Horse.find({
+            gender: data.gender
+        }, function(err, ent) {
             if (err) {
                 console.log(err);
             } else {
@@ -255,7 +279,8 @@ sio.sockets.on('connection', function (socket) {
                 console.log(err);
             } else {
                 socket.emit("horseAddToCompetitionRes", {
-                    competitionId: data.competitionId
+                    competitionId: data.competitionId,
+                    horse: data.horseId
                 });
             }
         });

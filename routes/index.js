@@ -205,7 +205,8 @@ exports.newCompetitionStep2 = function (req, res) {
         var competition = new db.Competition({
             name: req.body.name,
             date: req.body.date,
-            comments: req.body.comments
+            comments: req.body.comments,
+            gender: req.body.gender
         });
         
         competition.save(function(err) {
