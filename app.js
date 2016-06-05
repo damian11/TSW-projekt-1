@@ -122,6 +122,7 @@ app.post('/login',
 app.get('/logout', routes.logout);
 app.get("/jury/competition/:competitionId", routes.competition);
 app.get("/horse/competition/:horseId/:competitionId", routes.horseCompetition);
+app.get("/showCompetition/:competitionId", routes.showCompetition);
 
 
 var privateKey = fs.readFileSync( "cert/server-key.pem" );

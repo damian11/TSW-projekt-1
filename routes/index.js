@@ -309,3 +309,9 @@ exports.horseCompetition = function(req, res) {
     }
 }
 
+exports.showCompetition = function(req, res) {
+    res.render("showCompetition", {
+        competitionId: req.params.competitionId
+    });
+}
+
