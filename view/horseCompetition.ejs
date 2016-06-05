@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ocena konia</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <script>
+    $(function() {
+        var socket = io.connect('//' + window.location.host, {secure: true});
+        
+        
+    });
+    </script>
+    <div>
+        <div><a href="/profile">Edycja profilu</a></div>
+        <div><a href="/logout">Wyloguj</a></div>
+    </div>
+    <h1>Ocena konia</h1>
+    <div id="competitions">
+        <table>
+            <% for(var i=0; i<horses.length; i++) { %>
+            <tr>
+                <td>
+                    <%if (horses[i].isActive) {%>
+                    <a href="/horse/competition/<%= horses[i]._id %>/<%= competitionId %>">Koń <%= i+1 %></a>
+                    <%} else {%>
+                    Koń <%= i+1 %>
+                    <%}%>
+                </td>
+            </tr>
+            <% } %>
+        </table>
+    </div>
+</body>
+
+</html>

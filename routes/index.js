@@ -269,56 +269,26 @@ exports.competition = function(req, res) {
                 competitionId: req.params.competitionId,
                 horses: horses
             });
-            
-//            var horseIds = [];
-//            
-//            for (var i=0; i<horseGroup.length; i++) {
-//                horseIds.push(horseGroup[i].horse._id);
-//            }
-//            
-//            db.Horse.find({
-//                _id: {$in: horseIds}
-//            }, function (err, horses) {
-//                if (err) {
-//                    console.log(err);
-//                } else {
-//                    res.render("juryCompetition", {
-//                        competitionId: req.params.competitionId,
-//                        horses: horses
-//                    });
-//                }
-//            });
         }
     });
-    
-//    db.HorseGroup.find({
-//        competition: req.params.competitionId
-//    },
-//    function(err, horseGroup) {
-//        if (err) {
-//            console.log(err);
-//        } else {
-//            var horseIds = [];
-//            
-//            for (var i=0; i<horseGroup.length; i++) {
-//                horseIds.push(horseGroup[i].horse);
-//            }
-//            
-//            db.Horse.find({
-//                _id: {$in: horseIds},
-//                ["HorseGroup"]
-//            }, function (err, horses) {
-//        console.log(horses);
-//                if (err) {
-//                    console.log(err);
-//                } else {
-//                    res.render("juryCompetition", {
-//                        competitionId: req.params.competitionId,
-//                        horses: horses
-//                    });
-//                }
-//            });
-//        }
-//    });
+}
+
+exports.horseCompetition = function(req, res) {
+    if (req.session.loggedUser) {
+        db.HorseMark.find({
+            competition: req.params.competitionId,
+            horse: req.params.horseId,
+            jury: req.session.loggedUser._id
+        }, function (err, ent) {
+            
+        });
+        res.render("horseCompetition", {
+            
+        })
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
 }
 

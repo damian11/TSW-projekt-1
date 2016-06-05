@@ -121,6 +121,7 @@ app.post('/login',
 );
 app.get('/logout', routes.logout);
 app.get("/jury/competition/:competitionId", routes.competition);
+app.get("/horse/competition/:horseId/:competitionId", routes.horseCompetition);
 
 
 var privateKey = fs.readFileSync( "cert/server-key.pem" );
@@ -357,9 +358,32 @@ sio.sockets.on('connection', function (socket) {
                     if (err) {
                         console.log(err);
                     } else {
-                        socket.emit("horseActivateInCompetitionRes", {
-                            competitionId: data.competitionId,
-                            horse: ent[0]
+                        db.JuryGroup.find({
+                            competition: data.competitionId
+                        }, function (err, juriesInCompetition) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                for (var i=0;i<juriesInCompetition.length; i++) {
+                                    var horseMark = new db.HorseMark({
+                                        type: 0,
+                                        head: 0,
+                                        body: 0,
+                                        legs: 0,
+                                        movement: 0,
+                                        competition: data.competitionId,
+                                        horse: data.horseId,
+                                        jury: juriesInCompetition[i]._id
+                                    });
+                                    
+                                    horseMark.save();
+                                }
+                                
+                                socket.emit("horseActivateInCompetitionRes", {
+                                    competitionId: data.competitionId,
+                                    horse: ent[0]
+                                });
+                            }
                         });
                     }
                 });
