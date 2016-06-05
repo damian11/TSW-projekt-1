@@ -30,7 +30,12 @@
                 var horseMarks = $("#horseMarks table tbody");
                 horseMarks.empty();
                 var horsesAvg = {};
+                var horses = {};
                 var juries = {};
+                
+                for (var i=0; i<data.horseMarks.length; i++) {
+                    horses[data.horseMarks[i].jury._id] = [];
+                }
                                                            // robimy pętle po odpowiedzi z serwera
                 //Obliczenie liczby sędziów
                 for (var i=0; i<data.horseMarks.length; i++) {
