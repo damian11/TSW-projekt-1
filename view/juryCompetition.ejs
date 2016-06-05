@@ -14,9 +14,41 @@
     $(function() {
         var socket = io.connect('//' + window.location.host, {secure: true});
         
+        var competitionId = $("#competitionId").val();
         
+        socket.emit("horsesByCompetitionIdAndJuryIdReq", {
+            competitionId: competitionId,
+            juryId: "<%= juryId %>",
+        });
+        
+        socket.on("horsesByCompetitionIdAndJuryIdRes", function(data) {
+            var competitions = $("#competitions table");
+            competitions.empty();
+
+            for (var i=0; i<data.horses.length; i++) {
+                var row = $("<tr />");
+                
+                console.log(data.horses[i]);
+                
+                if (data.horses[i].isActive) {
+                    $("<td>").append( $("<a>").attr("href", "/horse/competition/" + data.horses[i].horse._id+"/"+competitionId).text("Koń "+(i+1)) ).appendTo(row);
+                } else {
+                    $("<td>Koń "+(i+1)+"</td>").appendTo(row);
+                }
+                
+                competitions.append(row);
+            }
+            
+            socket.emit("horsesByCompetitionIdAndJuryIdReq", {
+                competitionId: "<%= competitionId %>",
+                juryId: "<%= juryId %>",
+            });
+        });
     });
     </script>
+    
+    <input type="hidden" id="competitionId" value="<%= competitionId %>" />
+    
     <div>
         <div><a href="/profile">Edycja profilu</a></div>
         <div><a href="/logout">Wyloguj</a></div>
@@ -24,17 +56,6 @@
     <h1>Konie do oceny</h1>
     <div id="competitions">
         <table>
-            <% for(var i=0; i<horses.length; i++) { %>
-            <tr>
-                <td>
-                    <%if (horses[i].isActive) {%>
-                    <a href="/horse/competition/<%= horses[i]._id %>/<%= competitionId %>">Koń <%= i+1 %></a>
-                    <%} else {%>
-                    Koń <%= i+1 %>
-                    <%}%>
-                </td>
-            </tr>
-            <% } %>
         </table>
     </div>
 </body>

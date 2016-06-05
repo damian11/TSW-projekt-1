@@ -476,8 +476,6 @@ sio.sockets.on('connection', function (socket) {
         db.JuryGroup.find({
             jury: data.userId
         }, function(err, juryGroup) {
-//        console.log();
-//        console.log(juryGroup);
             if (err) {
                 console.log(err);
             } else {
@@ -498,6 +496,29 @@ sio.sockets.on('connection', function (socket) {
                             competitions: competitions
                         });
                     }
+                });
+            }
+        });
+    });
+    
+    socket.on("horsesByCompetitionIdAndJuryIdReq", function(data) {
+        db.HorseGroup.find({
+            competition: data.competitionId
+        })
+        .populate("horse")
+        .exec(function(err, horseGroup) {
+            if (err) {
+                console.log(err);
+            } else {
+                var horses = [];
+
+                for (var i=0; i<horseGroup.length; i++) {
+                    horses.push(horseGroup[i]);
+                }
+                
+                socket.emit("horsesByCompetitionIdAndJuryIdRes", {
+                    competitionId: data.competitionId,
+                    horses: horses
                 });
             }
         });

@@ -249,27 +249,37 @@ exports.GETnewCompetitionStep2 = function (req, res) {
 }
 
 exports.competition = function(req, res) {
-    db.HorseGroup.find({
-        competition: req.params.competitionId
-    })
-    .populate("horse")
-    .exec(function(err, horseGroup) {
-        if (err) {
-            console.log(err);
-        } else {
-            var horses = [];
-            
-            for (var i=0; i<horseGroup.length; i++) {
-                horseGroup[i].horse.isActive = horseGroup[i].isActive;
-                horses.push(horseGroup[i].horse);
-            }
-            
-            res.render("juryCompetition", {
-                competitionId: req.params.competitionId,
-                horses: horses
-            });
-        }
-    });
+//    db.HorseGroup.find({
+//        competition: req.params.competitionId
+//    })
+//    .populate("horse")
+//    .exec(function(err, horseGroup) {
+//        if (err) {
+//            console.log(err);
+//        } else {
+//            var horses = [];
+//            
+//            for (var i=0; i<horseGroup.length; i++) {
+//                horseGroup[i].horse.isActive = horseGroup[i].isActive;
+//                horses.push(horseGroup[i].horse);
+//            }
+//            
+//            res.render("juryCompetition", {
+//                competitionId: req.params.competitionId,
+//                horses: horses
+//            });
+//        }
+//    });
+    if (req.session.loggedUser) {
+        res.render("juryCompetition", {
+            competitionId: req.params.competitionId,
+            juryId: req.session.loggedUser._id
+        });
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
 }
 
 exports.horseCompetition = function(req, res) {
