@@ -373,7 +373,7 @@ sio.sockets.on('connection', function (socket) {
                                         movement: 0,
                                         competition: data.competitionId,
                                         horse: data.horseId,
-                                        jury: juriesInCompetition[i]._id
+                                        jury: juriesInCompetition[i].jury
                                     });
                                     
                                     horseMark.save();

@@ -21,20 +21,11 @@
         <div><a href="/profile">Edycja profilu</a></div>
         <div><a href="/logout">Wyloguj</a></div>
     </div>
-    <h1>Ocena konia</h1>
+    <h1>Ocena konia: <%- horseMark.horse.horseName %></h1>
     <div id="competitions">
         <table>
-            <% for(var i=0; i<horses.length; i++) { %>
-            <tr>
-                <td>
-                    <%if (horses[i].isActive) {%>
-                    <a href="/horse/competition/<%= horses[i]._id %>/<%= competitionId %>">Koń <%= i+1 %></a>
-                    <%} else {%>
-                    Koń <%= i+1 %>
-                    <%}%>
-                </td>
-            </tr>
-            <% } %>
+            <% //for(var i=0; i<horses.length; i++) { %>
+            <% //} %>
         </table>
     </div>
 </body>

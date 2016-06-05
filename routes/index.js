@@ -254,7 +254,6 @@ exports.competition = function(req, res) {
     })
     .populate("horse")
     .exec(function(err, horseGroup) {
-        console.log(horseGroup);
         if (err) {
             console.log(err);
         } else {
@@ -279,12 +278,16 @@ exports.horseCompetition = function(req, res) {
             competition: req.params.competitionId,
             horse: req.params.horseId,
             jury: req.session.loggedUser._id
-        }, function (err, ent) {
-            
-        });
-        res.render("horseCompetition", {
-            
         })
+        .populate("horse competition jury")
+        .exec(function (err, ent) {
+            console.log(ent);
+            res.render("horseCompetition", {
+                competitionId: req.params.competitionId,
+                horseId: req.params.horseId,
+                horseMark: ent[0]
+            });
+        });
     } else {
         res.render("unauthorized", {
             loggedUser: req.session.loggedUser
