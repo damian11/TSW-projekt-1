@@ -525,13 +525,7 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", function(data) {
-            console.log(data.competitionId);
-            
-            console.log(data.juryId);
-            
-            console.log(data.horseId);
-            
-        db.HorseMark.find({
+        db.HorseMark.findOne({
             competition: data.competitionId,
             jury: data.juryId,
             horse: data.horseId
@@ -542,13 +536,101 @@ sio.sockets.on('connection', function (socket) {
                 console.log(err);
             } else {
                 socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", {
-                    horseMark: ent[0]
+                    horseMark: ent
                 });
             }
         });
     });
     
+    socket.on("changeTypeMarkReq", function(data) {
+        db.HorseMark.findOne({
+            competition: data.competitionId,
+            jury: data.juryId,
+            horse: data.horseId
+        })
+        .exec(function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent.type = data.type;
+                ent.save(function(err) {
+                    socket.emit("changeMarkRes");
+                });
+            }
+        });
+    });
     
+    socket.on("changeHeadMarkReq", function(data) {
+        db.HorseMark.findOne({
+            competition: data.competitionId,
+            jury: data.juryId,
+            horse: data.horseId
+        })
+        .exec(function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent.head = data.head;
+                ent.save(function(err) {
+                    socket.emit("changeMarkRes");
+                });
+            }
+        });
+    });
+    
+    socket.on("changeBodyMarkReq", function(data) {
+        db.HorseMark.findOne({
+            competition: data.competitionId,
+            jury: data.juryId,
+            horse: data.horseId
+        })
+        .exec(function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent.body = data.body;
+                ent.save(function(err) {
+                    socket.emit("changeMarkRes");
+                });
+            }
+        });
+    });
+    
+    socket.on("changeLegsMarkReq", function(data) {
+        db.HorseMark.findOne({
+            competition: data.competitionId,
+            jury: data.juryId,
+            horse: data.horseId
+        })
+        .exec(function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent.legs = data.legs;
+                ent.save(function(err) {
+                    socket.emit("changeMarkRes");
+                });
+            }
+        });
+    });
+    
+    socket.on("changeMovementMarkReq", function(data) {
+        db.HorseMark.findOne({
+            competition: data.competitionId,
+            jury: data.juryId,
+            horse: data.horseId
+        })
+        .exec(function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent.movement = data.movement;
+                ent.save(function(err) {
+                    socket.emit("changeMarkRes");
+                });
+            }
+        });
+    });
     
 });
 

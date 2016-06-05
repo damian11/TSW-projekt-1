@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Ocena konia</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /> 
+    <link rel="stylesheet" href="/main.css" />    
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
@@ -29,31 +30,44 @@
         }, 5000);
         
         socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", function(data) {
+            $("#type div").removeClass("active");
             var type = $("#type"+data.horseMark.type);
             type.addClass("active");
             
+            $("#head div").removeClass("active");
             var head = $("#head"+data.horseMark.head);
             head.addClass("active");
             
+            $("#body div").removeClass("active");
             var body = $("#body"+data.horseMark.body);
             body.addClass("active");
             
+            $("#legs div").removeClass("active");
             var legs = $("#legs"+data.horseMark.legs);
             legs.addClass("active");
             
+            $("#movement div").removeClass("active");
             var movement = $("#movement"+data.horseMark.movement);
             movement.addClass("active");
-            
+        });
+        
+        socket.on("changeMarkRes", function(data) {
+            socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
+                competitionId: "<%- horseMark.competition._id %>",
+                juryId: "<%- horseMark.jury._id %>",
+                horseId: "<%- horseMark.horse._id %>"
+            });
         });
         
         var type = $("#type");
         for (var i=0; i<21; i++) {
             var div = $("<div>").attr("id", "type"+i).val(i).text(i);
             div.click(function(e) {
+                console.log($(this).val());
                 socket.emit("changeTypeMarkReq", {
-                    competitionId: "<%- horseMark.competitionId %>",
-                    juryId: "<%- horseMark.juryId %>",
-                    horseId: "<%- horseMark.horseId %>",
+                    competitionId: "<%- horseMark.competition._id %>",
+                    juryId: "<%- horseMark.jury._id %>",
+                    horseId: "<%- horseMark.horse._id %>",
                     type: $(this).val()
                 });
             });
@@ -65,9 +79,9 @@
             var div = $("<div>").attr("id", "head"+i).val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeHeadMarkReq", {
-                    competitionId: "<%- horseMark.competitionId %>",
-                    juryId: "<%- horseMark.juryId %>",
-                    horseId: "<%- horseMark.horseId %>",
+                    competitionId: "<%- horseMark.competition._id %>",
+                    juryId: "<%- horseMark.jury._id %>",
+                    horseId: "<%- horseMark.horse._id %>",
                     head: $(this).val()
                 });
             });
@@ -79,9 +93,9 @@
             var div = $("<div>").attr("id", "body"+i).val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeBodyMarkReq", {
-                    competitionId: "<%- horseMark.competitionId %>",
-                    juryId: "<%- horseMark.juryId %>",
-                    horseId: "<%- horseMark.horseId %>",
+                    competitionId: "<%- horseMark.competition._id %>",
+                    juryId: "<%- horseMark.jury._id %>",
+                    horseId: "<%- horseMark.horse._id %>",
                     body: $(this).val()
                 });
             });
@@ -93,9 +107,9 @@
             var div = $("<div>").attr("id", "legs"+i).val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeLegsMarkReq", {
-                    competitionId: "<%- horseMark.competitionId %>",
-                    juryId: "<%- horseMark.juryId %>",
-                    horseId: "<%- horseMark.horseId %>",
+                    competitionId: "<%- horseMark.competition._id %>",
+                    juryId: "<%- horseMark.jury._id %>",
+                    horseId: "<%- horseMark.horse._id %>",
                     legs: $(this).val()
                 });
             });
@@ -107,9 +121,9 @@
             var div = $("<div>").attr("id", "movement"+i).val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeMovementMarkReq", {
-                    competitionId: "<%- horseMark.competitionId %>",
-                    juryId: "<%- horseMark.juryId %>",
-                    horseId: "<%- horseMark.horseId %>",
+                    competitionId: "<%- horseMark.competition._id %>",
+                    juryId: "<%- horseMark.jury._id %>",
+                    horseId: "<%- horseMark.horse._id %>",
                     movement: $(this).val()
                 });
             });
