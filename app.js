@@ -644,7 +644,14 @@ sio.sockets.on('connection', function (socket) {
                 competitions: competitions
             });
         });
-    })
+    });
+    
+    socket.on("horseMarkByCompetitionIdReq", function(data) {
+        db.HorseMark.find({
+            competition: data.competitionId
+        })
+        .populate("horse competition jury") 
+    });
     
 });
 
