@@ -313,7 +313,8 @@ sio.sockets.on('connection', function (socket) {
     socket.on("horseAddToCompetitionReq", function(data) {
         var horseComp = new db.HorseGroup({
             competition:data.competitionId,
-            horse: data.horseId
+            horse: data.horseId,
+            isActive: false
         });
         
         horseComp.save(function(err) {
@@ -338,6 +339,29 @@ sio.sockets.on('connection', function (socket) {
             }else{
                 socket.emit("horseDeleteFromCompetitionRes", {
                     competitionId: data.competitionId
+                });
+            }
+        });
+    });
+    
+    socket.on("horseActivateInCompetitionReq", function(data) {
+        db.HorseGroup.find({
+            competition: data.competitionId,
+            horse: data.horseId
+        }, function (err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent[0].isActive = true;
+                ent[0].save(function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        socket.emit("horseActivateInCompetitionRes", {
+                            competitionId: data.competitionId,
+                            horse: ent[0]
+                        });
+                    }
                 });
             }
         });

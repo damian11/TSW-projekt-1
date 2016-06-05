@@ -251,28 +251,74 @@ exports.GETnewCompetitionStep2 = function (req, res) {
 exports.competition = function(req, res) {
     db.HorseGroup.find({
         competition: req.params.competitionId
-    }, function(err, horseGroup) {
+    })
+    .populate("horse")
+    .exec(function(err, horseGroup) {
+        console.log(horseGroup);
         if (err) {
             console.log(err);
         } else {
-            var horseIds = [];
+            var horses = [];
             
             for (var i=0; i<horseGroup.length; i++) {
-                horseIds.push(horseGroup[i].horse);
+                horseGroup[i].horse.isActive = horseGroup[i].isActive;
+                horses.push(horseGroup[i].horse);
             }
             
-            db.Horse.find({
-                _id: {$in: horseIds}
-            }, function (err, horses) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.render("juryCompetition", {
-                        horses: horses
-                    });
-                }
+            res.render("juryCompetition", {
+                competitionId: req.params.competitionId,
+                horses: horses
             });
+            
+//            var horseIds = [];
+//            
+//            for (var i=0; i<horseGroup.length; i++) {
+//                horseIds.push(horseGroup[i].horse._id);
+//            }
+//            
+//            db.Horse.find({
+//                _id: {$in: horseIds}
+//            }, function (err, horses) {
+//                if (err) {
+//                    console.log(err);
+//                } else {
+//                    res.render("juryCompetition", {
+//                        competitionId: req.params.competitionId,
+//                        horses: horses
+//                    });
+//                }
+//            });
         }
     });
+    
+//    db.HorseGroup.find({
+//        competition: req.params.competitionId
+//    },
+//    function(err, horseGroup) {
+//        if (err) {
+//            console.log(err);
+//        } else {
+//            var horseIds = [];
+//            
+//            for (var i=0; i<horseGroup.length; i++) {
+//                horseIds.push(horseGroup[i].horse);
+//            }
+//            
+//            db.Horse.find({
+//                _id: {$in: horseIds},
+//                ["HorseGroup"]
+//            }, function (err, horses) {
+//        console.log(horses);
+//                if (err) {
+//                    console.log(err);
+//                } else {
+//                    res.render("juryCompetition", {
+//                        competitionId: req.params.competitionId,
+//                        horses: horses
+//                    });
+//                }
+//            });
+//        }
+//    });
 }
 

@@ -14,35 +14,29 @@
     $(function() {
         var socket = io.connect('//' + window.location.host, {secure: true});
         
-        socket.emit("findCompetitionByUserIdReq", {
-            userId: "<%= loggedUser._id %>"
-        });
-        socket.on("findCompetitionByUserIdRes", function(data) {
-            var competitions = $("#competitions table");
-            competitions.empty();
-
-            var row = $("<tr />");
-            if(data.competitions.length == 0) {
-                row.append("<td>" + "Obecnie nie posiadasz żadnych aktywnych zawodów" +"</td>");
-                competitions.append(row);
-            } else {
-                for (var i=0; i<data.competitions.length; i++) {
-                    var competitionLink = $("<a>").attr("href", "/jury/competition/" + data.competitions[i]._id).text(data.competitions[i].name);
-                    $("<td>").append(competitionLink).appendTo(row);
-                    row.append("<td>" + data.competitions[i].date +"</td>");
-                    row.append("<td>" + data.competitions[i].comments +"</td>");
-                    competitions.append(row);
-                }
-            }
-        });
+        
     });
     </script>
     <div>
         <div><a href="/profile">Edycja profilu</a></div>
         <div><a href="/logout">Wyloguj</a></div>
     </div>
-    <h1>Twoje aktywne zawody</h1>
-    <div id="competitions"><table></table></div>
+    <h1>Konie do oceny</h1>
+    <div id="competitions">
+        <table>
+            <% for(var i=0; i<horses.length; i++) { %>
+            <tr>
+                <td>
+                    <%if (horses[i].isActive) {%>
+                    <a href="/horse/competition/<%= horses[i]._id %>/<%= competitionId %>">Koń <%= i+1 %></a>
+                    <%} else {%>
+                    Koń <%= i+1 %>
+                    <%}%>
+                </td>
+            </tr>
+            <% } %>
+        </table>
+    </div>
 </body>
 
 </html>
