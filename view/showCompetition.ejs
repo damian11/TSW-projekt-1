@@ -31,7 +31,7 @@
                 horseMarks.empty();
                 var horsesAvg = {};
                 var juries = {};
-                
+                                                           // robimy pętle po odpowiedzi z serwera
                 //Obliczenie liczby sędziów
                 for (var i=0; i<data.horseMarks.length; i++) {
                     juries[data.horseMarks[i].jury._id] = 1;
@@ -45,7 +45,8 @@
                         head: 0,
                         body: 0,
                         legs: 0,
-                        movement: 0
+                        movement: 0,
+                        avg: 0
                     };
                 }
                 
@@ -63,6 +64,7 @@
                     horsesAvg[key].body /= juriesNo;
                     horsesAvg[key].legs /= juriesNo;
                     horsesAvg[key].movement /= juriesNo;
+                    horsesAvg[key].avg = (horsesAvg[key].type + horsesAvg[key].head + horsesAvg[key].body + horsesAvg[key].legs + horsesAvg[key].movement)/5;
                 }
                 
                 var trj;
@@ -77,6 +79,7 @@
                         $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].body).appendTo(trh);
                         $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].legs).appendTo(trh);
                         $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].movement).appendTo(trh);
+                        $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].avg).appendTo(trh);
                         horseMarks.append(trh);
                     }
                     
@@ -92,8 +95,14 @@
                     $("<td>").text(data.horseMarks[i].movement).appendTo(trj);
                     
                     horseMarks.append(trj);
-                    trh = null;
                 }
+                
+                $(".juryRow").hide();
+                $(".horseRow").click(function(e) {
+                    var juryRows = $(this).parent().children(".juryRow");
+                    console.log(juryRows);
+                    juryRows.slideDown();
+                });
             });
         });
     </script>
