@@ -291,7 +291,6 @@ exports.horseCompetition = function(req, res) {
         })
         .populate("horse competition jury")
         .exec(function (err, ent) {
-            console.log(ent);
             res.render("horseCompetition", {
                 competitionId: req.params.competitionId,
                 horseId: req.params.horseId,

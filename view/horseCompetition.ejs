@@ -14,7 +14,39 @@
     $(function() {
         var socket = io.connect('//' + window.location.host, {secure: true});
         
+        socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
+            competitionId: "<%- horseMark.competition._id %>",
+            juryId: "<%- horseMark.jury._id %>",
+            horseId: "<%- horseMark.horse._id %>"
+        });
         
+        setInterval(function() {
+            socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
+                competitionId: "<%- horseMark.competition._id %>",
+                juryId: "<%- horseMark.jury._id %>",
+                horseId: "<%- horseMark.horse._id %>"
+            });
+        }, 5000);
+        
+        socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", function(data) {
+//            data.horseMark
+            var type = $("#type"+data.horseMark.type);
+            type.addClass("active");
+        });
+        
+        var type = $("#type");
+        for (var i=0; i<21; i++) {
+            var div = $("<div>").attr("id", "type"+i).val(i).text(i);
+            div.click(function(e) {
+                socket.emit("changeTypeMarkReq", {
+                    competitionId: "<%- horseMark.competitionId %>",
+                    juryId: "<%- horseMark.juryId %>",
+                    horseId: "<%- horseMark.horseId %>",
+                    type: $(this).val()
+                });
+            });
+            type.append(div);
+        }
     });
     </script>
     <div>
@@ -23,6 +55,17 @@
     </div>
     <h1>Ocena konia: <%- horseMark.horse.horseName %></h1>
     <div>
+        <div id="type">
+            <p>Typ</p>
+        </div>
+        <div id="head">
+        </div>
+        <div id="body">
+        </div>
+        <div id="legs">
+        </div>
+        <div id="movement">
+        </div>
     </div>
 </body>
 

@@ -524,6 +524,30 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
+    socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", function(data) {
+            console.log(data.competitionId);
+            
+            console.log(data.juryId);
+            
+            console.log(data.horseId);
+            
+        db.HorseMark.find({
+            competition: data.competitionId,
+            jury: data.juryId,
+            horse: data.horseId
+        })
+        .populate("horse jury competition")
+        .exec(function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", {
+                    horseMark: ent[0]
+                });
+            }
+        });
+    });
+    
     
     
 });
