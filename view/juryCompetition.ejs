@@ -21,14 +21,19 @@
             juryId: "<%= juryId %>",
         });
         
+        setInterval(function(){ 
+            socket.emit("horsesByCompetitionIdAndJuryIdReq", {
+                competitionId: competitionId,
+                juryId: "<%= juryId %>",
+            });
+        }, 3000);
+        
         socket.on("horsesByCompetitionIdAndJuryIdRes", function(data) {
             var competitions = $("#competitions table");
             competitions.empty();
 
             for (var i=0; i<data.horses.length; i++) {
                 var row = $("<tr />");
-                
-                console.log(data.horses[i]);
                 
                 if (data.horses[i].isActive) {
                     $("<td>").append( $("<a>").attr("href", "/horse/competition/" + data.horses[i].horse._id+"/"+competitionId).text("Koń "+(i+1)) ).appendTo(row);
@@ -38,11 +43,6 @@
                 
                 competitions.append(row);
             }
-            
-            socket.emit("horsesByCompetitionIdAndJuryIdReq", {
-                competitionId: "<%= competitionId %>",
-                juryId: "<%= juryId %>",
-            });
         });
     });
     </script>
