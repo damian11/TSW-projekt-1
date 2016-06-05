@@ -46,6 +46,7 @@
                 //unikalna mapa koni z inicjalnymi wartościami średnich ocen
                 for (var i=0; i<data.horseMarks.length; i++) {
                     horsesAvg[data.horseMarks[i].horse._id] = {
+                        id: data.horseMarks[i].horse._id,
                         type: 0,
                         head: 0,
                         body: 0,
@@ -72,39 +73,50 @@
                     horsesAvg[key].avg = (horsesAvg[key].type + horsesAvg[key].head + horsesAvg[key].body + horsesAvg[key].legs + horsesAvg[key].movement)/5;
                 }
                 
+                var horsesSorted = [];
+                for(var key in horsesAvg) {
+                    horsesSorted.push(horsesAvg[key]);
+                }
+                horsesSorted.sort(function(a, b) {
+                    return b.avg - a.avg;
+                });
+                console.log(horsesSorted);
+                
                 var trj;
                 var trh;
-                for (var i=0; i<data.horseMarks.length; i++) {
-                    trh = $("#"+data.horseMarks[i].horse._id+".horseRow");
-                    if (!trh.length) {
-                        trh = $("<tr>").attr("id", data.horseMarks[i].horse._id).addClass("horseRow");
-                        $("<td>").text(data.horseMarks[i].horse.horseName).appendTo(trh);
-                        $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].type).appendTo(trh);
-                        $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].head).appendTo(trh);
-                        $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].body).appendTo(trh);
-                        $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].legs).appendTo(trh);
-                        $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].movement).appendTo(trh);
-                        $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].avg).appendTo(trh);
-                        horseMarks.append(trh);
+                for (var j=0; j<horsesSorted.length; j++) {
+                    for (var i=0; i<data.horseMarks.length; i++) {
+                        if (horsesSorted[j].id == data.horseMarks[i].horse._id) {
+                            trh = $("#"+data.horseMarks[i].horse._id+".horseRow");
+                            if (!trh.length) {
+                                trh = $("<tr>").attr("id", data.horseMarks[i].horse._id).addClass("horseRow");
+                                $("<td>").text(data.horseMarks[i].horse.horseName).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].type).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].head).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].body).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].legs).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].movement).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].avg).appendTo(trh);
+                                horseMarks.append(trh);
+                            }
+
+                            trj = $("<tr>").addClass("juryRow").attr("horse", data.horseMarks[i].horse._id);
+
+                            $("<td>").text(data.horseMarks[i].jury.firstName + " " + data.horseMarks[i].jury.lastName).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].type).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].head).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].body).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].legs).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].movement).appendTo(trj);
+
+                            horseMarks.append(trj);
+                        }
                     }
-                    
-                    trj = $("<tr>").addClass("juryRow").attr("horse", data.horseMarks[i].horse._id);
-                    
-//                    $("<td>").text(data.horseMarks[i].horse.horseName).appendTo(tr);
-                    $("<td>").text(data.horseMarks[i].jury.firstName + " " + data.horseMarks[i].jury.lastName).appendTo(trj);
-                    $("<td>").text(data.horseMarks[i].type).appendTo(trj);
-                    $("<td>").text(data.horseMarks[i].head).appendTo(trj);
-                    $("<td>").text(data.horseMarks[i].body).appendTo(trj);
-                    $("<td>").text(data.horseMarks[i].legs).appendTo(trj);
-                    $("<td>").text(data.horseMarks[i].movement).appendTo(trj);
-                    
-                    horseMarks.append(trj);
                 }
                 
                 $(".juryRow").hide();
                 $(".horseRow").click(function(e) {
                     var juryRows = $(this).parent().children(".juryRow[horse="+$(this).attr("id")+"]");
-                    console.log(juryRows);
                     juryRows.toggle();
                 });
             });
