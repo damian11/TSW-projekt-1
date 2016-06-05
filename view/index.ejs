@@ -14,7 +14,23 @@
     $(function() {
         var socket = io.connect('//' + window.location.host, {secure: true});
         
+        socket.emit("competitionByActivityReq", {
+            isActive: true
+        });
+        
+        socket.on("competitionByActivityRes", function(data) {
+            var competitions = $("#competitions table tbody");
+            competitions.empty();
 
+            for (var i=0; i<data.competitions.length; i++) {
+                var row = $("<tr />");
+                row.append( $("<td>").append( $("<a>").attr("href", "/showCompetition/"+data.competitions[i]._id).text(data.competitions[i].name) ) );
+                row.append("<td>" + data.competitions[i].date +"</td>");
+                row.append("<td>" + data.competitions[i].comments +"</td>");
+                row.append("<td>" + data.competitions[i].gender +"</td>");
+                competitions.append(row);
+            };
+        });
     });
     </script>
     
@@ -28,7 +44,20 @@
         <% } %>
     </div>
     <h1>Aktywne zawody</h1>
-    <div id="competitions"><table></table></div>
+    <div id="competitions">
+        <table>
+            <thead>
+                <tr>
+                    <td>Nazwa zawodów</td>
+                    <td>Data</td>
+                    <td>Uwagi</td>
+                    <td>Płeć</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>

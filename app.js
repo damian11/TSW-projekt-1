@@ -632,6 +632,19 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
+    
+    
+    socket.on("competitionByActivityReq", function(data) {
+        db.Competition.find({
+            isActive: data.isActive
+        })
+        .exec(function (err, competitions) {
+            socket.emit("competitionByActivityRes", {
+                competitions: competitions
+            });
+        });
+    })
+    
 });
 
 server.listen(3000, function () {
