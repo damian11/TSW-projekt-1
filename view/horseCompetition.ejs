@@ -29,9 +29,21 @@
         }, 5000);
         
         socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", function(data) {
-//            data.horseMark
             var type = $("#type"+data.horseMark.type);
             type.addClass("active");
+            
+            var head = $("#head"+data.horseMark.head);
+            head.addClass("active");
+            
+            var body = $("#body"+data.horseMark.body);
+            body.addClass("active");
+            
+            var legs = $("#legs"+data.horseMark.legs);
+            legs.addClass("active");
+            
+            var movement = $("#movement"+data.horseMark.movement);
+            movement.addClass("active");
+            
         });
         
         var type = $("#type");
@@ -47,6 +59,62 @@
             });
             type.append(div);
         }
+        
+        var head = $("#head");
+        for (var i=0; i<21; i++) {
+            var div = $("<div>").attr("id", "head"+i).val(i).text(i);
+            div.click(function(e) {
+                socket.emit("changeHeadMarkReq", {
+                    competitionId: "<%- horseMark.competitionId %>",
+                    juryId: "<%- horseMark.juryId %>",
+                    horseId: "<%- horseMark.horseId %>",
+                    head: $(this).val()
+                });
+            });
+            head.append(div);
+        }
+        
+        var body = $("#body");
+        for (var i=0; i<21; i++) {
+            var div = $("<div>").attr("id", "body"+i).val(i).text(i);
+            div.click(function(e) {
+                socket.emit("changeBodyMarkReq", {
+                    competitionId: "<%- horseMark.competitionId %>",
+                    juryId: "<%- horseMark.juryId %>",
+                    horseId: "<%- horseMark.horseId %>",
+                    body: $(this).val()
+                });
+            });
+            body.append(div);
+        }
+        
+        var legs = $("#legs");
+        for (var i=0; i<21; i++) {
+            var div = $("<div>").attr("id", "legs"+i).val(i).text(i);
+            div.click(function(e) {
+                socket.emit("changeLegsMarkReq", {
+                    competitionId: "<%- horseMark.competitionId %>",
+                    juryId: "<%- horseMark.juryId %>",
+                    horseId: "<%- horseMark.horseId %>",
+                    legs: $(this).val()
+                });
+            });
+            legs.append(div);
+        }
+        
+        var movement = $("#movement");
+        for (var i=0; i<21; i++) {
+            var div = $("<div>").attr("id", "movement"+i).val(i).text(i);
+            div.click(function(e) {
+                socket.emit("changeMovementMarkReq", {
+                    competitionId: "<%- horseMark.competitionId %>",
+                    juryId: "<%- horseMark.juryId %>",
+                    horseId: "<%- horseMark.horseId %>",
+                    movement: $(this).val()
+                });
+            });
+            movement.append(div);
+        }
     });
     </script>
     <div>
@@ -59,12 +127,16 @@
             <p>Typ</p>
         </div>
         <div id="head">
+            <p>Głowa</p>
         </div>
         <div id="body">
+            <p>Tułów</p>
         </div>
         <div id="legs">
+            <p>Nogi</p>
         </div>
         <div id="movement">
+            <p>Ruch</p>
         </div>
     </div>
 </body>
