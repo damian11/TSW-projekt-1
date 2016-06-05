@@ -59,11 +59,10 @@
             });
         });
         
-        var type = $("#type");
-        for (var i=0; i<21; i++) {
+        for (var i=1; i<21; i++) {
+            var type = $("#type");
             var div = $("<div>").attr("id", "type"+i).val(i).text(i);
             div.click(function(e) {
-                console.log($(this).val());
                 socket.emit("changeTypeMarkReq", {
                     competitionId: "<%- horseMark.competition._id %>",
                     juryId: "<%- horseMark.jury._id %>",
@@ -72,10 +71,8 @@
                 });
             });
             type.append(div);
-        }
-        
-        var head = $("#head");
-        for (var i=0; i<21; i++) {
+            
+            var head = $("#head");
             var div = $("<div>").attr("id", "head"+i).val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeHeadMarkReq", {
@@ -86,10 +83,8 @@
                 });
             });
             head.append(div);
-        }
-        
-        var body = $("#body");
-        for (var i=0; i<21; i++) {
+            
+            var body = $("#body");
             var div = $("<div>").attr("id", "body"+i).val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeBodyMarkReq", {
@@ -100,10 +95,8 @@
                 });
             });
             body.append(div);
-        }
-        
-        var legs = $("#legs");
-        for (var i=0; i<21; i++) {
+            
+            var legs = $("#legs");
             var div = $("<div>").attr("id", "legs"+i).val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeLegsMarkReq", {
@@ -114,10 +107,8 @@
                 });
             });
             legs.append(div);
-        }
-        
-        var movement = $("#movement");
-        for (var i=0; i<21; i++) {
+            
+            var movement = $("#movement");
             var div = $("<div>").attr("id", "movement"+i).val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeMovementMarkReq", {
@@ -132,6 +123,7 @@
     });
     </script>
     <div>
+        <div><a href="/jury/competition/<%- horseMark.competition._id %>">Powrót do strony zawodów</a></div>
         <div><a href="/profile">Edycja profilu</a></div>
         <div><a href="/logout">Wyloguj</a></div>
     </div>
