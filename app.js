@@ -650,7 +650,14 @@ sio.sockets.on('connection', function (socket) {
         db.HorseMark.find({
             competition: data.competitionId
         })
-        .populate("horse competition jury") 
+        .populate("horse competition jury")
+        .exec(function(err, horseMarks) {
+            console.log(horseMarks);
+            
+            socket.emit("horseMarkByCompetitionIdRes", {
+                horseMarks: horseMarks
+            });
+        });
     });
     
 });

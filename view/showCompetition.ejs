@@ -4,55 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <title>Zawody</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
+<!--    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    -->
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
     <script>
-    $(function() {
-        var socket = io.connect('//' + window.location.host, {secure: true});
-        
-        var competitionId = "<%= competitionId %>";
-        
-        socket.emit("horseMarkByCompetitionIdReq", {
-            competitionId: competitionId
+        $(function() {
+            var socket = io.connect('//' + window.location.host, {secure: true});
+
+            var competitionId = "<%= competitionId %>";
+
+            socket.emit("horseMarkByCompetitionIdReq", {
+                competitionId: competitionId
+            });
+            
+            setInterval(function() {
+                socket.emit("horseMarkByCompetitionIdReq", {
+                    competitionId: competitionId
+                });
+            }, 5000);
+
+            socket.on("horseMarkByCompetitionIdRes", function(data) {
+                var horseMarks = $("#horseMarks table tbody");
+                horseMarks.empty();
+                var horses = {};
+                
+                for (var i=0; i<data.horseMarks.length; i++) {
+                    horses[data.horseMarks[i].horse._id] = {
+                    };
+                }
+                console.log(horses);
+                
+                var tr;
+                for (var i=0; i<data.horseMarks.length; i++) {
+                    tr = $("<tr>");
+                    
+//                    $("<td>").text(data.horseMarks[i].horse.horseName).appendTo(tr);
+                    $("<td>").text(data.horseMarks[i].jury.firstName + " " + data.horseMarks[i].jury.lastName).appendTo(tr);
+                    $("<td>").text(data.horseMarks[i].type).appendTo(tr);
+                    $("<td>").text(data.horseMarks[i].head).appendTo(tr);
+                    $("<td>").text(data.horseMarks[i].body).appendTo(tr);
+                    $("<td>").text(data.horseMarks[i].legs).appendTo(tr);
+                    $("<td>").text(data.horseMarks[i].movement).appendTo(tr);
+                    
+                    horseMarks.append(tr);
+                }
+            });
         });
-        
-        socket.on("horseMarkByCompetitionIdRes", function(data) {
-            //TODO
-        });
-        
-//        socket.emit("competitionByActivityReq", {
-//            isActive: true
-//        });
-//        
-//        socket.on("competitionByActivityRes", function(data) {
-//            var competitions = $("#competitions table tbody");
-//            competitions.empty();
-//
-//            for (var i=0; i<data.competitions.length; i++) {
-//                var row = $("<tr />");
-//                row.append( $("<td>").append( $("<a>").attr("href", "/showCompetition/"+data.competitions[i]._id).text(data.competitions[i].name) ) );
-//                row.append("<td>" + data.competitions[i].date +"</td>");
-//                row.append("<td>" + data.competitions[i].comments +"</td>");
-//                row.append("<td>" + data.competitions[i].gender +"</td>");
-//                competitions.append(row);
-//            };
-//        });
-    });
     </script>
     
-    <h1>Aktywne zawody</h1>
-    <div id="competitions">
+    <h1>Tablica wyników</h1>
+    <h1 id="competitionLabel">Zawody: </h1>
+    <div id="horseMarks">
         <table>
             <thead>
                 <tr>
-                    <td>Nazwa zawodów</td>
-                    <td>Data</td>
-                    <td>Uwagi</td>
-                    <td>Płeć</td>
+                    <td>Koń</td>
+                    <td>Typ</td>
+                    <td>Głowa</td>
+                    <td>Ciało</td>
+                    <td>Nogi</td>
+                    <td>Ruch</td>
+                    <td>Średnia</td>
                 </tr>
             </thead>
             <tbody>
