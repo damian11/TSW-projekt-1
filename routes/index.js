@@ -3,17 +3,22 @@ var exports = module.exports = {};
 var db = require("../db");
 
 exports.index = function (req, res) {
-    var body = '<html><body>';
-    var username;
     if (req.user) {
-        username = req.user.username;
-        body += '<p>Jesteś zalogowany jako „' + username + '”</p>';
-        body += '<a href="/logout">Wyloguj</a>';
+        db.User.findOne({
+            username: req.user.username
+        })
+        .exec(function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("index", {
+                    user: ent
+                });
+            }
+        });
     } else {
-        body += '<a href="/login">Zaloguj</a>';
+        res.render("index");
     }
-    body += '</body></html>';
-    res.send(body);
 };
 
 exports.login = function (req, res) {

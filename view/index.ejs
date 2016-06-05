@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Zawody</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <script>
+    $(function() {
+        var socket = io.connect('//' + window.location.host, {secure: true});
+        
+
+    });
+    </script>
+    
+    <div>
+        <% if(typeof user != 'undefined') { %>
+            <p>Witaj: <%= user.firstName %> <%= user.lastName %></p>
+            <div><a href="/profile">Edycja profilu</a></div>
+            <div><a href="/logout">Wyloguj</a></div>
+        <% } else { %>
+            <div><a href="/logout">Zaloguj</a></div>
+        <% } %>
+    </div>
+    <h1>Aktywne zawody</h1>
+    <div id="competitions"><table></table></div>
+</body>
+
+</html>
