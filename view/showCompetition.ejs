@@ -83,8 +83,7 @@
                         horseMarks.append(trh);
                     }
                     
-                    
-                    trj = $("<tr>").addClass("juryRow");
+                    trj = $("<tr>").addClass("juryRow").attr("horse", data.horseMarks[i].horse._id);
                     
 //                    $("<td>").text(data.horseMarks[i].horse.horseName).appendTo(tr);
                     $("<td>").text(data.horseMarks[i].jury.firstName + " " + data.horseMarks[i].jury.lastName).appendTo(trj);
@@ -99,9 +98,9 @@
                 
                 $(".juryRow").hide();
                 $(".horseRow").click(function(e) {
-                    var juryRows = $(this).parent().children(".juryRow");
+                    var juryRows = $(this).parent().children(".juryRow[horse="+$(this).attr("id")+"]");
                     console.log(juryRows);
-                    juryRows.slideDown();
+                    juryRows.toggle();
                 });
             });
         });
