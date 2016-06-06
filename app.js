@@ -489,14 +489,30 @@ sio.sockets.on('connection', function (socket) {
     
     
     
-    socket.on("competitionActivateReq", function(data) {
+    socket.on("competitionStartReq", function(data) {
+       
         db.Competition.findById(data.competitionId, function(err, ent) {
             ent.isActive = true;
             ent.save(function(err) {
                 if (err) {
                     console.log(err);
                 } else {
-                    socket.emit("competitionActivateRes", {
+                    socket.emit("competitionStartRes", {
+                        competitionId: ent._id
+                    });
+                }
+            });
+        });
+    });
+    
+        socket.on("competitionStopReq", function(data) {
+        db.Competition.findById(data.competitionId, function(err, ent) {
+            ent.isActive = false;
+            ent.save(function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    socket.emit("competitionStopRes", {
                         competitionId: ent._id
                     });
                 }
@@ -690,6 +706,23 @@ sio.sockets.on('connection', function (socket) {
             });
         });
     });
+    
+   socket.on("competitionListReq", function(data){
+       db.Competition
+       .find()
+       .exec(function(err, competitions) {
+           if(err) {
+               console.log(err);
+           }else {
+               socket.emit("competitionListRes", {
+                   competitions: competitions
+               });
+           }
+           
+       });
+   }); 
+    
+    
     
 });
 

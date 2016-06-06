@@ -218,12 +218,21 @@ exports.administrator = function (req, res) {
                 res.render("administrator", {
                     loggedUser: req.session.loggedUser
                 });
+            } else {
+                res.render("unauthorized", {
+                    loggedUser: req.session.loggedUser
+                });
             }
+        } else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+            });
         }
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
     }
-    res.render("unauthorized", {
-        loggedUser: req.session.loggedUser
-    });
 }
 
 exports.newCompetition = function (req, res) {

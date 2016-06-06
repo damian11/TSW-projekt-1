@@ -167,13 +167,25 @@
             window.location = "/newCompetitionStep2/" + data.competitionId;
         });
         
-        $("#competitionActivity").click(function(e) {
-            socket.emit("competitionActivateReq", {
+        $("#competitionStart").click(function(e) {
+            socket.emit("competitionStartReq", {
                 competitionId: "<%= competition._id %>"
             });
         });
+            socket.on("competitionStartRes", function(data){
+                $("#competitionStatus").text("Aktywne");
+            });
+            
+        $("#competitionStop").click(function(e) {
+            socket.emit("competitionStopReq", {
+                competitionId: "<%= competition._id %>"
+            });
+        });
+                    socket.on("competitionStopRes", function(data){
+                $("#competitionStatus").text("Nieaktywne");
+            });
+            
     });
-        
         
         
     </script>
@@ -181,7 +193,10 @@
     <input type="hidden" id="competitionId" value="<%= competition._id %>" />
 
     <h1>Widok zawodów <%= competition.name %></h1>
-    <div id="competitionActivity">Status: <%= competition.isActive ? "Aktywne" : "Nieaktywne" %></div>
+    
+    <div id="competitionStart">Rozpocznij</div>
+    <div id="competitionStop">Zakończ</div>
+    <div id="competitionStatus">Status: <%= competition.isActive ? "Aktywne" : "Nieaktywne" %></div>
     <h2>Konie w zawodach</h2>
     <div id="horsesInCompetition"></div>
     <h2>Dostępne konie</h2>
@@ -190,6 +205,7 @@
     <div id="juriesInCompetition"></div>
     <h2>Dostępni sędziowie</h2>
     <div id="juries"><table></table></div>
+
    
     
 </body>

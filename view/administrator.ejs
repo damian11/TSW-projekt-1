@@ -13,105 +13,106 @@
 <body>
 
     <script>
+        $(function() {
         
-        ///////////////////CRUD KONIA    
-    var socket = io.connect('//' + window.location.host, {secure: true});
-    socket.emit("horsesReq");
-    socket.on("horsesRes", function(data) {
-        var horsesList = $("#horsesList table tbody");
-        horsesList.empty();
-        
-        for (var i=0; i<data.length; i++) {
-            var row = $("<tr />");
-            row.append("<td>" + data[i].horseName +"</td>");
-//            row.append("<td>" + data[i].gender +"</td>");
-            row.append("<td>" + ( (data[i].gender)=="MALE" ? "Ogier" : "Klacz" ) + "</td>");
-            row.append("<td>" + data[i].owner +"</td>");
-            row.append("<td>" + data[i].dateOfBirth +"</td>");
-            
-            var buttons = $("<td>");
-            
-            var editButton = $("<span>");
-            editButton.attr("horseId", data[i]._id)
-            var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
-            editButton.click(function(e) {
-                socket.emit("horseReadByIDReq", {
-                    horseId: $(this).attr("horseId")
-                });
-            });
-            buttons.append(editButton);
-            
-            //remove_circle_outline
-            var deleteButton = $("<span>");    
-            deleteButton.attr("horseId", data[i]._id)
-             var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
-            deleteButton.click(function(e) {
-                socket.emit("horseDeleteByIDReq", {
-                    horseId: $(this).attr("horseId")
-                });
-            });
-            buttons.append(deleteButton);
-            row.append(buttons);
-            horsesList.append(row);
-        }
-    });
-        
-    socket.on("horseDeleteByIDRes", function(data) {
-        socket.emit("horsesReq");
-    });
-        
-    socket.on("horseReadByIDRes", function(data) {
-        console.log(data.data);
-        $("#horseId").val(data.data._id);
-        $("#horseName").val(data.data.horseName);
-        $("#gender").val(data.data.gender);
-        $("#owner").val(data.data.owner);
-        $("#dateOfBirth").val(data.data.dateOfBirth);
-    });
-        
-///////////////CRUD SĘDZIEGO        
-    socket.emit("juryReq");
-    socket.on("juryRes", function(data){
-       
-        var juryList = $("#juryList table tbody");
-            juryList.empty();
-//              console.log(JSON.stringify(data));
+            ///////////////////CRUD KONIA    
+            var socket = io.connect('//' + window.location.host, {secure: true});
+            socket.emit("horsesReq");
+            socket.on("horsesRes", function(data) {
+            var horsesList = $("#horsesList table tbody");
+            horsesList.empty();
+
             for (var i=0; i<data.length; i++) {
                 var row = $("<tr />");
-                row.append("<td>" + data[i].username +"</td>");
-                row.append("<td>" + data[i].firstName +"</td>");
-                row.append("<td>" + data[i].lastName +"</td>");
-                row.append("<td>" + data[i].password +"</td>");
+                row.append("<td>" + data[i].horseName +"</td>");
+    //            row.append("<td>" + data[i].gender +"</td>");
+                row.append("<td>" + ( (data[i].gender)=="MALE" ? "Ogier" : "Klacz" ) + "</td>");
+                row.append("<td>" + data[i].owner +"</td>");
+                row.append("<td>" + data[i].dateOfBirth +"</td>");
 
                 var buttons = $("<td>");
 
                 var editButton = $("<span>");
-                editButton.attr("userId", data[i]._id)
+                editButton.attr("horseId", data[i]._id)
                 var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
                 editButton.click(function(e) {
-                socket.emit("juryReadByIDReq", {
-                userId: $(this).attr("userId")
+                    socket.emit("horseReadByIDReq", {
+                        horseId: $(this).attr("horseId")
                     });
                 });
                 buttons.append(editButton);
 
-                                //remove_circle_outline
+                //remove_circle_outline
                 var deleteButton = $("<span>");    
-                deleteButton.attr("userId", data[i]._id)
-                var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
+                deleteButton.attr("horseId", data[i]._id)
+                 var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
                 deleteButton.click(function(e) {
-                socket.emit("juryDeleteByIDReq", {
-                        userId: $(this).attr("userId")
+                    socket.emit("horseDeleteByIDReq", {
+                        horseId: $(this).attr("horseId")
                     });
                 });
                 buttons.append(deleteButton);
                 row.append(buttons);
-                juryList.append(row);
+                horsesList.append(row);
             }
-         });
-    socket.on("juryDeleteByIDRes", function(data) {
+        });
+
+        socket.on("horseDeleteByIDRes", function(data) {
+            socket.emit("horsesReq");
+        });
+
+        socket.on("horseReadByIDRes", function(data) {
+            console.log(data.data);
+            $("#horseId").val(data.data._id);
+            $("#horseName").val(data.data.horseName);
+            $("#gender").val(data.data.gender);
+            $("#owner").val(data.data.owner);
+            $("#dateOfBirth").val(data.data.dateOfBirth);
+        });
+
+    ///////////////CRUD SĘDZIEGO        
         socket.emit("juryReq");
-    });
+        socket.on("juryRes", function(data){
+
+            var juryList = $("#juryList table tbody");
+                juryList.empty();
+    //              console.log(JSON.stringify(data));
+                for (var i=0; i<data.length; i++) {
+                    var row = $("<tr />");
+                    row.append("<td>" + data[i].username +"</td>");
+                    row.append("<td>" + data[i].firstName +"</td>");
+                    row.append("<td>" + data[i].lastName +"</td>");
+                    row.append("<td>" + data[i].password +"</td>");
+
+                    var buttons = $("<td>");
+
+                    var editButton = $("<span>");
+                    editButton.attr("userId", data[i]._id)
+                    var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
+                    editButton.click(function(e) {
+                    socket.emit("juryReadByIDReq", {
+                    userId: $(this).attr("userId")
+                        });
+                    });
+                    buttons.append(editButton);
+
+                                    //remove_circle_outline
+                    var deleteButton = $("<span>");    
+                    deleteButton.attr("userId", data[i]._id)
+                    var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
+                    deleteButton.click(function(e) {
+                    socket.emit("juryDeleteByIDReq", {
+                            userId: $(this).attr("userId")
+                        });
+                    });
+                    buttons.append(deleteButton);
+                    row.append(buttons);
+                    juryList.append(row);
+                }
+             });
+        socket.on("juryDeleteByIDRes", function(data) {
+            socket.emit("juryReq");
+        });
         
         socket.on("juryReadByIDRes", function(data) {
         console.log(data.data);
@@ -122,6 +123,36 @@
         $("#password").val(data.data.password);
 
     });
+            
+        
+        
+        socket.emit("competitionListReq");
+        socket.on("competitionListRes", function(data){
+          var  competitionList = $("#competitionList table tbody");
+            competitionList.empty();
+            
+            for(var i=0; i<data.competitions.length; i++){
+                var row = $("<tr />");
+               // row.append("<td>" + data.competitions[i].name + "</td>");
+                $("<a>").attr("href","/newCompetitionStep2/" + data.competitions[i]._id).text(data.competitions[i].name).appendTo(row);
+                row.append("<td>" + data.competitions[i].date + "</td>");
+                row.append("<td>" + data.competitions[i].comments + "</td>");
+                row.append("<td>" + data.competitions[i].gender + "</td>");
+                row.append("<td>" + data.competitions[i].isActive + "</td>");
+                competitionList.append(row);
+                
+            }
+            
+            
+        });
+        
+//var Competition = mongoose.model("Competition", {
+//    name: String,
+//    date: Date,
+//    comments: String,
+//    gender: String,
+//    isActive: Boolean
+        });
         
         
     </script>
@@ -209,6 +240,10 @@
             </tr>
         </table>
     </form>
+      
+
+      
+      
     
     <div id="horsesList">
         <table>
@@ -225,6 +260,23 @@
             </tbody>
         </table>
       </div>
+      <div id="competitionList">
+          <table>
+            <thead>
+                <tr>
+                    <td>Nazwa</td>
+                    <td>Data</td>
+                    <td>Komentarz</td>
+                    <td>Płeć</td>
+                    <td>Aktywność</td>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+      </div>
+      
+      
 </body>
     </div>
     </div>
