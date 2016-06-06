@@ -77,30 +77,65 @@ exports.newHorse = function(req, res) {
 }
 
 exports.newUser = function(req, res) {
-    var user = new db.User({
-        username: req.body.username,
-        password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        isAdmin: (req.body.isAdmin == 'on' ? true : false)
-    });
+    if ( (req.body.userId != "undefined") && (req.body.userId != "")) {
+        db.User.findById(req.body.userId, function(err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                ent.username = req.body.username;
+                ent.firstName = req.body.firstName;
+                ent.lastName = req.body.lastName;
+                ent.password = req.body.password;
+                ent.save(function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.render("administrator", {
+                            message: "Poprawnie zaktualizowano użytkownika w bazie danych"
+                        });
+                    }
+                });
+            }
+        });
+    } else {
+        var user = new db.User({
+            username : req.body.username,
+            firstName: req.body.firstName,
+            lastName : req.body.lastName,
+            password : req.body.password
+        });
 
-    //Create
-    user.save(function (err){
-        if(err){
-              console.log(err);
-          
-          
-        }else if(isAdmin = true){
-              res.redirect("/administrator");
-           
-        }else {
-             res.redirect("/login");
-          
-            
-        }
-        
-    });
+        user.save(function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("administrator", {
+                    message: "Poprawnie zapisano użytkownika w bazie danych"
+                });
+            }
+        });
+    }
+//    var user = new db.User({
+//        username: req.body.username,
+//        password: req.body.password,
+//        firstName: req.body.firstName,
+//        lastName: req.body.lastName,
+//        isAdmin: (req.body.isAdmin == 'on' ? true : false)
+//    });
+//
+//    //Create
+//    user.save(function (err){
+//        if(err){
+//              console.log(err);
+//          
+//          
+//        }else if(isAdmin = true){
+//              res.redirect("/administrator");
+//           
+//        }else {
+//             res.redirect("/login");
+//        }
+//    });
     
 //    //Read
 //    db.User.find({
@@ -254,27 +289,6 @@ exports.GETnewCompetitionStep2 = function (req, res) {
 }
 
 exports.competition = function(req, res) {
-//    db.HorseGroup.find({
-//        competition: req.params.competitionId
-//    })
-//    .populate("horse")
-//    .exec(function(err, horseGroup) {
-//        if (err) {
-//            console.log(err);
-//        } else {
-//            var horses = [];
-//            
-//            for (var i=0; i<horseGroup.length; i++) {
-//                horseGroup[i].horse.isActive = horseGroup[i].isActive;
-//                horses.push(horseGroup[i].horse);
-//            }
-//            
-//            res.render("juryCompetition", {
-//                competitionId: req.params.competitionId,
-//                horses: horses
-//            });
-//        }
-//    });
     if (req.session.loggedUser) {
         res.render("juryCompetition", {
             competitionId: req.params.competitionId,
