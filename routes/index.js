@@ -66,8 +66,12 @@ exports.newHorse = function(req, res) {
     }
 }
 
+exports.registerAdmin = function(req, res) {
+    res.render("registerAdmin");
+}
+
 exports.newUser = function(req, res) {
-    if ( (req.body.userId != "undefined") && (req.body.userId != "")) {
+    if ( (typeof req.body.userId != "undefined") && (req.body.userId != "")) {
         db.User.findById(req.body.userId, function(err, ent) {
             if (err) {
                 console.log(err);
@@ -88,11 +92,19 @@ exports.newUser = function(req, res) {
             }
         });
     } else {
+//        var user = new db.User({
+//            username : req.body.username,
+//            firstName: req.body.firstName,
+//            lastName : req.body.lastName,
+//            password : req.body.password
+//        });
+        
         var user = new db.User({
-            username : req.body.username,
+            username: req.body.username,
+            password: req.body.password,
             firstName: req.body.firstName,
-            lastName : req.body.lastName,
-            password : req.body.password
+            lastName: req.body.lastName,
+            isAdmin: (req.body.isAdmin == 'on' ? true : false)
         });
 
         user.save(function(err) {

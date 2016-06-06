@@ -93,6 +93,7 @@ app.use(express.static('bower_components'));
 var routes = require('./routes');
 app.get('/', routes.index);
 app.get('/login', routes.login);
+app.get('/registerAdmin', routes.registerAdmin);
 app.post('/newUser', routes.newUser);
 app.post('/newHorse', routes.newHorse)
 app.get('/profile', routes.profile);

@@ -23,7 +23,7 @@
             competitionId: "<%= competition._id %>"
         });
         socket.on("availableHorsesRes", function(data) {
-            var horsesList = $("#horses table");
+            var horsesList = $("#horses table tbody");
             horsesList.empty();
 
             for (var i=0; i<data.length; i++) {
@@ -59,16 +59,16 @@
             competitionId: "<%= competition._id %>"
         });
         socket.on("horsesByCompetitionIDRes", function(data) {
-            var horsesInCompetition = $("#horsesInCompetition");
+            var horsesInCompetition = $("#horsesInCompetition table tbody");
             horsesInCompetition.empty();
 
             for (var i=0; i<data.length; i++) {
                 var row = $("<tr />");
                 row.append("<td>" + data[i].horse.horseName +"</td>");
-                row.append("<td>" + data[i].horse.gender +"</td>");
+                row.append("<td>" + ( data[i].horse.gender == "MALE" ? "Ogier" : "Klacz" ) +"</td>");
                 row.append("<td>" + data[i].horse.owner +"</td>");
                 row.append("<td>" + data[i].horse.dateOfBirth +"</td>");
-                row.append("<td>" + data[i].isActive +"</td>");
+                row.append("<td>" + ( data[i].isActive == true ? "TAK" : "NIE" ) +"</td>");
 
                 <% if (competition.isActive) { %>
                     var activateButton = $("<td>");
@@ -101,7 +101,7 @@
                 <% } %>
             }
         });
-        socket.on("horseDeleteFromCompetitionRes", function(data) {
+        socket.on("horseActivateInCompetitionRes", function(data) {
             window.location = "/newCompetitionStep2/" + data.competitionId;
         });
         socket.on("horseDeleteFromCompetitionRes", function(data) {
@@ -113,7 +113,7 @@
         });
 
         socket.on("availableJuryRes", function(data) {
-            var juryList = $("#juries table");
+            var juryList = $("#juries table tbody");
             juryList.empty();
 
             for (var i=0; i<data.length; i++) {
@@ -133,8 +133,6 @@
                     });
                 });
                 
-
-                
                 <% if (competition.isActive == false)  { %>
                 row.append(addButton);
                 <% } %>
@@ -153,7 +151,7 @@
             competitionId: "<%= competition._id %>"
         });
         socket.on("juriesByCompetitionIDRes", function(data) {
-            var juriesInCompetition = $("#juriesInCompetition");
+            var juriesInCompetition = $("#juriesInCompetition table tbody");
             juriesInCompetition.empty();
 
             for (var i=0; i<data.length; i++) {
@@ -211,6 +209,8 @@
     </script>
     
     <input type="hidden" id="competitionId" value="<%= competition._id %>" />
+    
+    <a href="/administrator">Strona administratora</a>
 
     <h1>Widok zawodów <%= competition.name %></h1>
     
@@ -218,13 +218,71 @@
     <div id="competitionStop">Zakończ</div>
     <div id="competitionStatus">Status: <%= competition.isActive ? "Aktywne" : "Nieaktywne" %></div>
     <h2>Konie w zawodach</h2>
-    <div id="horsesInCompetition"></div>
+    <div id="horsesInCompetition">
+        <table>
+            <thead>
+                <tr>
+                    <td>Nazwa</td>
+                    <td>Płeć</td>
+                    <td>Właściciel</td>
+                    <td>Data urodzenia</td>
+                    <td>Czy aktywny</td>
+                    <td>Operacje</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <h2>Dostępne konie</h2>
-    <div id="horses"><table></table></div>
+    <div id="horses">
+        <table>
+            <thead>
+                <tr>
+                    <td>Nazwa</td>
+                    <td>Płeć</td>
+                    <td>Właściciel</td>
+                    <td>Data urodzenia</td>
+                    <td>Czy aktywny</td>
+                    <td>Operacje</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <h2>sędziowie w zawodach</h2>
-    <div id="juriesInCompetition"></div>
+    <div id="juriesInCompetition">
+        <table>
+            <thead>
+                <tr>
+                    <td>Nazwa użytkownika</td>
+                    <td>Hasło</td>
+                    <td>Imię</td>
+                    <td>Nazwisko</td>
+                    <td>Operacje</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <h2>Dostępni sędziowie</h2>
-    <div id="juries"><table></table></div>
+    <div id="juries">
+        <table>
+            <thead>
+                <tr>
+                    <td>Nazwa użytkownika</td>
+                    <td>Hasło</td>
+                    <td>Imię</td>
+                    <td>Nazwisko</td>
+                    <td>Operacje</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 
    
     

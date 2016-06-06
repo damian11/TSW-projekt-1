@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Test pasport.socketio</title>
+    <title>Strona administratora</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -137,26 +137,16 @@
                 $("<a>").attr("href","/newCompetitionStep2/" + data.competitions[i]._id).text(data.competitions[i].name).appendTo(row);
                 row.append("<td>" + data.competitions[i].date + "</td>");
                 row.append("<td>" + data.competitions[i].comments + "</td>");
-                row.append("<td>" + data.competitions[i].gender + "</td>");
-                row.append("<td>" + data.competitions[i].isActive + "</td>");
+                row.append("<td>" + ( data.competitions[i].gender == "MALE" ? "Ogier" : "Klacz" ) + "</td>");
+                row.append("<td>" + ( data.competitions[i].isActive == true ? "TAK" : "NIE" ) + "</td>");
                 competitionList.append(row);
-                
             }
-            
-            
         });
-        
-//var Competition = mongoose.model("Competition", {
-//    name: String,
-//    date: Date,
-//    comments: String,
-//    gender: String,
-//    isActive: Boolean
         });
         
         
     </script>
-    
+     <div><a href="/profile">Edycja profilu</a></div>
     <div class="message">
         <% if(typeof message != 'undefined') { %>
             <%= message %>
