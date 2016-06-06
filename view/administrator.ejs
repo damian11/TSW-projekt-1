@@ -18,7 +18,7 @@
     var socket = io.connect('//' + window.location.host, {secure: true});
     socket.emit("horsesReq");
     socket.on("horsesRes", function(data) {
-        var horsesList = $("#horsesList table");
+        var horsesList = $("#horsesList table tbody");
         horsesList.empty();
         
         for (var i=0; i<data.length; i++) {
@@ -28,7 +28,9 @@
             row.append("<td>" + data[i].owner +"</td>");
             row.append("<td>" + data[i].dateOfBirth +"</td>");
             
-            var editButton = $("<td>");
+            var buttons = $("<td>");
+            
+            var editButton = $("<span>");
             editButton.attr("horseId", data[i]._id)
             var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
             editButton.click(function(e) {
@@ -36,11 +38,10 @@
                     horseId: $(this).attr("horseId")
                 });
             });
-            row.append(editButton);
-                
+            buttons.append(editButton);
             
             //remove_circle_outline
-            var deleteButton = $("<td>");    
+            var deleteButton = $("<span>");    
             deleteButton.attr("horseId", data[i]._id)
              var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
             deleteButton.click(function(e) {
@@ -48,7 +49,8 @@
                     horseId: $(this).attr("horseId")
                 });
             });
-            row.append(deleteButton);
+            buttons.append(deleteButton);
+            row.append(buttons);
             horsesList.append(row);
         }
     });
@@ -70,41 +72,41 @@
     socket.emit("juryReq");
     socket.on("juryRes", function(data){
        
-        var juryList = $("#juryList table");
+        var juryList = $("#juryList table tbody");
             juryList.empty();
 //              console.log(JSON.stringify(data));
             for (var i=0; i<data.length; i++) {
-            var row = $("<tr />");
-            row.append("<td>" + data[i].username +"</td>");
-            row.append("<td>" + data[i].firstName +"</td>");
-            row.append("<td>" + data[i].lastName +"</td>");
-            row.append("<td>" + data[i].password +"</td>");
-            var deleteButton = $("<td>");
-                
-                
-            var editButton = $("<td>");
-            editButton.attr("userId", data[i]._id)
-            var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
-            editButton.click(function(e) {
-            socket.emit("juryReadByIDReq", {
-            userId: $(this).attr("userId")
+                var row = $("<tr />");
+                row.append("<td>" + data[i].username +"</td>");
+                row.append("<td>" + data[i].firstName +"</td>");
+                row.append("<td>" + data[i].lastName +"</td>");
+                row.append("<td>" + data[i].password +"</td>");
+
+                var buttons = $("<td>");
+
+                var editButton = $("<span>");
+                editButton.attr("userId", data[i]._id)
+                var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
+                editButton.click(function(e) {
+                socket.emit("juryReadByIDReq", {
+                userId: $(this).attr("userId")
+                    });
                 });
-            });
-            row.append(editButton);   
-                
-                
-                            //remove_circle_outline
-            var deleteButton = $("<td>");    
-            deleteButton.attr("userId", data[i]._id)
-            var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
-            deleteButton.click(function(e) {
-            socket.emit("juryDeleteByIDReq", {
-                    userId: $(this).attr("userId")
+                buttons.append(editButton);
+
+                                //remove_circle_outline
+                var deleteButton = $("<span>");    
+                deleteButton.attr("userId", data[i]._id)
+                var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
+                deleteButton.click(function(e) {
+                socket.emit("juryDeleteByIDReq", {
+                        userId: $(this).attr("userId")
+                    });
                 });
-            });
-            row.append(deleteButton);
-                    juryList.append(row);
-                }
+                buttons.append(deleteButton);
+                row.append(buttons);
+                juryList.append(row);
+            }
          });
     socket.on("juryDeleteByIDRes", function(data) {
         socket.emit("juryReq");
@@ -157,14 +159,28 @@
             </tr>
         </table>
     </form>
-        <div id="juryList"><table></table></div>
+    <div id="juryList">
+        <table>
+            <thead>
+                <tr>
+                    <td>Nazwa użytkownika</td>
+                    <td>Imię</td>
+                    <td>Nazwisko</td>
+                    <td>Hasło</td>
+                    <td>Operacje</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+      </div>
         
     
     
     <h1>Dodaj konia</h1>
+    <input type="hidden" name="horseId" id="horseId" value="" />
     <form action="/newHorse" method="post">
         <table>
-            <input type="hidden" name="horseId" id="horseId" value="" />
             <tr>
                 <td><label for="horseName">Nazwa</label></td>
                 <td><input type="text" name="horseName" id="horseName" /></td>
@@ -193,7 +209,21 @@
         </table>
     </form>
     
-    <div id="horsesList"><table></table></div>
+    <div id="horsesList">
+        <table>
+            <thead>
+                <tr>
+                    <td>Nazwa</td>
+                    <td>Płeć</td>
+                    <td>Właściciel</td>
+                    <td>Data urodzenia</td>
+                    <td>Operacje</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+      </div>
 </body>
     </div>
     </div>
