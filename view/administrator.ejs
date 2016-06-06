@@ -24,7 +24,8 @@
         for (var i=0; i<data.length; i++) {
             var row = $("<tr />");
             row.append("<td>" + data[i].horseName +"</td>");
-            row.append("<td>" + data[i].gender +"</td>");
+//            row.append("<td>" + data[i].gender +"</td>");
+            row.append("<td>" + ( (data[i].gender)=="MALE" ? "Ogier" : "Klacz" ) + "</td>");
             row.append("<td>" + data[i].owner +"</td>");
             row.append("<td>" + data[i].dateOfBirth +"</td>");
             

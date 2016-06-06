@@ -45,15 +45,20 @@ var db = require("./db");
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        
+                    console.log("passport - przed wybieraniem z bazy");
+                    console.log("passport - username: " + username);
+                    console.log("passport - password: " + password);
         db.User.findOne({
             username: username,
             password: password
         }, function (err, ent) {
+                    console.log("passport - po zapytaniu do bazy");
             if (err) {
+                    console.log("passport - błą - " + err);
                 console.log(err);
                 return done(err);
             } else {
+                    console.log("passport - poprawnie zapytanie do bazy");
                 if (ent) {
                     console.log("Udane logowanie:");
                     console.log(ent);
@@ -62,6 +67,7 @@ passport.use(new LocalStrategy(
                         password: ent.password
                     });
                 } else {
+                    console.log("passport - błąd logowania");
                     return done(null, false, {message: "Błąd logowania"});
                 }
             }
@@ -100,17 +106,23 @@ app.post('/login',
         failureRedirect: '/login'
     }),
     function (req, res) {
+    console.log("przed zapytaniem");
         db.User.findOne({
             username: req.user.username
         }, function (err, ent) {
+    console.log("wykoanne zapytanie w bazie");
             req.session.loggedUser = ent;
             
             if (err) {
-                    res.redirect('/login');
+    console.log("błąd wybierania użytkownika z bazy");
+                res.redirect('/login');
             } else {
+    console.log("znaleziony użytkownik");
                 if(req.session.loggedUser.isAdmin) {
+    console.log("przekierowanie administrator");
                     res.redirect('/administrator');
                 } else {
+    console.log("przekierowanie jury");
                     res.render('jury', {
                         loggedUser: ent
                     });

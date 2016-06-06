@@ -22,17 +22,7 @@ exports.index = function (req, res) {
 };
 
 exports.login = function (req, res) {
-    var body = '<html><body>';
-    body += '<form action="/login" method="post">';
-    body += '<div><label>Użytkownik:</label>';
-    body += '<input type="text" name="username"/><br/></div>';
-    body += '<div><label>Hasło:</label>';
-    body += '<input type="password" name="password"/></div>';
-    body += '<div><input type="submit" value="Zaloguj"/></div></form>';
-    body += '<a href="/registerAdmin.html">Utwórz administratora</a>';
-
-    body += '</body></html>';
-    res.send(body);
+    res.render("login");
 };
 
 exports.newHorse = function(req, res) {
@@ -216,20 +206,24 @@ exports.editProfile = function (req, res) {
 
 exports.logout = function (req, res) {
     console.log('Wylogowanie...');
+    req.session.loggedUser = null;
     req.logout();
     res.redirect('/login');
 };
 
 exports.administrator = function (req, res) {
-    if (req.session.loggedUser.isAdmin) {
-        res.render("administrator", {
-            loggedUser: req.session.loggedUser
-        });
-    } else {
-        res.render("unauthorized", {
-            loggedUser: req.session.loggedUser
-        });
+    if ( (typeof req.session.loggedUser != "undefined") && (req.session.loggedUser != null) ) {
+        if ( (typeof req.session.loggedUser.isAdmin != "undefined") && (req.session.loggedUser.isAdmin != null) ) {
+            if (req.session.loggedUser.isAdmin) {
+                res.render("administrator", {
+                    loggedUser: req.session.loggedUser
+                });
+            }
+        }
     }
+    res.render("unauthorized", {
+        loggedUser: req.session.loggedUser
+    });
 }
 
 exports.newCompetition = function (req, res) {
