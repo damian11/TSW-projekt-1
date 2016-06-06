@@ -42,7 +42,11 @@
                         horseId: $(this).attr("horseId")
                     });
                 });
-                row.append(addButton);
+               
+                    <%if(competition.isActive == false){%>
+                    
+                    row.append(addButton);
+                    <% }%>
                 horsesList.append(row);
             }
         });
@@ -60,16 +64,20 @@
 
             for (var i=0; i<data.length; i++) {
                 var row = $("<tr />");
-                row.append("<td>" + data[i].horseName +"</td>");
-                row.append("<td>" + data[i].gender +"</td>");
-                row.append("<td>" + data[i].owner +"</td>");
-                row.append("<td>" + data[i].dateOfBirth +"</td>");
+                row.append("<td>" + data[i].horse.horseName +"</td>");
+                row.append("<td>" + data[i].horse.gender +"</td>");
+                row.append("<td>" + data[i].horse.owner +"</td>");
+                row.append("<td>" + data[i].horse.dateOfBirth +"</td>");
                 row.append("<td>" + data[i].isActive +"</td>");
 
                 <% if (competition.isActive) { %>
                     var activateButton = $("<td>");
-                    activateButton.attr("horseId", data[i]._id);
-                    $("<i class='material-icons'>done</i>").appendTo(activateButton);
+                    activateButton.attr("horseId", data[i].horse._id);
+                    if (data[i].isActive == true) {
+                        $("<i class='material-icons'>highlight_off</i>").appendTo(activateButton);
+                    } else {
+                        $("<i class='material-icons'>done</i>").appendTo(activateButton);
+                    }
                     activateButton.click(function(e) {
                         socket.emit("horseActivateInCompetitionReq", {
                             competitionId: '<%= competition._id %>',
@@ -80,7 +88,7 @@
                     horsesInCompetition.append(row);
                 <% } else { %>
                     var deleteButton = $("<td>");
-                    deleteButton.attr("horseId", data[i]._id);
+                    deleteButton.attr("horseId", data[i].horse._id);
                     $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
                     deleteButton.click(function(e) {
                         socket.emit("horseDeleteFromCompetitionReq", {
@@ -124,7 +132,12 @@
                         juryId: $(this).attr("juryId")
                     });
                 });
+                
+
+                
+                <% if (competition.isActive == false)  { %>
                 row.append(addButton);
+                <% } %>
                 juryList.append(row);
             }
         });
@@ -159,7 +172,12 @@
                         juryId: $(this).attr("juryId")
                     });
                 });
-                row.append(deleteButton);
+                <%if(competition.isActive == false){ %>
+                             row.append(deleteButton);
+                
+                   <%  } %>
+                
+        
                 juriesInCompetition.append(row);
             }
         });
@@ -172,19 +190,21 @@
                 competitionId: "<%= competition._id %>"
             });
         });
-            socket.on("competitionStartRes", function(data){
-                $("#competitionStatus").text("Aktywne");
-            });
+        socket.on("competitionStartRes", function(data){
+            $("#competitionStatus").text("Aktywne");
+            window.location = "/newCompetitionStep2/" + data.competitionId;
+        });
             
         $("#competitionStop").click(function(e) {
             socket.emit("competitionStopReq", {
                 competitionId: "<%= competition._id %>"
+                
             });
         });
-                    socket.on("competitionStopRes", function(data){
-                $("#competitionStatus").text("Nieaktywne");
-            });
-            
+        socket.on("competitionStopRes", function(data){
+            $("#competitionStatus").text("Nieaktywne");
+            window.location = "/newCompetitionStep2/" + data.competitionId;
+        });
     });
         
         

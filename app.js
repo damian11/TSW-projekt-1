@@ -316,26 +316,14 @@ sio.sockets.on('connection', function (socket) {
     socket.on("horsesByCompetitionIDReq", function(data) {
         db.HorseGroup.find({
             competition: data.competitionId
-        }, function(err, data) {
+        })
+        .populate("horse")
+        .exec(function(err, data) {
             if(err){
                 console.log(err);
             } else {
                 if (data) {
-                    var horsesIds = [];
-                    
-                    for(var i=0; i<data.length; i++) {
-                        horsesIds.push(data[i].horse);
-                    }
-                    
-//                    select *
-//                        from horse
-//                        where _id in ("54534", "543543", "543523412")
-                    
-                    db.Horse.find({
-                        _id: {$in: horsesIds}
-                    }, function(err, data) {
-                        socket.emit("horsesByCompetitionIDRes", data);
-                    });
+                    socket.emit("horsesByCompetitionIDRes", data);
                 } else {
                     socket.emit("horsesByCompetitionIDRes");
                 }
@@ -385,7 +373,7 @@ sio.sockets.on('connection', function (socket) {
             if (err) {
                 console.log(err);
             } else {
-                ent[0].isActive = true;
+                ent[0].isActive = !ent[0].isActive;
                 ent[0].save(function(err) {
                     if (err) {
                         console.log(err);
