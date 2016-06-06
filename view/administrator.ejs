@@ -11,7 +11,10 @@
 </head>
 
 <body>
+
     <script>
+        
+        ///////////////////CRUD KONIA    
     var socket = io.connect('//' + window.location.host, {secure: true});
     socket.emit("horsesReq");
     socket.on("horsesRes", function(data) {
@@ -38,8 +41,8 @@
             
             //remove_circle_outline
             var deleteButton = $("<td>");    
-            deleteButton.text("Usuń");
             deleteButton.attr("horseId", data[i]._id)
+             var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
             deleteButton.click(function(e) {
                 socket.emit("horseDeleteByIDReq", {
                     horseId: $(this).attr("horseId")
@@ -63,7 +66,7 @@
         $("#dateOfBirth").val(data.data.dateOfBirth);
     });
         
-        
+///////////////CRUD SĘDZIEGO        
     socket.emit("juryReq");
     socket.on("juryRes", function(data){
        
@@ -77,10 +80,45 @@
             row.append("<td>" + data[i].lastName +"</td>");
             row.append("<td>" + data[i].password +"</td>");
             var deleteButton = $("<td>");
+                
+                
+            var editButton = $("<td>");
+            editButton.attr("userId", data[i]._id)
+            var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
+            editButton.click(function(e) {
+            socket.emit("juryReadByIDReq", {
+            userId: $(this).attr("userId")
+                });
+            });
+            row.append(editButton);   
+                
+                
+                            //remove_circle_outline
+            var deleteButton = $("<td>");    
+            deleteButton.attr("userId", data[i]._id)
+            var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
+            deleteButton.click(function(e) {
+            socket.emit("juryDeleteByIDReq", {
+                    userId: $(this).attr("userId")
+                });
+            });
+            row.append(deleteButton);
                     juryList.append(row);
                 }
          });
+    socket.on("juryDeleteByIDRes", function(data) {
+        socket.emit("juryReq");
+    });
+        
+        socket.on("juryReadByIDRes", function(data) {
+        console.log(data.data);
+        $("#userId").val(data.data._id);
+        $("#username").val(data.data.username);    
+        $("#firstName").val(data.data.firstName);
+        $("#lastName").val(data.data.lastName);
+        $("#password").val(data.data.password);
 
+    });
         
         
     </script>
@@ -96,6 +134,7 @@
     <h1>Dodaj sędziego</h1>
     <form action="/newUser" method="post">
         <table>
+                <input type="hidden" name="userId" id="userId" value="" />
             <tr>
                 <td><label for="username">Nazwa użytkownika</label></td>
                 <td><input type="text" name="username" /></td>

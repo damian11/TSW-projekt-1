@@ -245,7 +245,7 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("horseReadByIDReq", function(data) { 
-        db.Horse.findById(data.horseId, function(err, ent) {
+        db.User.findById(data.horseId, function(err, ent) {
             if (err) {
                 console.log(err);
             } else {
@@ -256,10 +256,29 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
-    socket.on("juryReadByIDReq", function(data) { 
-        db.User.findById(data.juryId, function(err, ent) {
+        socket.on("juryDeleteByIDReq", function(data) {
+        db.User.findById(data.userId, function(err, ent) {
             if (err) {
                 console.log(err);
+            } else {
+                ent.remove(function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        socket.emit("juryDeleteByIDRes", {
+                            status: "OK"
+                        });
+                    }
+                });
+            };
+        });
+    });
+    
+    socket.on("juryReadByIDReq", function(data) { 
+        db.User.findById(data.userId, function(err, ent) {
+            if (err) {
+                console.log(err);
+       
             } else {
                 socket.emit("juryReadByIDRes", {
                     data: ent
