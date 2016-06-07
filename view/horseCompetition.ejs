@@ -61,7 +61,7 @@
         
         for (var i=1; i<21; i++) {
             var type = $("#type");
-            var div = $("<div>").attr("id", "type"+i).val(i).text(i);
+            var div = $("<div>").attr("id", "type"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeTypeMarkReq", {
                     competitionId: "<%- horseMark.competition._id %>",
@@ -85,7 +85,7 @@
             head.append(div);
             
             var body = $("#body");
-            var div = $("<div>").attr("id", "body"+i).val(i).text(i);
+            var div = $("<div>").attr("id", "body"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeBodyMarkReq", {
                     competitionId: "<%- horseMark.competition._id %>",
@@ -97,7 +97,7 @@
             body.append(div);
             
             var legs = $("#legs");
-            var div = $("<div>").attr("id", "legs"+i).val(i).text(i);
+            var div = $("<div>").attr("id", "legs"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeLegsMarkReq", {
                     competitionId: "<%- horseMark.competition._id %>",
@@ -109,7 +109,7 @@
             legs.append(div);
             
             var movement = $("#movement");
-            var div = $("<div>").attr("id", "movement"+i).val(i).text(i);
+            var div = $("<div>").attr("id", "movement"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeMovementMarkReq", {
                     competitionId: "<%- horseMark.competition._id %>",

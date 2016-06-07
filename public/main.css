@@ -1,3 +1,9 @@
 div.active {
-    background-color: aquamarine;
+    background-color: red;
+}
+
+div.box {
+
+    display: inline;
+   
 }
