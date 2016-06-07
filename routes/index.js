@@ -11,9 +11,15 @@ exports.index = function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                res.render("index", {
-                    user: ent
-                });
+                if (ent.isAdmin) {
+                    res.render("administrator", {
+                        user: ent
+                    });
+                } else {
+                    res.render("index", {
+                        user: ent
+                    });
+                }
             }
         });
     } else {
@@ -111,9 +117,13 @@ exports.newUser = function(req, res) {
             if (err) {
                 console.log(err);
             } else {
-                res.render("administrator", {
-                    message: "Poprawnie zapisano użytkownika w bazie danych"
-                });
+                if (req.user) {
+                    res.render("administrator", {
+                        message: "Poprawnie zapisano użytkownika w bazie danych"
+                    });
+                } else {
+                    res.render("login");
+                }
             }
         });
     }
@@ -211,7 +221,7 @@ exports.editProfile = function (req, res) {
             
             console.log("Zaktualizowano użytkownika: " + ent.username);
             
-            res.redirect("authorized.html");
+            res.redirect("/");
         }
     });
 }

@@ -374,7 +374,12 @@ sio.sockets.on('connection', function (socket) {
             if (err) {
                 console.log(err);
             } else {
-                ent[0].isActive = !ent[0].isActive;
+//                ent[0].isActive = !ent[0].isActive;
+                if (ent[0].isActive == true) {
+                    ent[0].isActive = false;
+                } else {
+                    ent[0].isActive = true;
+                }
                 ent[0].save(function(err) {
                     if (err) {
                         console.log(err);
@@ -386,18 +391,28 @@ sio.sockets.on('connection', function (socket) {
                                 console.log(err);
                             } else {
                                 for (var i=0;i<juriesInCompetition.length; i++) {
-                                    var horseMark = new db.HorseMark({
-                                        type: 0,
-                                        head: 0,
-                                        body: 0,
-                                        legs: 0,
-                                        movement: 0,
-                                        competition: data.competitionId,
-                                        horse: data.horseId,
-                                        jury: juriesInCompetition[i].jury
-                                    });
-                                    
-                                    horseMark.save();
+//                                    db.HorseMark.find({
+//                                        competition: data.competitionId,
+//                                        horse: data.horseId,
+//                                        jury: juriesInCompetition[i].jury
+//                                    })
+//                                    .exec(function(err, horseMark) {
+//                                        if (horseMark.length == 0) {
+                                            var horseMark = new db.HorseMark({
+                                                type: 0,
+                                                head: 0,
+                                                body: 0,
+                                                legs: 0,
+                                                movement: 0,
+                                                competition: data.competitionId,
+                                                horse: data.horseId,
+                                                jury: juriesInCompetition[i].jury
+                                            });
+
+                                            horseMark.save();
+//                                        console.log(horseMark);
+//                                        }
+//                                    });
                                 }
                                 
                                 socket.emit("horseActivateInCompetitionRes", {

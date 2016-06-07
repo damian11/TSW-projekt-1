@@ -73,7 +73,7 @@
             type.append(div);
             
             var head = $("#head");
-            var div = $("<div>").attr("id", "head"+i).val(i).text(i);
+            var div = $("<div>").attr("id", "head"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
                 socket.emit("changeHeadMarkReq", {
                     competitionId: "<%- horseMark.competition._id %>",
