@@ -1,3 +1,53 @@
+.color-0 { color: #D4BF3F }	/* Main Primary color */
+.color-1 { color: #9C8700 }
+.color-2 { color: #BBA30A }
+.color-3 { color: #FAED9D }
+.color-4 { color: #FBF7DB }
+
+body {
+    background-color:  #FBF7DB;
+    color: #BBA30A;
+    border-color: #D4BF3F;
+    font-family: 'Oswald', sans-serif;
+}
+
+thead tr td {
+  text-align: center;
+  font-weight: 500;
+  margin: 0 20px 0 20px;
+  padding: 0 20px 0 20px;
+  background-color: #FAED9D;
+  border: solid 1px #9C8700;
+}
+
+tbody tr {
+  margin: 0 20px 0 20px;
+  padding: 0 20px 0 20px;
+}
+
+tbody tr td {
+  margin: 0 20px 0 20px;
+  padding: 0 20px 0 20px;
+}
+
+form table, form table tr, form table tr td {
+    border: solid 0px #D4BF3F;
+}
+
+a {
+    color: #9C8700;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #D4BF3F;
+    text-decoration: none;
+}
+
+h1 {
+    color: #9C8700;
+}
+
 div.active {
     background-color: red;
 }
@@ -6,4 +56,14 @@ div.box {
 
     display: inline;
    
+}
+
+div#juryContainer {
+    display: inline-block;
+    margin: 0 50px 0 50px;
+}
+
+div#horseContainer {
+  display: inline-block;
+    margin: 0 50px 0 50px;
 }

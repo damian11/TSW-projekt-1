@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <title>Strona administratora</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
+    <link href='https://fonts.googleapis.com/css?family=Oswald&subset=latin,latin-ext' rel='stylesheet' type='text/css' />
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="/main.css" />
     
 </head>
 
@@ -146,41 +148,44 @@
         
         
     </script>
-     <div><a href="/profile">Edycja profilu</a></div>
-    <div class="message">
-        <% if(typeof message != 'undefined') { %>
-            <%= message %>
-        <% }%>
-    </div>
-    <a href="/newCompetition">Rozpocznij zawody</a>
-    <div class="container">
-  <div class="jumbotron">
-    <h1>Dodaj sędziego</h1>
-    <form action="/newUser" method="post">
-        <table>
-            <input type="hidden" name="userId" id="userId" value="" />
-            <tr>
-                <td><label for="username">Nazwa użytkownika</label></td>
-                <td><input type="text" name="username" id="username"/></td>
-            </tr>
-            <tr>
-                <td><label for="firstName">Imię</label></td>
-                <td><input type="text" name="firstName" id="firstName" /></td>
-            </tr>
-            <tr>
-                <td><label for="lastname">Nazwisko</label></td>
-                <td><input type="text" name="lastName" id="lastName"/></td>
-            </tr>
-            <tr>
-                <td><label for="password">Hasło</label></td>
-                <td><input type="text" name="password" id="password" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" value="Zapisz sędziego" /></td>
-            </tr>
-        </table>
-    </form>
+    <nav>
+        <div>
+            <a href="/profile">Edycja profilu</a>
+            <a href="/newCompetition">Rozpocznij zawody</a>
+        </div>
+        <div class="message">
+            <% if(typeof message != 'undefined') { %>
+                <%= message %>
+            <% }%>
+        </div>
+    </nav>
+    <div id="juryContainer">
+        <h1>Dodaj sędziego</h1>
+        <form action="/newUser" method="post">
+            <table>
+                <input type="hidden" name="userId" id="userId" value="" />
+                <tr>
+                    <td><label for="username">Nazwa użytkownika</label></td>
+                    <td><input type="text" name="username" id="username"/></td>
+                </tr>
+                <tr>
+                    <td><label for="firstName">Imię</label></td>
+                    <td><input type="text" name="firstName" id="firstName" /></td>
+                </tr>
+                <tr>
+                    <td><label for="lastname">Nazwisko</label></td>
+                    <td><input type="text" name="lastName" id="lastName"/></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Hasło</label></td>
+                    <td><input type="text" name="password" id="password" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Zapisz sędziego" /></td>
+                </tr>
+            </table>
+        </form>
     <div id="juryList">
         <table>
             <thead>
@@ -196,9 +201,11 @@
             </tbody>
         </table>
       </div>
+    </div>
         
     
     
+    <div id="horseContainer">
     <h1>Dodaj konia</h1>
     <form action="/newHorse" method="post">
         <input type="hidden" name="horseId" id="horseId" value="" />
@@ -250,7 +257,11 @@
             </tbody>
         </table>
       </div>
+      </div>
+    
+    
       <div id="competitionList">
+          <h1>Lista zawodów</h1>
           <table>
             <thead>
                 <tr>
@@ -268,6 +279,4 @@
       
       
 </body>
-    </div>
-    </div>
 </html>
