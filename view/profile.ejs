@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Edycja profilu</title>
+        <%- include("header") %>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
     <h1>Profil użytkownika</h1>
-    <form action="/editProfile" method="post">
+ 
+    <form action="/editProfile" method="post" class="form-style-6">
         <label for="firstName">Imię</label>
         <% if( (loggedUser != null) && (typeof loggedUser.firstName != 'undefined') ) { %>
             <input type="text" name="firstName" value="<%= loggedUser.firstName %>" /><br/>
@@ -28,12 +30,14 @@
         <input type="text" name="username" value="<%= loggedUser.username %>" /><br/>
         
         <label for="password">Hasło</label>
-        <input type="password" name="password" /><br/>
+        <input type="password" name="password"  value="<%= loggedUser.password %>" /><br/>
         
  
         
         <input type="submit" value="Aktualizuj profil" />
     </form>
+    
+        
 </body>
 
 </html>

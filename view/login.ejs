@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Zawody</title>
+        <%- include("header") %>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -13,7 +14,7 @@
     <div>
         <a href="/registerAdmin">Utwórz administratora</a>
     </div>
-    <form action="/login" method="post">
+    <form action="/login" method="post" class="form-style-6">
         <table>
             <tr>
                 <td><label>Użytkownik:</label></td>

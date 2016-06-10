@@ -4,12 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Strona administratora</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
-    <link href='https://fonts.googleapis.com/css?family=Oswald&subset=latin,latin-ext' rel='stylesheet' type='text/css' />
-    <script src="/jquery/dist/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="/main.css" />
-    
+    <%- include("header") %>
 </head>
 
 <body>
@@ -161,7 +156,7 @@
     </nav>
     <div id="juryContainer">
         <h1>Dodaj sędziego</h1>
-        <form action="/newUser" method="post">
+        <form action="/newUser" method="post" class="form-style-6">
             <table>
                 <input type="hidden" name="userId" id="userId" value="" />
                 <tr>
@@ -207,7 +202,7 @@
     
     <div id="horseContainer">
     <h1>Dodaj konia</h1>
-    <form action="/newHorse" method="post">
+    <form action="/newHorse" method="post" class="form-style-6">
         <input type="hidden" name="horseId" id="horseId" value="" />
         <table>
             <tr>

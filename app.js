@@ -136,6 +136,7 @@ app.get('/logout', routes.logout);
 app.get("/jury/competition/:competitionId", routes.competition);
 app.get("/horse/competition/:horseId/:competitionId", routes.horseCompetition);
 app.get("/showCompetition/:competitionId", routes.showCompetition);
+app.post("/editCompetition", routes.editCompetition);
 
 
 var privateKey = fs.readFileSync( "cert/server-key.pem" );
@@ -159,7 +160,8 @@ let onAuthorizeSuccess = function (data, accept) {
 let onAuthorizeFail = function (data, message, error, accept) {
     if (error) {
         
-        throw new Error(message);
+//        throw new Error(message);
+        console.log(message);
     }
 console.log('Nieudane połączenie z socket.io:', message);
     accept(null, false);

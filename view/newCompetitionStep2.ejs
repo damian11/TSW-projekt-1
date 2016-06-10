@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Zawody</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
-    <script src="/jquery/dist/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <%- include("header") %>
     
 </head>
 
@@ -217,86 +215,124 @@
             $("#competitionStatus").text("Nieaktywne");
             window.location = "/newCompetitionStep2/" + data.competitionId;
         });
+        
+        $("#competitionForm form").hide();
+        <%if(competition.isActive == false){ %>
+            $("#competitionForm h1 a").show();
+        <% } else { %>
+            $("#competitionForm h1 a").hide();
+        <% } %>
+        $("#competitionForm h1 a").click(function(e) {
+            <%if(competition.isActive == false){ %>
+                $("#competitionForm form").toggle();
+            <% } %>
+        });
     });
-        
-        
+       
     </script>
     
     <input type="hidden" id="competitionId" value="<%= competition._id %>" />
     
     <a href="/administrator">Strona administratora</a>
 
-    <h1>Widok zawodów <%= competition.name %></h1>
+    <div id="competitionForm">
+        <h1>Widok zawodów <%= competition.name %> <a>Edytuj</a></h1>
+        <form action="/editCompetition" method="post" class="form-style-6">
+            <input type="hidden" name="competitionId" value="<%= competition._id %>" />
+            <table>
+                <tr>
+                    <td><label>Nazwa</label></td>
+                    <td><input type="text" name="name" value="<%= competition.name %>" /></td>
+                </tr>
+                <tr>
+                    <td><label>Data</label></td>
+                    <td><input type="text" name="date" value="<%= competition.date %>" /></td>
+                </tr>
+                <tr>
+                    <td><label>Uwagi</label></td>
+                    <td><textarea type="text" name="comments" value="<%= competition.comments %>"></textarea></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Zapisz zawody" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
     
     <div id="competitionStart">Rozpocznij</div>
     <div id="competitionStop">Zakończ</div>
     <div id="competitionStatus">Status: <%= competition.isActive ? "Aktywne" : "Nieaktywne" %></div>
-    <h2>Konie w zawodach</h2>
-    <div id="horsesInCompetition">
-        <table>
-            <thead>
-                <tr>
-                    <td>Nazwa</td>
-                    <td>Płeć</td>
-                    <td>Właściciel</td>
-                    <td>Data urodzenia</td>
-                    <td>Czy aktywny</td>
-                    <td>Operacje</td>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-    <div id="horses">
-        <h2>Dostępne konie</h2>
-        <table>
-            <thead>
-                <tr>
-                    <td>Nazwa</td>
-                    <td>Płeć</td>
-                    <td>Właściciel</td>
-                    <td>Data urodzenia</td>
-                
-                    <td>Operacje</td>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-    <h2>sędziowie w zawodach</h2>
-    <div id="juriesInCompetition">
-        <table>
-            <thead>
-                <tr>
-                    <td>Nazwa użytkownika</td>
-                    <td>Hasło</td>
-                    <td>Imię</td>
-                    <td>Nazwisko</td>
-                    <td>Operacje</td>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+    <div class="inline-block">
+        <h2>Konie w zawodach</h2>
+        <div id="horsesInCompetition">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Nazwa</td>
+                        <td>Płeć</td>
+                        <td>Właściciel</td>
+                        <td>Data urodzenia</td>
+                        <td>Czy aktywny</td>
+                        <td>Operacje</td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div id="horses">
+            <h2>Dostępne konie</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Nazwa</td>
+                        <td>Płeć</td>
+                        <td>Właściciel</td>
+                        <td>Data urodzenia</td>
 
-    <div id="juries">
-        <h2>Dostępni sędziowie</h2>
-        <table>
-            <thead>
-                <tr>
-                    <td>Nazwa użytkownika</td>
-                    <td>Hasło</td>
-                    <td>Imię</td>
-                    <td>Nazwisko</td>
-                    <td>Operacje</td>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+                        <td>Operacje</td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="inline-block">
+        <h2>sędziowie w zawodach</h2>
+        <div id="juriesInCompetition">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Nazwa użytkownika</td>
+                        <td>Hasło</td>
+                        <td>Imię</td>
+                        <td>Nazwisko</td>
+                        <td>Operacje</td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="juries">
+            <h2>Dostępni sędziowie</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Nazwa użytkownika</td>
+                        <td>Hasło</td>
+                        <td>Imię</td>
+                        <td>Nazwisko</td>
+                        <td>Operacje</td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
 
    

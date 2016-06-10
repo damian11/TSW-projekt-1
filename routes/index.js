@@ -354,3 +354,16 @@ exports.showCompetition = function(req, res) {
     });
 }
 
+exports.editCompetition = function(req, res) {
+    db.Competition.findById(req.body.competitionId, function (err, ent) {
+        ent.name = req.body.name;
+        ent.date = req.body.date;
+        ent.comments = req.body.comments;
+        ent.save(function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    })
+}
+
