@@ -11,7 +11,7 @@ exports.index = function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                if (ent.isAdmin) {
+                if ( (typeof ent.isAdmin != "undefined") && (ent.isAdmin) ) {
                     res.render("administrator", {
                         user: ent
                     });
@@ -86,6 +86,7 @@ exports.newUser = function(req, res) {
                 ent.firstName = req.body.firstName;
                 ent.lastName = req.body.lastName;
                 ent.password = req.body.password;
+                ent.isAdmin = ent.isAdmin;
                 ent.save(function(err) {
                     if (err) {
                         console.log(err);
@@ -216,7 +217,7 @@ exports.editProfile = function (req, res) {
 //            ent.password = req.body.password;
             ent.firstName = req.body.firstName;
             ent.lastName = req.body.lastName;
-            ent.isAdmin = req.body.isAdmin == 'on' ? true : false;
+            ent.isAdmin = ent.isAdmin;
             ent.save();
             
             console.log("Zaktualizowano użytkownika: " + ent.username);

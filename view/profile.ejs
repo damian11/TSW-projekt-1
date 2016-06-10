@@ -4,37 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Edycja profilu</title>
-        <%- include("header") %>
-    <script src="/socket.io/socket.io.js"></script>
+    <%- include("header") %>
 </head>
 
 <body>
+    
     <h1>Profil użytkownika</h1>
  
     <form action="/editProfile" method="post" class="form-style-6">
-        <label for="firstName">Imię</label>
-        <% if( (loggedUser != null) && (typeof loggedUser.firstName != 'undefined') ) { %>
-            <input type="text" name="firstName" value="<%= loggedUser.firstName %>" /><br/>
-        <% } else { %>
-            <input type="text" name="firstName" /><br/>
-        <% } %>
-        
-        <label for="lastName">Nazwisko</label>
-        <% if( (loggedUser != null) && (typeof loggedUser.lastName != 'undefined') ) { %>
-            <input type="text" name="lastName" value="<%= loggedUser.lastName %>" /><br/>
-        <% } else { %>
-            <input type="text" name="lastName" /><br/>
-        <% } %>
-        
-        <label for="username">Nazwa użytkownika</label>
-        <input type="text" name="username" value="<%= loggedUser.username %>" /><br/>
-        
-        <label for="password">Hasło</label>
-        <input type="password" name="password"  value="<%= loggedUser.password %>" /><br/>
-        
+        <input type="hidden" name="isAdmin" value="<%= loggedUser.isAdmin %>" />
+        <table>
+            <tr>
+                        <td><label for="firstName">Imię</label></td>
+               <td><% if( (loggedUser != null) && (typeof loggedUser.firstName != 'undefined') ) { %>
+                    <input type="text" name="firstName" value="<%= loggedUser.firstName %>" /><br/>
+                <% } else { %>
+                    <input type="text" name="firstName" /><br/>
+                <% } %></td>
+            </tr>
+            <tr>
+                <td><label for="lastName">Nazwisko</label></td>
+                <td><% if( (loggedUser != null) && (typeof loggedUser.lastName != 'undefined') ) { %>
+                    <input type="text" name="lastName" value="<%= loggedUser.lastName %>" /><br/>
+                <% } else { %>
+                    <input type="text" name="lastName" /><br/>
+                <% } %></td>
+            </tr>
+            <tr>
+                <td><label for="username">Nazwa użytkownika</label></td>
+                <td> <input type="text" name="username" value="<%= loggedUser.username %>" /><br/></td>
+            </tr>
+            <tr>
+                <td><label for="password">Hasło</label></td>
+                <td><input type="password" name="password"  value="<%= loggedUser.password %>" /><br/></td>
+            </tr>
  
-        
-        <input type="submit" value="Aktualizuj profil" />
+            <tr>
+                <td><input type="submit" value="Aktualizuj profil" /></td>
+            </tr>
+            </table>
     </form>
     
         

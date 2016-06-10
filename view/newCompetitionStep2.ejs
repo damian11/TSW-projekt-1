@@ -107,6 +107,9 @@
             }
         });
         socket.on("horseActivateInCompetitionRes", function(data) {
+            if (typeof data.message != "undefined") {
+                alert(data.message);
+            }
             window.location = "/newCompetitionStep2/" + data.competitionId;
         });
         socket.on("horseDeleteFromCompetitionRes", function(data) {
@@ -230,6 +233,10 @@
     });
        
     </script>
+    
+    <% if (typeof message != "undefined") { %>
+        <div class="message"></div>
+    <%}%>
     
     <input type="hidden" id="competitionId" value="<%= competition._id %>" />
     
