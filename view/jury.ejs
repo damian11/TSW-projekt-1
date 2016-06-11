@@ -3,11 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Zawody</title>
-        <%- include("header") %>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
-    <script src="/jquery/dist/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <title>11111Zawody</title>
+    <%- include("header") %>
 </head>
 
 <body>
@@ -19,18 +16,19 @@
             userId: "<%= loggedUser._id %>"
         });
         socket.on("findCompetitionByUserIdRes", function(data) {
-            var competitions = $("#competitions table");
+            var competitions = $("#competitions table tbody");
             competitions.empty();
 
-            var row = $("<tr />");
+            var row = $("<tr>");
             if(data.competitions.length == 0) {
                 row.append("<td>" + "Obecnie nie posiadasz żadnych aktywnych zawodów" +"</td>");
                 competitions.append(row);
             } else {
                 for (var i=0; i<data.competitions.length; i++) {
+                    row = $("<tr>");
                     var competitionLink = $("<a>").attr("href", "/jury/competition/" + data.competitions[i]._id).text(data.competitions[i].name);
                     $("<td>").append(competitionLink).appendTo(row);
-                    row.append("<td>" + data.competitions[i].date +"</td>");
+                    row.append("<td>" + ( data.competitions[i].date != null ? data.competitions[i].date : "" ) +"</td>");
                     row.append("<td>" + data.competitions[i].comments +"</td>");
                     competitions.append(row);
                 }
@@ -43,7 +41,19 @@
         <div><a href="/logout">Wyloguj</a></div>
     </div>
     <h1>Twoje aktywne zawody</h1>
-    <div id="competitions"><table></table></div>
+    <div id="competitions">
+        <table>
+            <thead>
+                <tr>
+                    <td>Nazwa</td>
+                    <td>Data</td>
+                    <td>Uwagi</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>

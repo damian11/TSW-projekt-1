@@ -373,7 +373,7 @@ sio.sockets.on('connection', function (socket) {
 //                ent[0].isActive = !ent[0].isActive;
                 if (ent[0].isActive == true) {
                     db.HorseMark.find({
-                        competition: data.competitionId,
+                        competition: data.competitionId,                // select * from horsemark where competition=... and horse=... and (type=0 or head=0 orbody=0 ...)
                         horse: data.horseId,
                         $or: [
                             { type: 0     },
@@ -399,49 +399,9 @@ sio.sockets.on('connection', function (socket) {
                                     if (err) {
                                         console.log(err);
                                     } else {
-                                        db.JuryGroup.find({
-                                            competition: data.competitionId
-                                        }, function (err, juriesInCompetition) {
-                                            if (err) {
-                                                console.log(err);
-                                            } else {
-                                                db.HorseMark.find({
-                                                    horse: data.horseId,
-                                                    competition: data.competitionId
-                                                })
-                                                .remove()
-                                                .exec();
-
-                                                for (var i=0;i<juriesInCompetition.length; i++) {
-                //                                    db.HorseMark.find({
-                //                                        competition: data.competitionId,
-                //                                        horse: data.horseId,
-                //                                        jury: juriesInCompetition[i].jury
-                //                                    })
-                //                                    .exec(function(err, horseMark) {
-                //                                        if (horseMark.length == 0) {
-                                                            var horseMark = new db.HorseMark({
-                                                                type: 0,
-                                                                head: 0,
-                                                                body: 0,
-                                                                legs: 0,
-                                                                movement: 0,
-                                                                competition: data.competitionId,
-                                                                horse: data.horseId,
-                                                                jury: juriesInCompetition[i].jury
-                                                            });
-
-                                                            horseMark.save();
-                //                                        console.log(horseMark);
-                //                                        }
-                //                                    });
-                                                }
-
-                                                socket.emit("horseActivateInCompetitionRes", {
-                                                    competitionId: data.competitionId,
-                                                    horse: ent[0]
-                                                });
-                                            }
+                                        socket.emit("horseActivateInCompetitionRes", {
+                                            competitionId: data.competitionId,
+                                            horse: ent[0]
                                         });
                                     }
                                 });
