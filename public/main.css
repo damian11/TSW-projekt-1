@@ -54,27 +54,27 @@ div.active {
 
 div.box {
     display: inline-block;
-    margin: 0 50px 0 50px;
-    align-content: flex-start;
+    margin: 3px;
+    border: solid 1px #9C8700;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    align-items: center;
 }
 
-div#juryContainer {
-    display: inline-block;
+div.box:hover {
+    background-color: #FAED9D;
+}
+
+div.inline-block {
+    display: inline-table;
     margin: 0 50px 0 50px;
 }
 
-div#horseContainer {
-    display: inline-block;
-    margin: 0 50px 0 50px;
-}
-
-<style type="text/css">
 .form-style-6{
-    font: 95% Arial, Helvetica, sans-serif;
     max-width: 400px;
     margin: 10px auto;
     padding: 16px;
-    background: #F7F7F7;
 }
 .form-style-6 h1{
     background: #BBA30A;
@@ -191,6 +191,9 @@ div#horseContainer {
 	top:1px;
 }
 
+.newCompetitionStep1 {
+ 
+  display: flex;
   align-items: center;
   justify-content: center;
     
