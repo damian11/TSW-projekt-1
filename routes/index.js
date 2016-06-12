@@ -359,11 +359,17 @@ exports.horseCompetition = function(req, res) {
         })
         .populate("horse competition jury")
         .exec(function (err, ent) {
-            res.render("horseCompetition", {
-                competitionId: req.params.competitionId,
-                horseId: req.params.horseId,
-                horseMark: ent[0]
-            });
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("ent[0]");
+                console.log(ent[0]);
+                res.render("horseCompetition", {
+                    competitionId: req.params.competitionId,
+                    horseId: req.params.horseId,
+                    horseMark: ent[0]
+                });
+            }
         });
     } else {
         res.render("unauthorized", {

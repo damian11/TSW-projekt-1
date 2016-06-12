@@ -28,9 +28,13 @@
                 juryId: "<%- horseMark.jury._id %>",
                 horseId: "<%- horseMark.horse._id %>"
             });
-        }, 5000);
+        }, 1000);
         
         socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", function(data) {
+            if(data.status == "NOK") {
+                window.location = "/jury/competition/"+competitionId;
+            }
+            
             $("#type div").removeClass("active");
             var type = $("#type"+data.horseMark.type);
             type.addClass("active");
@@ -176,6 +180,9 @@
             <p>Ruch</p>
         </div>
     </div>
+        <div id="EndMark">
+            <p>Zakończ ocene konia</p>
+        </div>
 </body>
 
 </html>

@@ -395,15 +395,19 @@
                         }
                     }
                 }
-                
-                $(".juryRow").hide();
-                $(".horseRow").click(function(e) {
-                    var juryRows = $(this).parent().children(".juryRow[horse="+$(this).attr("id")+"]");
-                    juryRows.toggle();
-                });
+//                
+//                $(".juryRow").hide();
+//                $(".horseRow").click(function(e) {
+//                    var juryRows = $(this).parent().children(".juryRow[horse="+$(this).attr("id")+"]");
+//                    juryRows.toggle();
+//                });
             });
        
-            
+            <% if(competition.isActive == false){ %>
+                $("#horseMarks").hide();
+                <%}%>
+        
+        
             
     });
      
@@ -529,9 +533,9 @@
 </div>
 
     
-    <h1>Tablica wyników</h1>
-    <h1 id="competitionLabel">Zawody: </h1>
+
     <div id="horseMarks">
+      <h1>Tablica wyników</h1>
         <table>
             <thead>
                 <tr>

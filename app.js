@@ -449,12 +449,31 @@ sio.sockets.on('connection', function (socket) {
                 if (ent.isActive == true) {
                     findNotMarkedHorseAndDeactivate(data.competitionId, data.horseId, ent);
                 } else {
-                    ent.isActive = true;
-                    ent.save(function(err) {
+                    db.HorseGroup.find({
+                        competition: data.competitionId,
+                        isActive: true
+                    })
+                    .exec(function(err, activeHorseGroup) {
                         if (err) {
                             console.log(err);
                         } else {
-                            regenerateHorseMarks(data.competitionId, data.horseId, ent);
+                            if (activeHorseGroup.length != 0) {
+                                socket.emit("horseActivateInCompetitionRes", {
+                                    competitionId: data.competitionId,
+                                    horse: ent,
+                                    message: "Nie można jeszcze aktywować konia - są jeszcze inne aktywne konie w tych zawodach"
+                                });
+                                return;
+                            } else {
+                                ent.isActive = true;
+                                ent.save(function(err) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        regenerateHorseMarks(data.competitionId, data.horseId, ent);
+                                    }
+                                });
+                            }
                         }
                     });
                 }
@@ -612,18 +631,37 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", function(data) {
-        db.HorseMark.findOne({
+        db.HorseGroup.findOne({
             competition: data.competitionId,
-            jury: data.juryId,
-            horse: data.horseId
+            horse: data.horseId,
+            isActive: true
         })
-        .populate("horse jury competition")
-        .exec(function(err, ent) {
+        .exec(function(err, horseGroup) {
             if (err) {
                 console.log(err);
             } else {
-                socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", {
-                    horseMark: ent
+                db.HorseMark.findOne({
+                    competition: data.competitionId,
+                    jury: data.juryId,
+                    horse: data.horseId
+                })
+                .populate("horse jury competition")
+                .exec(function(err, ent) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        if (horseGroup == null) {
+                            socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", {
+                                horseMark: ent,
+                                status: "NOK"
+                            });
+                        } else {
+                            socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", {
+                                horseMark: ent,
+                                status: "OK"
+                            });
+                        }
+                    }
                 });
             }
         });
