@@ -140,8 +140,8 @@
                 competitionList.append(row);
             }
         });
-            
-    ////nie działa        
+   
+        //WALIDACJE
         $("#username").blur(function(e) {
             if ($(this).val() == "") {
                 var msg = $("<p>").text("Podaj nazwę użytkownika");
@@ -150,7 +150,19 @@
             } else {
                 $(this).parent().children("p").remove();
             }
+        });     
+            
+        $("#dateOfBirth").blur(function(e) {
+            if ($(this).val() == "") {
+                var msg = $("<p>").text("Podaj datę urodzenia konia");
+                $(this).parent().children("p").remove();
+                $(this).parent().append(msg);
+            } else {
+                $(this).parent().children("p").remove();
+            }
         });
+            
+            
             
             
     });
@@ -164,7 +176,15 @@ $(document).ready(function(){
     $("competitionv").hide();
     
     <% if (typeof showJuries != "undefined") { %>
-        $("juryv").show();
+        $("juryv").animate({
+            height: 'toggle'
+        });
+    <% } %>
+    
+    <% if (typeof showHorses != "undefined") { %>
+        $("horsev").animate({
+            height: 'toggle'
+        });
     <% } %>
     
     $("#juryvid").click(function(){

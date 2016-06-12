@@ -108,26 +108,24 @@ app.post('/login',
         failureRedirect: '/login'
     }),
     function (req, res) {
-    console.log("przed zapytaniem");
+//    console.log("przed zapytaniem");
         db.User.findOne({
             username: req.user.username
         }, function (err, ent) {
-    console.log("wykoanne zapytanie w bazie");
+//    console.log("wykoanne zapytanie w bazie");
             req.session.loggedUser = ent;
             
             if (err) {
-    console.log("błąd wybierania użytkownika z bazy");
+//    console.log("błąd wybierania użytkownika z bazy");
                 res.redirect('/login');
             } else {
-    console.log("znaleziony użytkownik");
+//    console.log("znaleziony użytkownik");
                 if(req.session.loggedUser.isAdmin) {
-    console.log("przekierowanie administrator");
+//    console.log("przekierowanie administrator");
                     res.redirect('/administrator');
                 } else {
-    console.log("przekierowanie jury");
-                    res.render('jury', {
-                        loggedUser: ent
-                    });
+//    console.log("przekierowanie jury");
+                    res.redirect('/');
                 }
             }
         });
@@ -303,8 +301,8 @@ sio.sockets.on('connection', function (socket) {
             if(err){
                 console.log(err);
             }else{
-                console.log("ent");
-                console.log(ent);
+//                console.log("ent");
+//                console.log(ent);
                 socket.emit("juryRes", ent)
             }
         });
@@ -364,113 +362,107 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
-    socket.on("horseActivateInCompetitionReq", function(data) {
-        db.HorseGroup.find({
-            competition: data.competitionId,
-            horse: data.horseId
-        }, function (err, ent) {
+    function findNotMarkedHorseAndDeactivate(competitionId, horseId, horseEnt) {
+        db.HorseMark.find({
+            competition: competitionId,                // select * from horsemark where competition=... and horse=... and (type=0 or head=0 orbody=0 ...)
+            horse: horseId,
+            $or: [
+                { type: 0     },
+                { head: 0     },
+                { body: 0     },
+                { legs: 0     },
+                { movement: 0 }
+            ]
+        })
+        .exec(function(err, undoneHorseMarks) {
             if (err) {
                 console.log(err);
             } else {
-//                ent[0].isActive = !ent[0].isActive;
-                if (ent[0].isActive == true) {
-                    db.HorseMark.find({
-                        competition: data.competitionId,                // select * from horsemark where competition=... and horse=... and (type=0 or head=0 orbody=0 ...)
-                        horse: data.horseId,
-                        $or: [
-                            { type: 0     },
-                            { head: 0     },
-                            { body: 0     },
-                            { legs: 0     },
-                            { movement: 0 }
-                        ]
-                    })
-                    .exec(function(err, undoneHorseMarks) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            if (undoneHorseMarks.length != 0) {
-                                socket.emit("horseActivateInCompetitionRes", {
-                                    competitionId: data.competitionId,
-                                    horse: ent[0],
-                                    message: "Nie można jeszcze zdeaktywować konia - brak wszystkich wystawionych ocen"
-                                });
-                            } else {
-                                ent[0].isActive = false;
-                                ent[0].save(function(err) {
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        socket.emit("horseActivateInCompetitionRes", {
-                                            competitionId: data.competitionId,
-                                            horse: ent[0]
-                                        });
-                                    }
-                                });
-                            }
-//                            console.log("undoneHorseMarks");
-//                            console.log(undoneHorseMarks);
-                        }
+                if (undoneHorseMarks.length != 0) {
+                    socket.emit("horseActivateInCompetitionRes", {
+                        competitionId: competitionId,
+                        horse: horseEnt,
+                        message: "Nie można jeszcze zdeaktywować konia - brak wszystkich wystawionych ocen"
                     });
                 } else {
-                    ent[0].isActive = true;
-                    ent[0].save(function(err) {
+                    horseEnt.isActive = false;
+                    horseEnt.save(function(err) {
                         if (err) {
                             console.log(err);
                         } else {
-                            db.JuryGroup.find({
-                                competition: data.competitionId
-                            }, function (err, juriesInCompetition) {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    db.HorseMark.find({
-                                        horse: data.horseId,
-                                        competition: data.competitionId
-                                    })
-                                    .remove()
-                                    .exec();
-
-                                    for (var i=0;i<juriesInCompetition.length; i++) {
-    //                                    db.HorseMark.find({
-    //                                        competition: data.competitionId,
-    //                                        horse: data.horseId,
-    //                                        jury: juriesInCompetition[i].jury
-    //                                    })
-    //                                    .exec(function(err, horseMark) {
-    //                                        if (horseMark.length == 0) {
-                                                var horseMark = new db.HorseMark({
-                                                    type: 0,
-                                                    head: 0,
-                                                    body: 0,
-                                                    legs: 0,
-                                                    movement: 0,
-                                                    competition: data.competitionId,
-                                                    horse: data.horseId,
-                                                    jury: juriesInCompetition[i].jury
-                                                });
-
-                                                horseMark.save();
-    //                                        console.log(horseMark);
-    //                                        }
-    //                                    });
-                                    }
-
-                                    socket.emit("horseActivateInCompetitionRes", {
-                                        competitionId: data.competitionId,
-                                        horse: ent[0]
-                                    });
-                                }
+                            socket.emit("horseActivateInCompetitionRes", {
+                                competitionId: competitionId,
+                                horse: horseEnt
                             });
                         }
                     });
                 }
             }
         });
+    }
+    
+    function regenerateHorseMarks(competitionId, horseId, horseEnt) {
+        db.JuryGroup.find({
+            competition: competitionId
+        }, function (err, juriesInCompetition) {
+            if (err) {
+                console.log(err);
+            } else {
+                db.HorseMark.find({
+                    horse: horseId,
+                    competition: competitionId
+                })
+                .remove()
+                .exec();
+
+                for (var i=0;i<juriesInCompetition.length; i++) {
+                    var horseMark = new db.HorseMark({
+                        type: 0,
+                        head: 0,
+                        body: 0,
+                        legs: 0,
+                        movement: 0,
+                        competition: competitionId,
+                        horse: horseId,
+                        jury: juriesInCompetition[i].jury
+                    });
+
+                    horseMark.save();
+                }
+
+                socket.emit("horseActivateInCompetitionRes", {
+                    competitionId: competitionId,
+                    horse: horseEnt
+                });
+            }
+        });
+    }
+    
+    socket.on("horseActivateInCompetitionReq", function(data) {
+        db.HorseGroup.findOne({
+            competition: data.competitionId,
+            horse: data.horseId
+        }, function (err, ent) {
+            if (err) {
+                console.log(err);
+            } else {
+                if (ent.isActive == true) {
+                    findNotMarkedHorseAndDeactivate(data.competitionId, data.horseId, ent);
+                } else {
+                    ent.isActive = true;
+                    ent.save(function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            regenerateHorseMarks(data.competitionId, data.horseId, ent);
+                        }
+                    });
+                }
+            }
+        });
     });
-    
-    
-       socket.on("juryAddToCompetitionReq", function(data) {
+
+    socket.on("juryAddToCompetitionReq", function(data) {
         var juryComp = new db.JuryGroup({
             competition:data.competitionId,
             jury: data.juryId
@@ -761,16 +753,12 @@ sio.sockets.on('connection', function (socket) {
             db.HorseGroup.find({
                 competition: data.competitionId,
                 horse: {$in: horsesIds},
-                isActive: false
+                isActive: true
             })
             .exec(function(err, horses) {
                 if (err) {
                     console.log(err);
                 } else {
-//            console.log("horses");
-//            console.log(horses);
-//            console.log("horseMarks");
-//            console.log(horseMarks);
                     for(var i=0;i<horses.length; i++) {
                         for(var j=0;j<horseMarks.length; j++) {
                             if ( (horses[i].horse == horseMarks[j].horse._id) ){
@@ -779,15 +767,48 @@ sio.sockets.on('connection', function (socket) {
                         }
                     }
                 }
-            
-//                console.log("doneHorseMarks");
-//                console.log(doneHorseMarks);
 
                 socket.emit("horseMarkByCompetitionIdRes", {
                     horseMarks: doneHorseMarks
                 });
-                
-                
+            });
+        });
+    });
+    
+    socket.on("horseMarkByCompetitionIdAdminReq", function(data) {
+        db.HorseMark.find({
+            competition: data.competitionId
+        })
+        .populate("horse competition jury")
+        .exec(function(err, horseMarks) {
+            var doneHorseMarks = [];
+            var horsesIds = [];
+            
+            for(var i=0;i<horseMarks.length; i++) {
+                horsesIds.push(horseMarks[i].horse._id);
+            }
+            
+            db.HorseGroup.find({
+                competition: data.competitionId,
+                horse: {$in: horsesIds},
+                isActive: true
+            })
+            .exec(function(err, horses) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    for(var i=0;i<horses.length; i++) {
+                        for(var j=0;j<horseMarks.length; j++) {
+                            if ( (horses[i].horse == horseMarks[j].horse._id) ){
+                                doneHorseMarks.push(horseMarks[j]);
+                            }
+                        }
+                    }
+                }
+
+                socket.emit("horseMarkByCompetitionIdAdminRes", {
+                    horseMarks: doneHorseMarks
+                });
             });
         });
     });
@@ -808,7 +829,6 @@ sio.sockets.on('connection', function (socket) {
    }); 
     
     socket.on("juryHurryUpReq", function(data) {
-        console.log("juryHurryUpReq");
         hurryUpTab.push({
             competitionId: data.competitionId,
             juryId: data.juryId
@@ -816,10 +836,6 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("shouldIHurryUpReq", function(data) {
-        console.log("shouldIHurryUpReq");
-        console.log(hurryUpTab);
-//        console.log("data");
-//        console.log(data);
         for (var i in hurryUpTab) {
             if ( (hurryUpTab[i].competitionId == data.competitionId)
               && (hurryUpTab[i].juryId == data.juryId) ) {

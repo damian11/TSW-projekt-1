@@ -4,10 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Ocena konia</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" /> 
-    <link rel="stylesheet" href="/main.css" />    
-    <script src="/jquery/dist/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <%- include("header") %>
 </head>
 
 <body>
@@ -76,6 +73,10 @@
             });
             type.append(div);
             
+            if ( ($(document).width() <= 800) && (i==10)){
+                type.append($("<br>"));
+            }
+            
             var head = $("#head");
             var div = $("<div>").attr("id", "head"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
@@ -88,6 +89,9 @@
             });
             head.append(div);
             
+               if ( ($(window).width() <= 800) && (i==10)){
+                head.append($("<br>"));
+            }
             var body = $("#body");
             var div = $("<div>").attr("id", "body"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
@@ -100,6 +104,9 @@
             });
             body.append(div);
             
+               if ( ($(window).width() <= 800) && (i==10)){
+                body.append($("<br>"));
+            }
             var legs = $("#legs");
             var div = $("<div>").attr("id", "legs"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
@@ -112,6 +119,9 @@
             });
             legs.append(div);
             
+               if ( ($(window).width() <= 800) && (i==10)){
+                legs.append($("<br>"));
+            }
             var movement = $("#movement");
             var div = $("<div>").attr("id", "movement"+i).addClass("box").val(i).text(i);
             div.click(function(e) {
@@ -123,8 +133,11 @@
                 });
             });
             movement.append(div);
-        }
-        
+            
+              if ( ($(window).width() <= 800) && (i==10)){
+                movement.append($("<br>"));
+            }           
+        }               
         setInterval(function() {
 //            console.log("shouldIHurryUpReq");
             socket.emit("shouldIHurryUpReq", {
@@ -140,9 +153,9 @@
     });
     </script>
     <div>
-        <div><a href="/jury/competition/<%- horseMark.competition._id %>">Powrót do strony zawodów</a></div>
-        <div><a href="/profile">Edycja profilu</a></div>
-        <div><a href="/logout">Wyloguj</a></div>
+        <a href="/jury/competition/<%- horseMark.competition._id %>">Powrót do strony zawodów</a>
+        <a href="/profile">Edycja profilu</a>
+        <a href="/logout">Wyloguj</a>
     </div>
     <div id="message"></div>
     <h1>Ocena konia: <%- horseMark.horse.horseName %></h1>

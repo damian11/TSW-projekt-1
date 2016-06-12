@@ -16,8 +16,8 @@ exports.index = function (req, res) {
                         user: ent
                     });
                 } else {
-                    res.render("index", {
-                        user: ent
+                    res.render("jury", {
+                        loggedUser: ent
                     });
                 }
             }
@@ -32,43 +32,52 @@ exports.login = function (req, res) {
 };
 
 exports.newHorse = function(req, res) {
-    if ( (req.body.horseId != "undefined") && (req.body.horseId != "")) {
-        db.Horse.findById(req.body.horseId, function(err, ent) {
-            if (err) {
-                console.log(err);
-            } else {
-                ent.horseName = req.body.horseName;
-                ent.gender = req.body.gender;
-                ent.owner = req.body.owner;
-                ent.dateOfBirth = req.body.dateOfBirth;
-                ent.save(function(err) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        res.render("administrator", {
-                            message: "Poprawnie zaktualizowano konia w bazie danych"
-                        });
-                    }
-                });
-            }
+    if (req.body.dateOfBirth == "") {
+        res.render("administrator", {
+            message: "Nie zapisano konia w bazie danych - brak daty urodzenia",
+            showHorses: true
         });
     } else {
-        var horse = new db.Horse({
-            horseName:   req.body.horseName,
-            gender:      req.body.gender,
-            owner:       req.body.owner,
-            dateOfBirth: req.body.dateOfBirth
-        });
+        if ( (req.body.horseId != "undefined") && (req.body.horseId != "")) {
+            db.Horse.findById(req.body.horseId, function(err, ent) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    ent.horseName = req.body.horseName;
+                    ent.gender = req.body.gender;
+                    ent.owner = req.body.owner;
+                    ent.dateOfBirth = req.body.dateOfBirth;
+                    ent.save(function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            res.render("administrator", {
+                                message: "Poprawnie zaktualizowano konia w bazie danych",
+                                showHorses: true
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            var horse = new db.Horse({
+                horseName:   req.body.horseName,
+                gender:      req.body.gender,
+                owner:       req.body.owner,
+                dateOfBirth: req.body.dateOfBirth
+            });
 
-        horse.save(function(err) {
-            if (err) {
-                console.log(err);
-            } else {
-                res.render("administrator", {
-                    message: "Poprawnie zapisano konia w bazie danych"
-                });
-            }
-        });
+            horse.save(function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("administrator", {
+                        message: "Poprawnie zapisano konia w bazie danych",
+                        showHorses: true
+                    });
+                }
+            });
+        }
     }
 }
 
@@ -271,25 +280,31 @@ exports.newCompetition = function (req, res) {
 }
 
 exports.newCompetitionStep2 = function (req, res) {
-    if (req.session.loggedUser.isAdmin) {
-        var competition = new db.Competition({
-            name: req.body.name,
-            date: req.body.date,
-            comments: req.body.comments,
-            gender: req.body.gender,
-            isActive: false
-        });
-        
-        competition.save(function(err) {
-            if (err) {
-                console.log(err);
-            } else {
-                res.render("newCompetitionStep2", {
-                    loggedUser: req.session.loggedUser,
-                    competition: competition
-                });
-            }
-        });
+    if (req.session.loggedUser != null) {
+        if (req.session.loggedUser.isAdmin) {
+            var competition = new db.Competition({
+                name: req.body.name,
+                date: req.body.date,
+                comments: req.body.comments,
+                gender: req.body.gender,
+                isActive: false
+            });
+
+            competition.save(function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("newCompetitionStep2", {
+                        loggedUser: req.session.loggedUser,
+                        competition: competition
+                    });
+                }
+            });
+        } else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+            });
+        }
     } else {
         res.render("unauthorized", {
             loggedUser: req.session.loggedUser
@@ -298,17 +313,23 @@ exports.newCompetitionStep2 = function (req, res) {
 }
 
 exports.GETnewCompetitionStep2 = function (req, res) {
-    if (req.session.loggedUser.isAdmin) {
-        db.Competition.findById(req.params.competitionId, function(err, ent) {
-            if (err) {
-                console.log(err);
-            } else {
-                res.render("newCompetitionStep2", {
-                    loggedUser: req.session.loggedUser,
-                    competition: ent
-                });
-            }
-        });
+    if (req.session.loggedUser != null) {
+        if (req.session.loggedUser.isAdmin) {
+            db.Competition.findById(req.params.competitionId, function(err, ent) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("newCompetitionStep2", {
+                        loggedUser: req.session.loggedUser,
+                        competition: ent
+                    });
+                }
+            });
+        } else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+            });
+        }
     } else {
         res.render("unauthorized", {
             loggedUser: req.session.loggedUser
@@ -365,6 +386,11 @@ exports.editCompetition = function(req, res) {
         ent.save(function (err) {
             if (err) {
                 console.log(err);
+            } else {
+                res.render("newCompetitionStep2", {
+                    loggedUser: req.session.loggedUser,
+                    competition: ent
+                });
             }
         });
     })

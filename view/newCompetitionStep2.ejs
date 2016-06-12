@@ -10,7 +10,7 @@
 
 <body>
     <script>
-    $(function() {
+    $(document).ready(function(){
         var socket = io.connect('//' + window.location.host, {secure: true});
         
         socket.on("competitionActivateRes", function(data) {
@@ -24,19 +24,13 @@
         socket.on("availableHorsesRes", function(data) {
             var horsesList = $("#horses table tbody");
             horsesList.empty();
-            
-            if ( (data.length == 0) && (<%= competition.isActive == true %>) ) {
-                $("#horses").hide();
-            } else {
-                $("#horses").show();
-            }
 
             for (var i=0; i<data.length; i++) {
                 var row = $("<tr />");
                 row.append("<td>" + data[i].horseName +"</td>");
                 row.append("<td>" + ( data[i].gender == "MALE" ? "Ogier" : "Klacz" ) +"</td>");
                 row.append("<td>" + data[i].owner +"</td>");
-                row.append("<td>" + data[i].dateOfBirth +"</td>");
+                row.append($("<td>").addClass("date").text(moment(Date.parse(data[i].dateOfBirth)).format("YYYY-MM-DD")));
 
                 var addButton = $("<td>");
                 addButton.attr("horseId", data[i]._id)
@@ -72,7 +66,7 @@
                 row.append("<td>" + data[i].horse.horseName +"</td>");
                 row.append("<td>" + ( data[i].horse.gender == "MALE" ? "Ogier" : "Klacz" ) +"</td>");
                 row.append("<td>" + data[i].horse.owner +"</td>");
-                row.append("<td>" + data[i].horse.dateOfBirth +"</td>");
+                row.append($("<td>").addClass("date").text(moment(Date.parse(data[i].horse.dateOfBirth)).format("YYYY-MM-DD")));
                 row.append("<td>" + ( data[i].isActive == true ? "TAK" : "NIE" ) +"</td>");
 
                 <% if (competition.isActive) { %>
@@ -123,13 +117,6 @@
         socket.on("availableJuryRes", function(data) {
             var juryList = $("#juries table tbody");
             juryList.empty();
-            
-            
-               if ( (data.length == 0) && (<%= competition.isActive == true %>) ) {
-                $("#juries").hide();
-            } else {
-                $("#juries").show();
-            }
 
             for (var i=0; i<data.length; i++) {
                 var row = $("<tr />");
@@ -230,25 +217,197 @@
         socket.on("competitionStopRes", function(data){
             $("#competitionStatus").text("Nieaktywne");
             window.location = "/newCompetitionStep2/" + data.competitionId;
+            
+      
         });
         
         $("#competitionForm form").hide();
         <%if(competition.isActive == false){ %>
-            $("#competitionForm h1 a").show();
-            $("#horses").show();
-            $("#juries").show();
+            $("#editCompetitionButton").show();
+//            $("#horses").show();
+//            $("#juries").show();
         <% } else { %>
-            $("#competitionForm h1 a").hide();
-            $("#horses").hide();
-            $("#juries").hide();
+            $("#editCompetitionButton").hide();
+//            $("#horses").hide();
+//            $("#juries").hide();
         <% } %>
-        $("#competitionForm h1 a").click(function(e) {
+        $("#editCompetitionButton").click(function(e) {
             <%if(competition.isActive == false){ %>
                 $("#competitionForm form").toggle();
             <% } %>
         });
-    });
+        
+        
+           ///pokazywanie i ukrywanie crudów i listy
+        
+    
+//        $(document).ready(function(){
+           
+        $("#juries").hide();
+        $("#horses").hide();
+//        $("#horsesInCompetition").show();
+//        $("#juryInCompetition").show();
+
+        <% if (typeof showJuries != "undefined") { %>
+            $("juryv").show();
+        <% } %>
+
+        $("#juryVbtn").click(function(){
+//            $("#juryV").animate({
+            $("#juries").animate({
+                height: 'toggle'
+            });
+    //        $("juryv").toggle();
+        });
+
+        $("#horseVbtn").click(function(){
+//            $("#horseV").animate({
+            $("#horses").animate({
+                height: 'toggle'
+            });
+    //        $("horsev").toggle();
+        });
+
+
+
+
+        $("#competitionStop").click(function(){
+//            $("#juryInCompetition").animate({
+//                height: 'toggle'
+//            });
+//             $("#horsesInCompetition").animate({
+//                height: 'toggle'
+//            });
+        });
+
+        $("#competitionStart").click(function(){
+//            $("#juryInCompetition").animate({
+//                height: 'toggle'
+//            });
+//             $("#horsesInCompetition").animate({
+//                height: 'toggle'
+//            });
+    //        $("competitionv").toggle();
+        });
+
+            $("input[type=date]").datepicker();
+//        });
+        
+        
+            
+////tabela wyników            
+        var competitionId = "<%= competition._id %>";
+
+            socket.emit("horseMarkByCompetitionIdAdminReq", {
+                competitionId: competitionId
+            });
+            
+            setInterval(function() {
+                socket.emit("horseMarkByCompetitionIdAdminReq", {
+                    competitionId: competitionId
+                });
+            }, 5000);
+
+            socket.on("horseMarkByCompetitionIdAdminRes", function(data) {
+                var horseMarks = $("#horseMarks table tbody");
+                horseMarks.empty();
+                var horsesAvg = {};
+                var horses = {};
+                var juries = {};
+                
+                for (var i=0; i<data.horseMarks.length; i++) {
+                    horses[data.horseMarks[i].jury._id] = [];
+                }
+                                                           // robimy pętle po odpowiedzi z serwera
+                //Obliczenie liczby sędziów
+                for (var i=0; i<data.horseMarks.length; i++) {
+                    juries[data.horseMarks[i].jury._id] = 1;
+                }
+                var juriesNo = Object.keys(juries).length;
+                
+                //unikalna mapa koni z inicjalnymi wartościami średnich ocen
+                for (var i=0; i<data.horseMarks.length; i++) {
+                    horsesAvg[data.horseMarks[i].horse._id] = {
+                        id: data.horseMarks[i].horse._id,
+                        type: 0,
+                        head: 0,
+                        body: 0,
+                        legs: 0,
+                        movement: 0,
+                        avg: 0
+                    };
+                }
+                
+                //obliczenie wartości średnich ocen koni - sumowanie
+                for (var i=0; i<data.horseMarks.length; i++) {
+                    horsesAvg[data.horseMarks[i].horse._id].type += data.horseMarks[i].type;
+                    horsesAvg[data.horseMarks[i].horse._id].head += data.horseMarks[i].head;
+                    horsesAvg[data.horseMarks[i].horse._id].body += data.horseMarks[i].body;
+                    horsesAvg[data.horseMarks[i].horse._id].legs += data.horseMarks[i].legs;
+                    horsesAvg[data.horseMarks[i].horse._id].movement += data.horseMarks[i].movement;
+                }
+                for(var key in horsesAvg) {
+                    horsesAvg[key].type /= juriesNo;
+                    horsesAvg[key].head /= juriesNo;
+                    horsesAvg[key].body /= juriesNo;
+                    horsesAvg[key].legs /= juriesNo;
+                    horsesAvg[key].movement /= juriesNo;
+                    horsesAvg[key].avg = (horsesAvg[key].type + horsesAvg[key].head + horsesAvg[key].body + horsesAvg[key].legs + horsesAvg[key].movement)/5;
+                }
+                
+                var horsesSorted = [];
+                for(var key in horsesAvg) {
+                    horsesSorted.push(horsesAvg[key]);
+                }
+                horsesSorted.sort(function(a, b) {
+                    return b.avg - a.avg;
+                });
+                console.log(horsesSorted);
+                
+                var trj;
+                var trh;
+                for (var j=0; j<horsesSorted.length; j++) {
+                    for (var i=0; i<data.horseMarks.length; i++) {
+                        if (horsesSorted[j].id == data.horseMarks[i].horse._id) {
+                            trh = $("#"+data.horseMarks[i].horse._id+".horseRow");
+                            if (!trh.length) {
+                                trh = $("<tr>").attr("id", data.horseMarks[i].horse._id).addClass("horseRow");
+                                $("<td>").text(data.horseMarks[i].horse.horseName).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].type).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].head).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].body).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].legs).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].movement).appendTo(trh);
+                                $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].avg).appendTo(trh);
+                                horseMarks.append(trh);
+                            }
+
+                            trj = $("<tr>").addClass("juryRow").attr("horse", data.horseMarks[i].horse._id);
+
+                            $("<td>").text(data.horseMarks[i].jury.firstName + " " + data.horseMarks[i].jury.lastName).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].type).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].head).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].body).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].legs).appendTo(trj);
+                            $("<td>").text(data.horseMarks[i].movement).appendTo(trj);
+
+                            horseMarks.append(trj);
+                        }
+                    }
+                }
+                
+                $(".juryRow").hide();
+                $(".horseRow").click(function(e) {
+                    var juryRows = $(this).parent().children(".juryRow[horse="+$(this).attr("id")+"]");
+                    juryRows.toggle();
+                });
+            });
        
+            
+            
+    });
+     
+        
     </script>
     
     <% if (typeof message != "undefined") { %>
@@ -258,10 +417,12 @@
     <input type="hidden" id="competitionId" value="<%= competition._id %>" />
     
     <a href="/administrator">Strona administratora</a>
-    <a >Edytuj zawody</a>
+    <a href="/logout">Wyloguj</a>
+    <a id="editCompetitionButton">Edytuj</a>
+
     <div id="competitionForm">
-          <a >Edytuj zawody</a>
-        <h1>Widok zawodów <%= competition.name %> <a>Edytuj</a></h1>
+        <h1>Widok zawodów <%= competition.name %></h1>
+        
         <form action="/editCompetition" method="post" class="form-style-6">
             <input type="hidden" name="competitionId" value="<%= competition._id %>" />
             <table>
@@ -271,7 +432,7 @@
                 </tr>
                 <tr>
                     <td><label>Data</label></td>
-                    <td><input type="text" name="date" value="<%= competition.date %>" /></td>
+                    <td><input type="date" name="date" value="<%= competition.date %>" /></td>
                 </tr>
                 <tr>
                     <td><label>Uwagi</label></td>
@@ -284,13 +445,17 @@
             </table>
         </form>
     </div>
-    
-    <div id="competitionStart">Rozpocznij</div>
-    <div id="competitionStop">Zakończ</div>
-    <div id="competitionStatus">Status: <%= competition.isActive ? "Aktywne" : "Nieaktywne" %></div>
+ <div>
+    <a id="horseVbtn" class="myButton">Zarzadzaj grupą koni</a>
+    <a  id="juryVbtn" class="myButton">Zarzadzaj grupą sędziów</a>
+    <a id="competitionStart" class="myButton">Rozpocznij zawody</a>
+    <a id="competitionStop" class="myButton">Zakończ zawody</a>
+ </div>
+    <div id="competitionStatus">Status zawodów: <%= competition.isActive ? "Aktywne" : "Nieaktywne" %></div>
     <div class="inline-block">
-        <h2>Konie w zawodach</h2>
+       <div id="horseV">
         <div id="horsesInCompetition">
+            <h2>Konie w zawodach</h2>
             <table>
                 <thead>
                     <tr>
@@ -324,8 +489,10 @@
             </table>
         </div>
     </div>
+  </div>
     <div class="inline-block">
-        <h2>sędziowie w zawodach</h2>
+      <div id="juryV">
+        <h2>Sędziowie w zawodach</h2>
         <div id="juriesInCompetition">
             <table>
                 <thead>
@@ -359,7 +526,28 @@
             </table>
         </div>
     </div>
+</div>
 
+    
+    <h1>Tablica wyników</h1>
+    <h1 id="competitionLabel">Zawody: </h1>
+    <div id="horseMarks">
+        <table>
+            <thead>
+                <tr>
+                    <td>Koń</td>
+                    <td>Typ</td>
+                    <td>Głowa</td>
+                    <td>Ciało</td>
+                    <td>Nogi</td>
+                    <td>Ruch</td>
+                    <td>Średnia</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
    
     
 </body>

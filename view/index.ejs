@@ -37,9 +37,12 @@
     
     <div>
         <% if(typeof user != 'undefined') { %>
-            <p>Witaj: <%= user.firstName %> <%= user.lastName %></p>
-            <div><a href="/profile">Edycja profilu</a></div>
-            <div><a href="/logout">Wyloguj</a></div>
+          
+            <div>
+                <a href="/profile">Edycja profilu</a>
+            <a href="/logout">Wyloguj</a>
+            </div>
+          <p>Witaj: <%= user.firstName %> <%= user.lastName %></p>
         <% } else { %>
             <div><a href="/login">Zaloguj</a></div>
         <% } %>

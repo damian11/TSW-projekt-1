@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Zawody</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />    
-    <script src="/jquery/dist/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+   <%- include("header") %>
+
 </head>
 
 <body>
@@ -50,8 +49,9 @@
     <input type="hidden" id="competitionId" value="<%= competitionId %>" />
     
     <div>
-        <div><a href="/profile">Edycja profilu</a></div>
-        <div><a href="/logout">Wyloguj</a></div>
+        <a href="/profile">Edycja profilu</a>
+        <a href="/logout">Wyloguj</a>
+        <a href="/">Strona główna</a>
     </div>
     <h1>Konie do oceny</h1>
     <div id="competitions">
