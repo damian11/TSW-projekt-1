@@ -13,6 +13,10 @@
 <body>
     <script>
     $(function() {
+        var competitionId = "<%- horseMark.competition._id %>";
+        var juryId = "<%- horseMark.jury._id %>";
+        var horseId = "<%- horseMark.horse._id %>";
+        
         var socket = io.connect('//' + window.location.host, {secure: true});
         
         socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
@@ -120,6 +124,19 @@
             });
             movement.append(div);
         }
+        
+        setInterval(function() {
+//            console.log("shouldIHurryUpReq");
+            socket.emit("shouldIHurryUpReq", {
+                competitionId: competitionId,
+                juryId: juryId
+            });
+        }, 1000);
+        
+        socket.on("shouldIHurryUpRes", function(data) {
+//            console.log("shouldIHurryUpRes")
+            $("#message").text("Proszę się pośpieszyć!");
+        });
     });
     </script>
     <div>
@@ -127,6 +144,7 @@
         <div><a href="/profile">Edycja profilu</a></div>
         <div><a href="/logout">Wyloguj</a></div>
     </div>
+    <div id="message"></div>
     <h1>Ocena konia: <%- horseMark.horse.horseName %></h1>
     <div>
         <div id="type">

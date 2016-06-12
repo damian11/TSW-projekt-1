@@ -92,7 +92,8 @@ exports.newUser = function(req, res) {
                         console.log(err);
                     } else {
                         res.render("administrator", {
-                            message: "Poprawnie zaktualizowano użytkownika w bazie danych"
+                            message: "Poprawnie zaktualizowano użytkownika w bazie danych",
+                            showJuries: true
                         });
                     }
                 });
@@ -120,7 +121,8 @@ exports.newUser = function(req, res) {
             } else {
                 if (req.user) {
                     res.render("administrator", {
-                        message: "Poprawnie zapisano użytkownika w bazie danych"
+                        message: "Poprawnie zapisano użytkownika w bazie danych",
+                        showJuries: true
                     });
                 } else {
                     res.render("login");

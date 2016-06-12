@@ -25,6 +25,7 @@ var passport = require('passport');
 var passportSocketIo = require('passport.socketio');
 var LocalStrategy = require('passport-local').Strategy;
 
+var hurryUpTab = [];
 
 app.set('views', __dirname + '/view');
 app.set('view engine', 'ejs');
@@ -159,11 +160,10 @@ let onAuthorizeSuccess = function (data, accept) {
 
 let onAuthorizeFail = function (data, message, error, accept) {
     if (error) {
-        
 //        throw new Error(message);
         console.log(message);
     }
-console.log('Nieudane połączenie z socket.io:', message);
+    console.log('Nieudane połączenie z socket.io:', message);
     accept(null, false);
 };
 sio.use(passportSocketIo.authorize({
@@ -303,7 +303,9 @@ sio.sockets.on('connection', function (socket) {
             if(err){
                 console.log(err);
             }else{
-               socket.emit("juryRes", ent)
+                console.log("ent");
+                console.log(ent);
+                socket.emit("juryRes", ent)
             }
         });
     });
@@ -804,6 +806,28 @@ sio.sockets.on('connection', function (socket) {
            
        });
    }); 
+    
+    socket.on("juryHurryUpReq", function(data) {
+        console.log("juryHurryUpReq");
+        hurryUpTab.push({
+            competitionId: data.competitionId,
+            juryId: data.juryId
+        });
+    });
+    
+    socket.on("shouldIHurryUpReq", function(data) {
+        console.log("shouldIHurryUpReq");
+        console.log(hurryUpTab);
+//        console.log("data");
+//        console.log(data);
+        for (var i in hurryUpTab) {
+            if ( (hurryUpTab[i].competitionId == data.competitionId)
+              && (hurryUpTab[i].juryId == data.juryId) ) {
+                hurryUpTab.splice(hurryUpTab.indexOf(i));
+                socket.emit("shouldIHurryUpRes");
+            }
+        }
+    });
 });
 
 server.listen(3000, function () {

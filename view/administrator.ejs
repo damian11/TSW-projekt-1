@@ -4,11 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Strona administratora</title>
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <%- include("header") %>
-</head>
-
-<body>
-
     <script>
         $(function() {
         
@@ -25,7 +22,8 @@
     //            row.append("<td>" + data[i].gender +"</td>");
                 row.append("<td>" + ( (data[i].gender)=="MALE" ? "Ogier" : "Klacz" ) + "</td>");
                 row.append("<td>" + data[i].owner +"</td>");
-                row.append("<td>" + (moment(data[i].dateOfBirth).format("YYYY-MM-DD")) +"</td>");
+//                row.append("<td>" + (moment(Date.parse(data[i].dateOfBirth)).format("YYYY-MM-DD")) +"</td>");
+                row.append($("<td>").addClass("date").text(moment(Date.parse(data[i].dateOfBirth)).format("YYYY-MM-DD")));
                   ///$(this).val(moment(res.planStartDate).format("YYYY-MM-DD"));
 
                 var buttons = $("<td>");
@@ -71,6 +69,8 @@
     ///////////////CRUD SĘDZIEGO        
         socket.emit("juryReq");
         socket.on("juryRes", function(data){
+            console.log("data");
+            console.log(data);
 
             var juryList = $("#juryList table tbody");
                 juryList.empty();
@@ -141,24 +141,73 @@
             }
         });
             
-            
+    ////nie działa        
         $("#username").blur(function(e) {
             if ($(this).val() == "") {
                 var msg = $("<p>").text("Podaj nazwę użytkownika");
+                $(this).parent().children("p").remove();
                 $(this).parent().append(msg);
             } else {
                 $(this).parent().children("p").remove();
             }
         });
+            
+            
     });
         
+   ///pokazywanie i ukrywanie crudów i listy
         
+    
+$(document).ready(function(){
+    $("juryv").hide();
+    $("horsev").hide();
+    $("competitionv").hide();
+    
+    <% if (typeof showJuries != "undefined") { %>
+        $("juryv").show();
+    <% } %>
+    
+    $("#juryvid").click(function(){
+        $("juryv").animate({
+            height: 'toggle'
+        });
+//        $("juryv").toggle();
+    });
+    
+    $("#horsevid").click(function(){
+        $("horsev").animate({
+            height: 'toggle'
+        });
+//        $("horsev").toggle();
+    });
+    
+    $("#competitionvid").click(function(){
+        $("competitionv").animate({
+            height: 'toggle'
+        });
+//        $("competitionv").toggle();
+    });
+    
+    $("input[type=date]").datepicker();
+});
         
     </script>
+</head>
+
+<body>
+
     <nav>
         <div>
             <a href="/profile">Edycja profilu</a>
-            <a href="/newCompetition">Rozpocznij zawody</a>
+            <a href="/logout">Wyloguj</a>
+           
+        </div>
+        <div>
+                
+            <a id="juryvid" class="myButton">Zarządzaj sędziami</a>
+            <a id="horsevid" class="myButton">Zarządzaj koniami</a>
+            <a id="competitionvid" class="myButton">Zarządzaj zawodami</a>
+            <a href="/newCompetition" class="myButton" >Utwórz nowe zawody</a>
         </div>
         <div class="message">
             <% if(typeof message != 'undefined') { %>
@@ -166,9 +215,12 @@
             <% }%>
         </div>
     </nav>
+    <juryv>
     <div id="juryContainer">
         <h1>Dodaj sędziego</h1>
         <form action="/newUser" method="post" class="form-style-6">
+ 
+            
             <table>
                 <input type="hidden" name="userId" id="userId" value="" />
                 <tr>
@@ -209,9 +261,9 @@
         </table>
       </div>
     </div>
-        
+    </juryv>    
     
-    
+    <horsev>
     <div id="horseContainer">
     <h1>Dodaj konia</h1>
     <form action="/newHorse" method="post" class="form-style-6">
@@ -236,7 +288,7 @@
             </tr>
             <tr>
                 <td><label for="dateOfBirth">Data urodzenia</label></td>
-                <td><input type="text" name="dateOfBirth" id="dateOfBirth" /></td>
+                <td><input type="date" name="dateOfBirth" id="dateOfBirth" /></td>
             </tr>
             <tr>
                 <td></td>
@@ -266,7 +318,12 @@
       </div>
       </div>
     
+    </horsev>
     
+        
+    
+    
+    <competitionv>
       <div id="competitionList">
           <h1>Lista zawodów</h1>
           <table>
@@ -283,7 +340,7 @@
               </tbody>
           </table>
       </div>
-      
+    </competitionv>  
       
 </body>
 </html>

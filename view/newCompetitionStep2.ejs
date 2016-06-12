@@ -190,6 +190,19 @@
                 
                    <%  } %>
                 
+                
+                var hurryUpButton = $("<td>");
+                hurryUpButton.attr("juryId", data[i]._id)
+                $("<i class='material-icons'>hourglass_empty</i>").appendTo(hurryUpButton);
+                hurryUpButton.click(function(e) {
+                    socket.emit("juryHurryUpReq", {
+                        competitionId: '<%= competition._id %>',
+                        juryId: $(this).attr("juryId")
+                    });
+                });
+                <%if(competition.isActive == true){ %>
+                    row.append(hurryUpButton);
+                <% } %>
         
                 juriesInCompetition.append(row);
             }
@@ -222,8 +235,12 @@
         $("#competitionForm form").hide();
         <%if(competition.isActive == false){ %>
             $("#competitionForm h1 a").show();
+            $("#horses").show();
+            $("#juries").show();
         <% } else { %>
             $("#competitionForm h1 a").hide();
+            $("#horses").hide();
+            $("#juries").hide();
         <% } %>
         $("#competitionForm h1 a").click(function(e) {
             <%if(competition.isActive == false){ %>
@@ -241,8 +258,9 @@
     <input type="hidden" id="competitionId" value="<%= competition._id %>" />
     
     <a href="/administrator">Strona administratora</a>
-
+    <a >Edytuj zawody</a>
     <div id="competitionForm">
+          <a >Edytuj zawody</a>
         <h1>Widok zawodów <%= competition.name %> <a>Edytuj</a></h1>
         <form action="/editCompetition" method="post" class="form-style-6">
             <input type="hidden" name="competitionId" value="<%= competition._id %>" />
