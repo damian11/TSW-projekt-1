@@ -82,7 +82,23 @@ exports.newHorse = function(req, res) {
 }
 
 exports.registerAdmin = function(req, res) {
-    res.render("registerAdmin");
+    if(req.session.loggedUser != null){
+    if(req.session.loggedUser.isAdmin == true){
+         res.render("registerAdmin");
+    }else{
+        res.render("unauthorized",{
+             loggedUser: req.session.loggedUser,
+             message:"Nie masz uprawnień do tej strony"
+            });
+        }
+    }else{
+        res.render("unauthorized",{
+             loggedUser: req.session.loggedUser,
+             message:"Nie masz uprawnień do tej strony"
+            });
+        
+    }
+   
 }
 
 exports.newUser = function(req, res) {

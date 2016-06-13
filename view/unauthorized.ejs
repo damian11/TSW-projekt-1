@@ -13,6 +13,10 @@
     <%} else {%>
         <p>Strona dostępna tylko dla zalogowanych użytkowników</p>
     <%}%>
+    
+    <%if(typeof message != "undefined"){ %>
+    <p> <%= message %></p>
+<%}%>
     <a href="/">Strona główna</a>
 </body>
 
