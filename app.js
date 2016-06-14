@@ -1,4 +1,4 @@
-/*jshint node: true */
+/*jshint node: true, loopfunc: true */
 
 "use strict";
 
@@ -95,7 +95,7 @@ app.get('/', routes.index);
 app.get('/login', routes.login);
 app.get('/registerAdmin', routes.registerAdmin);
 app.post('/newUser', routes.newUser);
-app.post('/newHorse', routes.newHorse)
+app.post('/newHorse', routes.newHorse);
 app.get('/profile', routes.profile);
 app.get('/administrator', routes.administrator);
 app.get("/newCompetition", routes.newCompetition);
@@ -448,7 +448,7 @@ sio.sockets.on('connection', function (socket) {
             if (err) {
                 console.log(err);
             } else {
-                if (ent.isActive == true) {
+                if (ent.isActive === true) {
                     findNotMarkedHorseAndDeactivate(data.competitionId, data.horseId, ent);
                 } else {
                     db.HorseGroup.find({
@@ -459,7 +459,7 @@ sio.sockets.on('connection', function (socket) {
                         if (err) {
                             console.log(err);
                         } else {
-                            if (activeHorseGroup.length != 0) {
+                            if (activeHorseGroup.length !== 0) {
                                 socket.emit("horseActivateInCompetitionRes", {
                                     competitionId: data.competitionId,
                                     horse: ent,
@@ -652,7 +652,7 @@ sio.sockets.on('connection', function (socket) {
                     if (err) {
                         console.log(err);
                     } else {
-                        if (horseGroup == null) {
+                        if (horseGroup === null) {
                             socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", {
                                 horseMark: ent,
                                 status: "NOK"

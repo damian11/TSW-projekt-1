@@ -102,7 +102,7 @@ exports.registerAdmin = function(req, res) {
 };
 
 exports.newUser = function(req, res) {
-    if ( (typeof req.body.userId != "undefined") && (req.body.userId != "")) {
+    if ( (typeof req.body.userId != "undefined") && (req.body.userId !== "")) {
         db.User.findById(req.body.userId, function(err, ent) {
             if (err) {
                 console.log(err);
@@ -224,13 +224,13 @@ exports.newUser = function(req, res) {
 //            console.log(docs); //pojedyńczy element
 //        }
 //    });
-}
+};
 
 exports.profile = function (req, res) {
     res.render("profile", {
         loggedUser: req.session.loggedUser
     });
-}
+};
 
 exports.editProfile = function (req, res) {
     db.User.findOne({
@@ -252,7 +252,7 @@ exports.editProfile = function (req, res) {
             res.redirect("/");
         }
     });
-}
+};
 
 exports.logout = function (req, res) {
     console.log('Wylogowanie...');
@@ -262,8 +262,8 @@ exports.logout = function (req, res) {
 };
 
 exports.administrator = function (req, res) {
-    if ( (typeof req.session.loggedUser != "undefined") && (req.session.loggedUser != null) ) {
-        if ( (typeof req.session.loggedUser.isAdmin != "undefined") && (req.session.loggedUser.isAdmin != null) ) {
+    if ( (typeof req.session.loggedUser != "undefined") && (req.session.loggedUser !== null) ) {
+        if ( (typeof req.session.loggedUser.isAdmin != "undefined") && (req.session.loggedUser.isAdmin !== null) ) {
             if (req.session.loggedUser.isAdmin) {
                 res.render("administrator", {
                     loggedUser: req.session.loggedUser
@@ -283,7 +283,7 @@ exports.administrator = function (req, res) {
             loggedUser: req.session.loggedUser
         });
     }
-}
+};
 
 exports.newCompetition = function (req, res) {
     if (req.session.loggedUser.isAdmin) {
@@ -293,10 +293,10 @@ exports.newCompetition = function (req, res) {
             loggedUser: req.session.loggedUser
         });
     }
-}
+};
 
 exports.newCompetitionStep2 = function (req, res) {
-    if (req.session.loggedUser != null) {
+    if (req.session.loggedUser !== null) {
         if (req.session.loggedUser.isAdmin) {
             var competition = new db.Competition({
                 name: req.body.name,
@@ -326,10 +326,10 @@ exports.newCompetitionStep2 = function (req, res) {
             loggedUser: req.session.loggedUser
         });
     }
-}
+};
 
 exports.GETnewCompetitionStep2 = function (req, res) {
-    if (req.session.loggedUser != null) {
+    if (req.session.loggedUser !== null) {
         if (req.session.loggedUser.isAdmin) {
             db.Competition.findById(req.params.competitionId, function(err, ent) {
                 if (err) {
@@ -351,7 +351,7 @@ exports.GETnewCompetitionStep2 = function (req, res) {
             loggedUser: req.session.loggedUser
         });
     }
-}
+};
 
 exports.competition = function(req, res) {
     if (req.session.loggedUser) {
@@ -392,7 +392,7 @@ exports.horseCompetition = function(req, res) {
             loggedUser: req.session.loggedUser
         });
     }
-}
+};
 
 exports.showCompetition = function(req, res) {
     db.Competition.findById(req.params.competitionId)
@@ -406,7 +406,7 @@ exports.showCompetition = function(req, res) {
             });
         }
     });
-}
+};
 
 exports.editCompetition = function(req, res) {
     db.Competition.findById(req.body.competitionId, function (err, ent) {
@@ -423,6 +423,6 @@ exports.editCompetition = function(req, res) {
                 });
             }
         });
-    })
-}
+    });
+};
 
