@@ -163,9 +163,19 @@
         });
             
             
+     
+            
+        $("#juryMark").click(function(e) {
+           socket.emit('adminSaveMarksReq'); 
+        });    
             
             
     });
+        
+        
+        
+        
+        
         
    ///pokazywanie i ukrywanie crudów i listy
         
@@ -235,7 +245,7 @@ $(document).ready(function(){
             <% }%>
         </div>
     </nav>
-    <juryv>
+    <juryv style="display: inline-table">
     <div id="juryContainer">
         <h1>Dodaj sędziego</h1>
         <form action="/newUser" method="post" class="form-style-6">
@@ -283,7 +293,7 @@ $(document).ready(function(){
     </div>
     </juryv>    
     
-    <horsev>
+    <horsev style="display: inline-table">
     <div id="horseContainer">
     <h1>Dodaj konia</h1>
     <form action="/newHorse" method="post" class="form-style-6">
@@ -343,7 +353,7 @@ $(document).ready(function(){
         
     
     
-    <competitionv>
+    <competitionv style="display: inline-table">
       <div id="competitionList">
           <h1>Lista zawodów</h1>
           <table>
@@ -362,5 +372,8 @@ $(document).ready(function(){
       </div>
     </competitionv>  
       
+    <div>
+       
+    </div>
 </body>
 </html>

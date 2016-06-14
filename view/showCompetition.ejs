@@ -11,6 +11,9 @@
 </head>
 
 <body>
+    <div>
+    <a href="/">Strona główna</a>
+        </div>
     <script>
         $(function() {
             var socket = io.connect('//' + window.location.host, {secure: true});
@@ -39,10 +42,18 @@
                 }
                                                            // robimy pętle po odpowiedzi z serwera
                 //Obliczenie liczby sędziów
+                
+//                jury 1 horse 1 competition 1 legs 5 head 2
+//                jury 1 horse 2 competition 1 
+//                jury 2 horse 1 competition 1 legs 6
+//              -  jury 2 horse 2 competition 1
+//                
+//                juries[2] = 1     { juries[1], juries[2] }
+                
                 for (var i=0; i<data.horseMarks.length; i++) {
                     juries[data.horseMarks[i].jury._id] = 1;
                 }
-                var juriesNo = Object.keys(juries).length;
+                var juriesNo = Object.keys(juries).length;    //   [1, 2].lenght = 2
                 
                 //unikalna mapa koni z inicjalnymi wartościami średnich ocen
                 for (var i=0; i<data.horseMarks.length; i++) {
@@ -59,12 +70,12 @@
                 
                 //obliczenie wartości średnich ocen koni - sumowanie
                 for (var i=0; i<data.horseMarks.length; i++) {
-                    horsesAvg[data.horseMarks[i].horse._id].type += data.horseMarks[i].type;
+                    horsesAvg[data.horseMarks[i].horse._id].type += data.horseMarks[i].type;//po kropce mamy klucz-ostatni element po kropce
                     horsesAvg[data.horseMarks[i].horse._id].head += data.horseMarks[i].head;
                     horsesAvg[data.horseMarks[i].horse._id].body += data.horseMarks[i].body;
                     horsesAvg[data.horseMarks[i].horse._id].legs += data.horseMarks[i].legs;
                     horsesAvg[data.horseMarks[i].horse._id].movement += data.horseMarks[i].movement;
-                }
+                }//przechodzenie forma przez mapy
                 for(var key in horsesAvg) {
                     horsesAvg[key].type /= juriesNo;
                     horsesAvg[key].head /= juriesNo;
@@ -89,7 +100,7 @@
                     for (var i=0; i<data.horseMarks.length; i++) {
                         if (horsesSorted[j].id == data.horseMarks[i].horse._id) {
                             trh = $("#"+data.horseMarks[i].horse._id+".horseRow");
-                            if (!trh.length) {
+                            if (!trh.length) {//to zeby koń był tylko raz wyświetlony
                                 trh = $("<tr>").attr("id", data.horseMarks[i].horse._id).addClass("horseRow");
                                 $("<td>").text(data.horseMarks[i].horse.horseName).appendTo(trh);
                                 $("<td>").text(horsesAvg[data.horseMarks[i].horse._id].type).appendTo(trh);
@@ -125,7 +136,7 @@
     </script>
     
     <h1>Tablica wyników</h1>
-    <h1 id="competitionLabel">Zawody: </h1>
+    <h1 id="competitionLabel">Zawody: <%= competition.name %></h1>
     <div id="horseMarks">
         <table>
             <thead>

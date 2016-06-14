@@ -8,6 +8,14 @@
 </head>
 
 <body>
+    <div>
+     <% if(loggedUser.isAdmin = true) { %>
+    <a href="/administrator">Strona administratora</a>
+       <% } else { %>
+    <a href="/jury">Strona sędziego</a>
+        <% } %>
+     <a href="/logout">Wyloguj</a>
+    </div>  
     
     <h1>Profil użytkownika</h1>
  

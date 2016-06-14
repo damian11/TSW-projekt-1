@@ -29,7 +29,7 @@
                 horseId: "<%- horseMark.horse._id %>"
             });
         }, 1000);
-        
+        //sprawdza czy admin nie deaktywował zawodów i jak tak to wywala ze strony
         socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", function(data) {
             if(data.status == "NOK") {
                 window.location = "/jury/competition/"+competitionId;
@@ -146,23 +146,33 @@
 //            console.log("shouldIHurryUpReq");
             socket.emit("shouldIHurryUpReq", {
                 competitionId: competitionId,
-                juryId: juryId
+                juryId: juryId,
+                horseId: "<%- horseMark.horse._id %>"
             });
         }, 1000);
         
         socket.on("shouldIHurryUpRes", function(data) {
 //            console.log("shouldIHurryUpRes")
-            $("#message").text("Proszę się pośpieszyć!");
+            $("#message").text("Proszę się pośpieszyć!").addClass("hurryfont");
+            
+            $("#type").removeClass("red-border");
+            $("#head").removeClass("red-border");
+            $("#body").removeClass("red-border");
+            $("#legs").removeClass("red-border");
+            $("#movement").removeClass("red-border");
+            
+            if (data.horseMark.type === 0) {
+                $("#type").addClass("red-border");
+            }
         });
     });
     </script>
     <div>
         <a href="/jury/competition/<%- horseMark.competition._id %>">Powrót do strony zawodów</a>
-        <a href="/profile">Edycja profilu</a>
         <a href="/logout">Wyloguj</a>
     </div>
     <div id="message"></div>
-    <h1>Ocena konia: <%- horseMark.horse.horseName %></h1>
+    <h1>Ocena konia</h1>
     <div>
         <div id="type">
             <p>Typ</p>
@@ -171,7 +181,7 @@
             <p>Głowa</p>
         </div>
         <div id="body">
-            <p>Tułów</p>
+            <p>Kłoda</p>
         </div>
         <div id="legs">
             <p>Nogi</p>
@@ -180,8 +190,8 @@
             <p>Ruch</p>
         </div>
     </div>
-        <div id="EndMark">
-            <p>Zakończ ocene konia</p>
+        <div>
+            <a href="/jury/competition/<%- horseMark.competition._id %>" class="myButton">Zakończ ocene konia</a>
         </div>
 </body>
 

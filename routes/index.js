@@ -32,13 +32,13 @@ exports.login = function (req, res) {
 };
 
 exports.newHorse = function(req, res) {
-    if (req.body.dateOfBirth == "") {
+    if (req.body.dateOfBirth === "") {
         res.render("administrator", {
             message: "Nie zapisano konia w bazie danych - brak daty urodzenia",
             showHorses: true
         });
     } else {
-        if ( (req.body.horseId != "undefined") && (req.body.horseId != "")) {
+        if ( (req.body.horseId != "undefined") && (req.body.horseId !== "")) {
             db.Horse.findById(req.body.horseId, function(err, ent) {
                 if (err) {
                     console.log(err);
@@ -79,11 +79,11 @@ exports.newHorse = function(req, res) {
             });
         }
     }
-}
+};
 
 exports.registerAdmin = function(req, res) {
-    if(req.session.loggedUser != null){
-    if(req.session.loggedUser.isAdmin == true){
+    if(req.session.loggedUser !== null){
+    if(req.session.loggedUser.isAdmin === true){
          res.render("registerAdmin");
     }else{
         res.render("unauthorized",{
@@ -99,7 +99,7 @@ exports.registerAdmin = function(req, res) {
         
     }
    
-}
+};
 
 exports.newUser = function(req, res) {
     if ( (typeof req.body.userId != "undefined") && (req.body.userId != "")) {
@@ -364,7 +364,7 @@ exports.competition = function(req, res) {
             loggedUser: req.session.loggedUser
         });
     }
-}
+};
 
 exports.horseCompetition = function(req, res) {
     if (req.session.loggedUser) {
@@ -395,8 +395,16 @@ exports.horseCompetition = function(req, res) {
 }
 
 exports.showCompetition = function(req, res) {
-    res.render("showCompetition", {
-        competitionId: req.params.competitionId
+    db.Competition.findById(req.params.competitionId)
+    .exec(function(err, ent) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("showCompetition", {
+                competitionId: req.params.competitionId,
+                competition: ent
+            });
+        }
     });
 }
 

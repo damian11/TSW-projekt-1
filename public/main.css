@@ -52,6 +52,9 @@ div.active {
     background-color: red;
 }
 
+.hurryfont{
+    font-size: 
+}
 div.box {
     display: inline-block;
     margin: 3px;
@@ -69,6 +72,10 @@ div.box:hover {
 div.inline-block {
     display: inline-table;
     margin: 0 50px 0 50px;
+}
+
+.red-border {
+    border: solid 3px red;
 }
 
 .form-style-6{

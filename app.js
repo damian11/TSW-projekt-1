@@ -13,7 +13,6 @@ var cookieSession = require('cookie-session');
 var session = require('express-session');
 var app = express();
 var redisStore = require('connect-redis')(session);
-var client  = require('redis').createClient();
 var sessionStore = new redisStore();
 var port = process.env.PORT || 3000;
 var env = process.env.NODE_ENV || 'development';
@@ -146,17 +145,17 @@ var server = https.createServer({
     cert: certificate
 }, app).listen(port);
 
-//var server = http.createServer(app);
+
 
 var sio = socketIo.listen(server);
 
 
-let onAuthorizeSuccess = function (data, accept) {
+var onAuthorizeSuccess = function (data, accept) {
 //    console.log('Udane połączenie z socket.io');
     accept(null, true);
 };
 
-let onAuthorizeFail = function (data, message, error, accept) {
+var onAuthorizeFail = function (data, message, error, accept) {
     if (error) {
 //        throw new Error(message);
         console.log(message);
@@ -173,13 +172,16 @@ sio.use(passportSocketIo.authorize({
   fail:         onAuthorizeFail     // *optional* callback on fail/error
 }));
 
+var marks = {};
+app.set("marks", marks);
+
 sio.sockets.on('connection', function (socket) {    
     socket.on('horsesReq', function(data) {
         db.Horse.find({}, function(err, ent) {
             if (err) {
                 console.log(err);
             } else {
-                socket.emit("horsesRes", ent)
+                socket.emit("horsesRes", ent);
             }
         });
     });
@@ -201,7 +203,7 @@ sio.sockets.on('connection', function (socket) {
                 if (err) {
                     console.log(err);
                 } else {
-                    socket.emit("availableHorsesRes", ent)
+                    socket.emit("availableHorsesRes", ent);
                 }
             });
         });
@@ -226,7 +228,7 @@ sio.sockets.on('connection', function (socket) {
                 if (err) {
                     console.log(err);
                 } else {
-                    socket.emit("availableJuryRes", ent)
+                    socket.emit("availableJuryRes", ent);
                 }
             });
         });
@@ -247,7 +249,7 @@ sio.sockets.on('connection', function (socket) {
                         });
                     }
                 });
-            };
+            }
         });
     });
     
@@ -263,7 +265,7 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
-        socket.on("juryDeleteByIDReq", function(data) {
+    socket.on("juryDeleteByIDReq", function(data) {
         db.User.findById(data.userId, function(err, ent) {
             if (err) {
                 console.log(err);
@@ -277,7 +279,7 @@ sio.sockets.on('connection', function (socket) {
                         });
                     }
                 });
-            };
+            }
         });
     });
     
@@ -303,7 +305,7 @@ sio.sockets.on('connection', function (socket) {
             }else{
 //                console.log("ent");
 //                console.log(ent);
-                socket.emit("juryRes", ent)
+                socket.emit("juryRes", ent);
             }
         });
     });
@@ -319,7 +321,7 @@ sio.sockets.on('connection', function (socket) {
             if(err){
                 console.log(err);
             } else {
-                if (data) {
+                if (data !== null) {
                     socket.emit("horsesByCompetitionIDRes", data);
                 } else {
                     socket.emit("horsesByCompetitionIDRes");
@@ -378,7 +380,7 @@ sio.sockets.on('connection', function (socket) {
             if (err) {
                 console.log(err);
             } else {
-                if (undoneHorseMarks.length != 0) {
+                if (undoneHorseMarks.length !== 0) {
                     socket.emit("horseActivateInCompetitionRes", {
                         competitionId: competitionId,
                         horse: horseEnt,
@@ -605,7 +607,7 @@ sio.sockets.on('connection', function (socket) {
             }
         });
     });
-    
+  
     socket.on("horsesByCompetitionIdAndJuryIdReq", function(data) {
         db.HorseGroup.find({
             competition: data.competitionId,
@@ -667,7 +669,19 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
+//    socket.on("adminSaveMarksReq", function(data) {
+//         var marks = app.get("marks");
+//        for(var key in marks){
+//            marks[key].save();
+//            delete marks[key];
+//
+//        }
+//    });
+    
+    
     socket.on("changeTypeMarkReq", function(data) {
+
+        
         db.HorseMark.findOne({
             competition: data.competitionId,
             jury: data.juryId,
@@ -776,7 +790,7 @@ sio.sockets.on('connection', function (socket) {
             type: {$ne: 0},
             head: {$ne: 0},
             body: {$ne: 0},
-            body: {$ne: 0},
+            legs: {$ne: 0},
             movement: {$ne: 0}
         })
         .populate("horse competition jury")
@@ -791,7 +805,7 @@ sio.sockets.on('connection', function (socket) {
             db.HorseGroup.find({
                 competition: data.competitionId,
                 horse: {$in: horsesIds},
-                isActive: true
+                isActive: false
             })
             .exec(function(err, horses) {
                 if (err) {
@@ -875,10 +889,22 @@ sio.sockets.on('connection', function (socket) {
     
     socket.on("shouldIHurryUpReq", function(data) {
         for (var i in hurryUpTab) {
-            if ( (hurryUpTab[i].competitionId == data.competitionId)
-              && (hurryUpTab[i].juryId == data.juryId) ) {
+            if ( (hurryUpTab[i].competitionId == data.competitionId) && (hurryUpTab[i].juryId == data.juryId) ) {
                 hurryUpTab.splice(hurryUpTab.indexOf(i));
-                socket.emit("shouldIHurryUpRes");
+                db.HorseMark.findOne({
+                    competition: data.competitionId,
+                    horse: data.horseId,
+                    jury: data.juryId
+                })
+                .exec(function(err, ent) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        socket.emit("shouldIHurryUpRes", {
+                            horseMark: ent
+                        });
+                    }
+                });
             }
         }
     });

@@ -16,7 +16,7 @@
         socket.on("competitionActivateRes", function(data) {
             window.location = "/newCompetitionStep2/" + data.competitionId;
         });
-
+///tworzymy grupe koni--poczatek
         socket.emit("availableHorsesReq", {
             gender: "<%= competition.gender %>",
             competitionId: "<%= competition._id %>"
@@ -69,7 +69,7 @@
                 row.append($("<td>").addClass("date").text(moment(Date.parse(data[i].horse.dateOfBirth)).format("YYYY-MM-DD")));
                 row.append("<td>" + ( data[i].isActive == true ? "TAK" : "NIE" ) +"</td>");
 
-                <% if (competition.isActive) { %>
+                <% if (competition.isActive === true) { %>
                     var activateButton = $("<td>");
                     activateButton.attr("horseId", data[i].horse._id);
                     if (data[i].isActive == true) {
@@ -533,8 +533,8 @@
 </div>
 
     
-
-    <div id="horseMarks">
+<div class="inline-block">
+    <div id="horseMarks" >
       <h1>Tablica wyników</h1>
         <table>
             <thead>
@@ -552,7 +552,7 @@
             </tbody>
         </table>
     </div>
-   
+ </div>
     
 </body>
 </html>
