@@ -139,7 +139,7 @@ app.get("/jury/competition/:competitionId", routes.competition);
 app.get("/horse/competition/:horseId/:competitionId", routes.horseCompetition);
 app.get("/showCompetition/:competitionId", routes.showCompetition);
 app.post("/editCompetition", routes.editCompetition);
-
+app.get("/juryManager", routes.juryManager);
 
 var privateKey = fs.readFileSync( "cert/server-key.pem" );
 var certificate = fs.readFileSync( "cert/server-cert.pem" );

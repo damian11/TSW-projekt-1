@@ -37,7 +37,6 @@ exports.guzik = function (req, res){
 
 
 
-
 exports.login = function (req, res) {
     res.render("login");
 };
@@ -436,4 +435,21 @@ exports.editCompetition = function(req, res) {
         });
     });
 };
+
+exports.juryManager = function (req, res) {
+   if (req.session.loggedUser !== null) {
+        if (req.session.loggedUser.isAdmin) {
+          res.render("juryManager");
+          
+        } else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+            });
+        }
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    } 
+}
 
