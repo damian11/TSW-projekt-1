@@ -53,7 +53,8 @@ div.active {
 }
 
 .hurryfont{
-    font-size: 
+    font-size: 30;
+    color: red;
 }
 div.box {
     display: inline-block;

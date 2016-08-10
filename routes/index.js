@@ -27,6 +27,17 @@ exports.index = function (req, res) {
     }
 };
 
+
+
+
+
+exports.guzik = function (req, res){
+    res.render("guzik");
+};
+
+
+
+
 exports.login = function (req, res) {
     res.render("login");
 };

@@ -6,6 +6,7 @@ mongoose.connect('mongodb://localhost/wyscigiDB', {
   }
 });
 
+
 var User = mongoose.model('User', { 
     username: String,
     password: String,
@@ -25,15 +26,27 @@ var Horse = mongoose.model("Horse", {
     dateOfBirth: Date
 });
 
-var Competition = mongoose.model("Competition", {
+var CompetitionMaster = mongoose.model("CompetitionMaster", { //zawody
+    name: String,
+    date: Date,
+    comments: String,
+    isActive: Boolean
+});
+
+var Competition = mongoose.model("Competition", {//grupa
     name: String,
     date: Date,
     comments: String,
     gender: String,
-    isActive: Boolean
+    isActive: Boolean,
+    competitionMaster:{
+        type: String,
+        ref: "CompetitionMaster"
+    }
+    
 });
 
-var JuryGroup = mongoose.model("JuryGroup", {
+var JuryGroup = mongoose.model("JuryGroup", {//łączenie pomiedzy zawodami a użytkownikami
     name: String,
     competition: {
         type: String,
@@ -77,7 +90,6 @@ var HorseMark = mongoose.model("HorseMark", {
         ref: "User"
     }
 });
-
 module.exports.User = User;
 module.exports.Horse = Horse;
 module.exports.Competition = Competition;

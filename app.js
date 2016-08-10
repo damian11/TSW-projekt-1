@@ -102,6 +102,10 @@ app.get("/newCompetition", routes.newCompetition);
 app.post("/newCompetitionStep2", routes.newCompetitionStep2);
 app.get("/newCompetitionStep2/:competitionId", routes.GETnewCompetitionStep2);
 app.post("/editProfile", routes.editProfile);
+
+app.get('/guzik', routes.guzik);
+app.post('/guzik', routes.guzik);
+
 app.post('/login',
     passport.authenticate('local', {
         failureRedirect: '/login'
@@ -160,7 +164,7 @@ var onAuthorizeFail = function (data, message, error, accept) {
 //        throw new Error(message);
         console.log(message);
     }
-    console.log('Nieudane połączenie z socket.io:', message);
+    console.log("");
     accept(null, false);
 };
 sio.use(passportSocketIo.authorize({
@@ -175,7 +179,26 @@ sio.use(passportSocketIo.authorize({
 var marks = {};
 app.set("marks", marks);
 
-sio.sockets.on('connection', function (socket) {    
+sio.sockets.on('connection', function (socket) {  
+    
+    socket.on('guzikReq', function(data){
+        console.log(data);
+        var liczba1 = parseInt(data.liczba1);
+        var liczba2 = parseInt(data.liczba2);
+        socket.emit('guzikRes', liczba1 + liczba2);
+//         db.Guzik.find({}, function(err, ent){
+//            if(err){
+//                console.log(err);
+//                
+//            }else{
+//                socket.emit("guzikRes", ent);
+//            }
+//         })
+        
+        });
+
+    
+    
     socket.on('horsesReq', function(data) {
         db.Horse.find({}, function(err, ent) {
             if (err) {
@@ -907,6 +930,7 @@ sio.sockets.on('connection', function (socket) {
                 });
             }
         }
+    
     });
 });
 
