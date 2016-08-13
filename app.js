@@ -103,8 +103,9 @@ app.post("/newCompetitionStep2", routes.newCompetitionStep2);
 app.get("/newCompetitionStep2/:competitionId", routes.GETnewCompetitionStep2);
 app.post("/editProfile", routes.editProfile);
 
+
 app.get('/guzik', routes.guzik);
-app.post('/guzik', routes.guzik);
+
 
 app.post('/login',
     passport.authenticate('local', {
@@ -140,6 +141,8 @@ app.get("/horse/competition/:horseId/:competitionId", routes.horseCompetition);
 app.get("/showCompetition/:competitionId", routes.showCompetition);
 app.post("/editCompetition", routes.editCompetition);
 app.get("/juryManager", routes.juryManager);
+app.get("/newCompetitionMaster", routes.newCompetitionMaster);
+app.post("/newCompetitionMasterStep2", routes.newCompetitionMasterStep2);
 
 var privateKey = fs.readFileSync( "cert/server-key.pem" );
 var certificate = fs.readFileSync( "cert/server-cert.pem" );

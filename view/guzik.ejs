@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pl">
+<meta harset="UTF-8">
+    <title></title>
+    <head>
+<%- include("header") %>
+    <script>
+        $(function() {
+            var socket = io.connect('//' + window.location.host, {secure: true});
+            var guzik = $("#zapisz");
+            guzik.click(function(e){
+                
+                var licz1 = $("#infoRow1").val();
+                var licz2 = $("#infoRow2").val(); //socket.on(function(data){ data.liczba1 })
+                socket.emit('guzikReq',{
+                    liczba1:licz1, 
+                    liczba2:licz2
+            
+                });
+                console.log({
+                    liczba1:licz1, 
+                    liczba2:licz2
+            
+                });
+            });
+         
+            socket.on("guzikRes", function(data) {
+                console.log(data);
+               $("#infoRow3").val(data);  
+//                $("<td>").appendTo( $("<tr>").appendTo(tab) ).append(data);
+//                var row = $("<tr>");
+//                row.append("<td>"+ data +"</td>");
+//                
+//                tab.append(row);
+            });
+        });
+            </script>  
+        
+       
+            <table>
+                <tr>
+                    
+                    <td><input type="text" name="info" id="infoRow1"/></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="info" id="infoRow2"/></td>
+
+                </tr>
+                <tr>
+                    <td><input type="text" name="info" id="infoRow3" readonly/></td>
+                </tr>
+                
+                <tr>
+                     <td><input id="zapisz" type="submit" value="Zapisz" /></td>
+                </tr>
+            </table>
+     
+        <table id="infoTab">
+            
+        </table>
+        
+    </body>
+</html>
+
+
+        

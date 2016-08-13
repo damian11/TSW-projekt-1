@@ -90,6 +90,7 @@ var HorseMark = mongoose.model("HorseMark", {
         ref: "User"
     }
 });
+module.exports.CompetitionMaster = CompetitionMaster;
 module.exports.User = User;
 module.exports.Horse = Horse;
 module.exports.Competition = Competition;

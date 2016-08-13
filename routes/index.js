@@ -338,6 +338,7 @@ exports.newCompetitionStep2 = function (req, res) {
     }
 };
 
+
 exports.GETnewCompetitionStep2 = function (req, res) {
     if (req.session.loggedUser !== null) {
         if (req.session.loggedUser.isAdmin) {
@@ -453,3 +454,51 @@ exports.juryManager = function (req, res) {
     } 
 }
 
+exports.newCompetitionMaster = function (req, res) {
+   if (req.session.loggedUser !== null) {
+        if (req.session.loggedUser.isAdmin) {
+          res.render("newCompetitionMaster");
+          
+        } else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+            });
+        }
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    } 
+}
+
+exports.newCompetitionMasterStep2 = function (req, res) {
+    if (req.session.loggedUser !== null) {
+        if (req.session.loggedUser.isAdmin) {
+            var competitionMaster = new db.CompetitionMaster({
+                name: req.body.name,
+                date: req.body.date,
+                comments: req.body.comments,
+                isActive: false
+            });
+
+            competitionMaster.save(function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("newCompetitionMasterStep2", {
+                        loggedUser: req.session.loggedUser,
+                        competitionMaster: competitionMaster
+                    });
+                }
+            });
+        } else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+            });
+        }
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
+};
