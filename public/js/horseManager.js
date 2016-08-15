@@ -1,7 +1,5 @@
 $(function(){
     
-
-///////////////////CRUD KONIA    
             var socket = io.connect('//' + window.location.host, {secure: true});
             socket.emit("horsesReq");
             socket.on("horsesRes", function(data) {
