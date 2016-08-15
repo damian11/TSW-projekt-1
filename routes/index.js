@@ -306,6 +306,7 @@ exports.newCompetition = function (req, res) {
 };
 
 exports.newCompetitionStep2 = function (req, res) {
+   
     if (req.session.loggedUser !== null) {
         if (req.session.loggedUser.isAdmin) {
             var competition = new db.Competition({
@@ -313,10 +314,12 @@ exports.newCompetitionStep2 = function (req, res) {
                 date: req.body.date,
                 comments: req.body.comments,
                 gender: req.body.gender,
-                isActive: false
+                isActive: false,
+                competitionMaster: req.body.competitionMasterId
             });
 
             competition.save(function(err) {
+            
                 if (err) {
                     console.log(err);
                 } else {
@@ -525,6 +528,43 @@ exports.newCompetitionMasterStep2 = function (req, res) {
                     });
                 }
             });
+        } else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+            });
+        }
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
+};
+
+exports.GETnewCompetitionMaster = function(req, res) {
+    if (req.session.loggedUser !== null){
+        if (req.session.loggedUser.isAdmin) {
+            res.render("newCompetitionStep1",{
+                loggedUser: req.session.loggedUser,
+                competitionMasterId: req.params.competitionMasterId
+            });
+
+        } else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+            });
+        }
+    } else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
+};
+
+exports.GETnewCompetitionMasterStep2 = function(req, res) {
+     if (req.session.loggedUser !== null){
+        if (req.session.loggedUser.isAdmin) {
+           
+
         } else {
             res.render("unauthorized", {
                 loggedUser: req.session.loggedUser

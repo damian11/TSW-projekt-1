@@ -102,6 +102,7 @@ app.get("/newCompetition", routes.newCompetition);
 app.post("/newCompetitionStep2", routes.newCompetitionStep2);
 app.get("/newCompetitionStep2/:competitionId", routes.GETnewCompetitionStep2);
 app.post("/editProfile", routes.editProfile);
+app.get("/newCompetition/:competitionMasterId", routes.GETnewCompetitionMaster);
 
 
 app.get('/guzik', routes.guzik);
@@ -143,6 +144,7 @@ app.post("/editCompetition", routes.editCompetition);
 app.get("/juryManager", routes.juryManager);
 app.get("/newCompetitionMaster", routes.newCompetitionMaster);
 app.post("/newCompetitionMasterStep2", routes.newCompetitionMasterStep2);
+app.get("/newCompetitionMasterStep2", routes.newCompetitionMasterStep2);
 app.get("/horseManager", routes.horseManager);
 app.get("/competitionManager", routes.competitionManager);
 var privateKey = fs.readFileSync( "cert/server-key.pem" );
