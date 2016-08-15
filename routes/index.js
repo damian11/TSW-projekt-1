@@ -454,6 +454,23 @@ exports.juryManager = function (req, res) {
     } 
 }
 
+exports.competitionManager = function (req, res) {
+    if (req.session.loggedUser !== null){
+        if(req.session.loggedUser.isAdmin) {
+            res.render("competitionManager");
+            }else {
+            res.render("unauthorized", {
+                loggedUser: req.session.loggedUser
+                
+            });
+        }
+    }      else{
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
+}
+
 exports.horseManager = function (req, res) {
     if (req.session.loggedUser !== null){
         if(req.session.loggedUser.isAdmin) {
