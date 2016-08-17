@@ -14,6 +14,16 @@
         });
         socket.on("competitionsByCompetitionMasterIdRes", function(data){
             console.log(data);
+        var competitionMasterList = $("#competitionMasterList table tbody");
+            competitionMasterList.empty();
+            for(var i=0; i<data.competitions.length; i++){
+                var row = $("<tr />");
+                $("<a>").attr("href","/newCompetitionMasterStep2/" + data.competitions[i]._id).text(data.competitions[i].name).appendTo(row);
+                row.append("<td>" + data.competitions[i].date + "</td>");
+                row.append("<td>" + data.competitions[i].comments + "</td>");
+                row.append("<td>" + ( data.competitions[i].isActive == true ? "TAK" : "NIE" ) + "</td>");
+                competitionMasterList.append(row);
+            }
         });
     });
     
@@ -29,8 +39,25 @@
             
         <a href="/administrator">Strona administratora</a>
         <a href="/logout">Wyloguj</a>
-        <a href="/newCompetition/<%= competitionMaster._id %>" class="myButton" >Utwórz nowe zawody</a>
+        <a href="/newCompetition/<%= competitionMaster._id %>" class="myButton" >Utwórz nową grupę</a>
         </div>
+    <div id="competitionMasterList">
+    <h1>Lista grup</h1>
+    <table>
+        <thead>
+            <tr>
+                <td>Nazwa</td>
+                <td>Data</td>
+                <td>Komentarz</td>
+                <td>Aktywny</td>
+                
+            </tr>    
+        </thead>
+        <tbody>
+        </tbody>
+    </table>    
+        
+    </div>
     
     
 </body>
