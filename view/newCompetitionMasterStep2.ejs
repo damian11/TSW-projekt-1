@@ -5,6 +5,19 @@
     <meta charset="UTF-8">
     <title>Zawody</title>
     <%- include("header") %>
+<script>
+    $(function(){
+      var socket = io.connect('//' + window.location.host, {secure: true});
+        var competitionMasterId = $("#competitionMasterId").val();
+        socket.emit("competitionsByCompetitionMasterIdReq", {
+            competitionMasterId: competitionMasterId
+        });
+        socket.on("competitionsByCompetitionMasterIdRes", function(data){
+            console.log(data);
+        });
+    });
+    
+    </script>
     
 </head>
 

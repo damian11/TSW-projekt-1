@@ -563,7 +563,18 @@ exports.GETnewCompetitionMaster = function(req, res) {
 exports.GETnewCompetitionMasterStep2 = function(req, res) {
      if (req.session.loggedUser !== null){
         if (req.session.loggedUser.isAdmin) {
-           
+            db.CompetitionMaster.findById(req.params.competitionMasterId, function(err, ent){
+                db.Competition.find({
+                    competitionMaster: req.params.competitionMasterId
+                })
+                .exec(function(err, competitions){
+                        res.render("newCompetitionMasterStep2", {
+                        loggedUser: req.session.loggedUser,
+                        competitionMaster: ent,
+                        competitions: competitions    
+                    });
+                });
+            });
 
         } else {
             res.render("unauthorized", {

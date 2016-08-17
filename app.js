@@ -144,7 +144,7 @@ app.post("/editCompetition", routes.editCompetition);
 app.get("/juryManager", routes.juryManager);
 app.get("/newCompetitionMaster", routes.newCompetitionMaster);
 app.post("/newCompetitionMasterStep2", routes.newCompetitionMasterStep2);
-app.get("/newCompetitionMasterStep2", routes.newCompetitionMasterStep2);
+app.get("/newCompetitionMasterStep2/:competitionMasterId", routes.GETnewCompetitionMasterStep2);
 app.get("/horseManager", routes.horseManager);
 app.get("/competitionManager", routes.competitionManager);
 var privateKey = fs.readFileSync( "cert/server-key.pem" );
@@ -938,7 +938,21 @@ sio.sockets.on('connection', function (socket) {
         }
     
     });
+    
+    socket.on("competitionsByCompetitionMasterIdReq",function(data) {
+        db.Competition.find({
+            competitionMaster: data.competitionMasterId
+        })
+        .exec(function(err, competitions){
+            socket.emit("competitionsByCompetitionMasterIdRes",{
+               competitions: competitions 
+            });
+        });
+    });
+    
 });
+
+    
 
 server.listen(3000, function () {
     console.log('Serwer pod adresem http://localhost:3000/');
