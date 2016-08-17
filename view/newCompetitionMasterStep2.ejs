@@ -18,7 +18,7 @@
             competitionMasterList.empty();
             for(var i=0; i<data.competitions.length; i++){
                 var row = $("<tr />");
-                $("<a>").attr("href","/newCompetitionMasterStep2/" + data.competitions[i]._id).text(data.competitions[i].name).appendTo(row);
+                $("<a>").attr("href","/newCompetitionStep2/" + data.competitions[i]._id).text(data.competitions[i].name).appendTo(row);
                 row.append("<td>" + data.competitions[i].date + "</td>");
                 row.append("<td>" + data.competitions[i].comments + "</td>");
                 row.append("<td>" + ( data.competitions[i].isActive == true ? "TAK" : "NIE" ) + "</td>");
@@ -32,11 +32,9 @@
 </head>
 
 <body>
+ 
         <div>
-            <input type="hidden" id="competitionMasterId" value="<%= competitionMaster._id %>" />    
-            
-            
-            
+            <input type="hidden" id="competitionMasterId" value="<%= competitionMaster._id %>" />   
         <a href="/administrator">Strona administratora</a>
         <a href="/logout">Wyloguj</a>
         <a href="/newCompetition/<%= competitionMaster._id %>" class="myButton" >Utwórz nową grupę</a>

@@ -68,7 +68,8 @@ var HorseGroup = mongoose.model("HorseGroup", {
         type: String,
         ref: "Horse"
     },
-    isActive: Boolean
+    isActive: Boolean,
+    startNumber: String
 });
 
 var HorseMark = mongoose.model("HorseMark", {

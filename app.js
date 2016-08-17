@@ -363,7 +363,8 @@ sio.sockets.on('connection', function (socket) {
         var horseComp = new db.HorseGroup({
             competition:data.competitionId,
             horse: data.horseId,
-            isActive: false
+            isActive: false,
+            startNumber: 0
         });
         
         horseComp.save(function(err) {
@@ -497,12 +498,19 @@ sio.sockets.on('connection', function (socket) {
                                 return;
                             } else {
                                 ent.isActive = true;
-                                ent.save(function(err) {
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        regenerateHorseMarks(data.competitionId, data.horseId, ent);
-                                    }
+                                db.HorseGroup.find({
+                                    competition: data.competitionId,
+                                    startNumber: { $gt: 0 }
+                                })
+                                .exec(function(err, horsesWithStartNumber) {
+                                    ent.startNumber = horsesWithStartNumber.length + 1;
+                                    ent.save(function(err) {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            regenerateHorseMarks(data.competitionId, data.horseId, ent);
+                                        }
+                                    });
                                 });
                             }
                         }

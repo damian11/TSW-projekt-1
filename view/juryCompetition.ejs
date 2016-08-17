@@ -35,9 +35,9 @@
                 var row = $("<tr />");
                 
                 if (data.horses[i].isActive) {
-                    $("<td>").append( $("<a>").attr("href", "/horse/competition/" + data.horses[i].horse._id+"/"+competitionId).text("Koń "+(i+1)) ).appendTo(row);
+                    $("<td>").append( $("<a>").attr("href", "/horse/competition/" + data.horses[i].horse._id+"/"+competitionId).text("Koń z numerem startowym: "+(data.horses[i].startNumber)) ).appendTo(row);
                 } else {
-                    $("<td>Koń "+(i+1)+"</td>").appendTo(row);
+                    $("<td>Koń z numerem startowym: "+data.horses[i].startNumber+"</td>").appendTo(row);
                 }
                 
                 competitions.append(row);
