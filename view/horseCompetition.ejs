@@ -10,189 +10,208 @@
 <body>
     <script>
     $(function() {
-        var competitionId = "<%- horseMark.competition._id %>";
-        var juryId = "<%- horseMark.jury._id %>";
-        var horseId = "<%- horseMark.horse._id %>";
-        
         var socket = io.connect('//' + window.location.host, {secure: true});
         
-        socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
-            competitionId: "<%- horseMark.competition._id %>",
-            juryId: "<%- horseMark.jury._id %>",
-            horseId: "<%- horseMark.horse._id %>"
+        socket.emit("getActiveCompetitionHorseJuryReq", {
+            loggedUserId: "<%= loggedUser._id %>"
         });
         
-        setInterval(function() {
-            socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
-                competitionId: "<%- horseMark.competition._id %>",
-                juryId: "<%- horseMark.jury._id %>",
-                horseId: "<%- horseMark.horse._id %>"
-            });
-        }, 1000);
-        //sprawdza czy admin nie deaktywował zawodów i jak tak to wywala ze strony
-        socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", function(data) {
-            if(data.status == "NOK") {
-                window.location = "/jury/competition/"+competitionId;
+        socket.on("getActiveCompetitionHorseJuryRes", function(data) {
+            if(data.status === "OK"){
+             $("#dataMark").show();
+                var competitionId = data.competitionId;
+                var juryId = data.juryId;
+                var horseId = data.horseId;
+                var horseStartNumber = data.horseGroup.startNumber;
+                var competition = data.competition;
+
+                $("#horseStartNumber").text("Ocena konia o numerze startowym: " + horseStartNumber).append( $("<h4>Zawody: " + competition.name + " </h4>") );
+
+                socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
+                    competitionId: competitionId,
+                    juryId: juryId,
+                    horseId: horseId
+                });
+
+                setInterval(function() {
+                    socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
+                    competitionId: competitionId,
+                    juryId: juryId,
+                    horseId: horseId
+                    });
+                }, 1000);
+                //sprawdza czy admin nie deaktywował zawodów i jak tak to wywala ze strony
+                socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", function(data) {
+                    if(data.status == "NOK") {
+                        window.location = "/";
+                    }
+
+                    $("#type div").removeClass("active");
+                    var type = $("#type"+data.horseMark.type);
+                    type.addClass("active");
+
+                    $("#head div").removeClass("active");
+                    var head = $("#head"+data.horseMark.head);
+                    head.addClass("active");
+
+                    $("#body div").removeClass("active");
+                    var body = $("#body"+data.horseMark.body);
+                    body.addClass("active");
+
+                    $("#legs div").removeClass("active");
+                    var legs = $("#legs"+data.horseMark.legs);
+                    legs.addClass("active");
+
+                    $("#movement div").removeClass("active");
+                    var movement = $("#movement"+data.horseMark.movement);
+                    movement.addClass("active");
+                });
+
+                socket.on("changeMarkRes", function(data) {
+
+                    console.log(data);
+                    socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
+                    competitionId: competitionId,
+                    juryId: juryId,
+                    horseId: horseId
+                    });
+                });
+
+                for (var i=1; i<21; i++) {
+                    var type = $("#type");
+                    var div = $("<div>").attr("id", "type"+i).addClass("box").val(i).text(i);
+                    div.click(function(e) {
+                        socket.emit("changeTypeMarkReq", {
+                    competitionId: competitionId,
+                    juryId: juryId,
+                    horseId: horseId,
+                            type: $(this).val()
+                        });
+                    });
+                    type.append(div);
+
+                    if ( ($(document).width() <= 800) && (i==10)){
+                        type.append($("<br>"));
+                    }
+
+                    var head = $("#head");
+                    var div = $("<div>").attr("id", "head"+i).addClass("box").val(i).text(i);
+                    div.click(function(e) {
+                        socket.emit("changeHeadMarkReq", {
+                    competitionId: competitionId,
+                    juryId: juryId,
+                    horseId: horseId,
+                            head: $(this).val()
+                        });
+                    });
+                    head.append(div);
+
+                       if ( ($(window).width() <= 800) && (i==10)){
+                        head.append($("<br>"));
+                    }
+                    var body = $("#body");
+                    var div = $("<div>").attr("id", "body"+i).addClass("box").val(i).text(i);
+                    div.click(function(e) {
+                        socket.emit("changeBodyMarkReq", {
+                        competitionId: competitionId,
+                        juryId: juryId,
+                        horseId: horseId,
+                            body: $(this).val()
+                        });
+                    });
+                    body.append(div);
+
+                       if ( ($(window).width() <= 800) && (i==10)){
+                        body.append($("<br>"));
+                    }
+                    var legs = $("#legs");
+                    var div = $("<div>").attr("id", "legs"+i).addClass("box").val(i).text(i);
+                    div.click(function(e) {
+                        socket.emit("changeLegsMarkReq", {
+                        competitionId: competitionId,
+                        juryId: juryId,
+                        horseId: horseId,
+                            legs: $(this).val()
+                        });
+                    });
+                    legs.append(div);
+
+                       if ( ($(window).width() <= 800) && (i==10)){
+                        legs.append($("<br>"));
+                    }
+                    var movement = $("#movement");
+                    var div = $("<div>").attr("id", "movement"+i).addClass("box").val(i).text(i);
+                    div.click(function(e) {
+                        socket.emit("changeMovementMarkReq", {
+                        competitionId: competitionId,
+                        juryId: juryId,
+                        horseId: horseId,
+                            movement: $(this).val()
+                        });
+                    });
+                    movement.append(div);
+
+                      if ( ($(window).width() <= 800) && (i==10)){
+                        movement.append($("<br>"));
+                    }           
+                }               
+                setInterval(function() {
+        //            console.log("shouldIHurryUpReq");
+                    socket.emit("shouldIHurryUpReq", {
+                        competitionId: competitionId,
+                        juryId: juryId,
+                        horseId: horseId
+                    });
+                }, 1000);
+
+                socket.on("shouldIHurryUpRes", function(data) {
+        //            console.log("shouldIHurryUpRes")
+                    $("#message").text("Proszę się pośpieszyć!").addClass("hurryfont");
+
+                    $("#type").removeClass("red-border");
+                    $("#head").removeClass("red-border");
+                    $("#body").removeClass("red-border");
+                    $("#legs").removeClass("red-border");
+                    $("#movement").removeClass("red-border");
+
+                    if (data.horseMark.type === 0) {
+                        $("#type").addClass("red-border");
+                    }
+                  
+                });
+                
+            } else if(data.status === "NODATA"){
+                $("#message").text("Brak aktywnych koni w zawodach");
+                $("#dataMark").hide();
             }
-            
-            $("#type div").removeClass("active");
-            var type = $("#type"+data.horseMark.type);
-            type.addClass("active");
-            
-            $("#head div").removeClass("active");
-            var head = $("#head"+data.horseMark.head);
-            head.addClass("active");
-            
-            $("#body div").removeClass("active");
-            var body = $("#body"+data.horseMark.body);
-            body.addClass("active");
-            
-            $("#legs div").removeClass("active");
-            var legs = $("#legs"+data.horseMark.legs);
-            legs.addClass("active");
-            
-            $("#movement div").removeClass("active");
-            var movement = $("#movement"+data.horseMark.movement);
-            movement.addClass("active");
         });
         
-        socket.on("changeMarkRes", function(data) {
-            socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
-                competitionId: "<%- horseMark.competition._id %>",
-                juryId: "<%- horseMark.jury._id %>",
-                horseId: "<%- horseMark.horse._id %>"
-            });
-        });
-        
-        for (var i=1; i<21; i++) {
-            var type = $("#type");
-            var div = $("<div>").attr("id", "type"+i).addClass("box").val(i).text(i);
-            div.click(function(e) {
-                socket.emit("changeTypeMarkReq", {
-                    competitionId: "<%- horseMark.competition._id %>",
-                    juryId: "<%- horseMark.jury._id %>",
-                    horseId: "<%- horseMark.horse._id %>",
-                    type: $(this).val()
-                });
-            });
-            type.append(div);
-            
-            if ( ($(document).width() <= 800) && (i==10)){
-                type.append($("<br>"));
-            }
-            
-            var head = $("#head");
-            var div = $("<div>").attr("id", "head"+i).addClass("box").val(i).text(i);
-            div.click(function(e) {
-                socket.emit("changeHeadMarkReq", {
-                    competitionId: "<%- horseMark.competition._id %>",
-                    juryId: "<%- horseMark.jury._id %>",
-                    horseId: "<%- horseMark.horse._id %>",
-                    head: $(this).val()
-                });
-            });
-            head.append(div);
-            
-               if ( ($(window).width() <= 800) && (i==10)){
-                head.append($("<br>"));
-            }
-            var body = $("#body");
-            var div = $("<div>").attr("id", "body"+i).addClass("box").val(i).text(i);
-            div.click(function(e) {
-                socket.emit("changeBodyMarkReq", {
-                    competitionId: "<%- horseMark.competition._id %>",
-                    juryId: "<%- horseMark.jury._id %>",
-                    horseId: "<%- horseMark.horse._id %>",
-                    body: $(this).val()
-                });
-            });
-            body.append(div);
-            
-               if ( ($(window).width() <= 800) && (i==10)){
-                body.append($("<br>"));
-            }
-            var legs = $("#legs");
-            var div = $("<div>").attr("id", "legs"+i).addClass("box").val(i).text(i);
-            div.click(function(e) {
-                socket.emit("changeLegsMarkReq", {
-                    competitionId: "<%- horseMark.competition._id %>",
-                    juryId: "<%- horseMark.jury._id %>",
-                    horseId: "<%- horseMark.horse._id %>",
-                    legs: $(this).val()
-                });
-            });
-            legs.append(div);
-            
-               if ( ($(window).width() <= 800) && (i==10)){
-                legs.append($("<br>"));
-            }
-            var movement = $("#movement");
-            var div = $("<div>").attr("id", "movement"+i).addClass("box").val(i).text(i);
-            div.click(function(e) {
-                socket.emit("changeMovementMarkReq", {
-                    competitionId: "<%- horseMark.competition._id %>",
-                    juryId: "<%- horseMark.jury._id %>",
-                    horseId: "<%- horseMark.horse._id %>",
-                    movement: $(this).val()
-                });
-            });
-            movement.append(div);
-            
-              if ( ($(window).width() <= 800) && (i==10)){
-                movement.append($("<br>"));
-            }           
-        }               
-        setInterval(function() {
-//            console.log("shouldIHurryUpReq");
-            socket.emit("shouldIHurryUpReq", {
-                competitionId: competitionId,
-                juryId: juryId,
-                horseId: "<%- horseMark.horse._id %>"
-            });
-        }, 1000);
-        
-        socket.on("shouldIHurryUpRes", function(data) {
-//            console.log("shouldIHurryUpRes")
-            $("#message").text("Proszę się pośpieszyć!").addClass("hurryfont");
-            
-            $("#type").removeClass("red-border");
-            $("#head").removeClass("red-border");
-            $("#body").removeClass("red-border");
-            $("#legs").removeClass("red-border");
-            $("#movement").removeClass("red-border");
-            
-            if (data.horseMark.type === 0) {
-                $("#type").addClass("red-border");
-            }
-        });
     });
     </script>
     <div>
-        <a href="/jury/competition/<%- horseMark.competition._id %>">Powrót do strony zawodów</a>
         <a href="/logout">Wyloguj</a>
     </div>
     <div id="message"></div>
-    <h1>Ocena konia</h1>
-    <div>
-        <div id="type">
-            <p>Typ</p>
-        </div>
-        <div id="head">
-            <p>Głowa</p>
-        </div>
-        <div id="body">
-            <p>Kłoda</p>
-        </div>
-        <div id="legs">
-            <p>Nogi</p>
-        </div>
-        <div id="movement">
-            <p>Ruch</p>
-        </div>
-    </div>
+    <div id="dataMark">
+        <h1 id="horseStartNumber">Ocena konia</h1>
         <div>
-            <a href="/jury/competition/<%- horseMark.competition._id %>" class="myButton">Zakończ ocene konia</a>
+            <div id="type">
+                <p>Typ</p>
+            </div>
+            <div id="head">
+                <p>Głowa</p>
+            </div>
+            <div id="body">
+                <p>Kłoda</p>
+            </div>
+            <div id="legs">
+                <p>Nogi</p>
+            </div>
+            <div id="movement">
+                <p>Ruch</p>
+            </div>
         </div>
+    </div>    
 </body>
 
 </html>

@@ -670,12 +670,14 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", function(data) {
+        console.log(data);
         db.HorseGroup.findOne({
             competition: data.competitionId,
             horse: data.horseId,
             isActive: true
         })
         .exec(function(err, horseGroup) {
+            console.log("//" + horseGroup);
             if (err) {
                 console.log(err);
             } else {
@@ -956,6 +958,49 @@ sio.sockets.on('connection', function (socket) {
                competitions: competitions 
             });
         });
+    });
+    
+    
+    socket.on("getActiveCompetitionHorseJuryReq",function(data){
+        db.JuryGroup.find({
+            jury: data.loggedUserId
+        })
+        .populate({
+            path: "competition",
+            match: { isActive: true}
+        })
+        .exec(function(err,ent){
+            var competition = null;
+            
+            for (var i in ent) {
+                if(ent[i].competition != null) {
+                    competition = ent[i].competition;
+                    break;
+                }
+            }
+            
+            db.HorseGroup.find({
+                competition: competition._id,
+                isActive: true
+            })
+            .exec(function(err, horseGroup) {
+                if(horseGroup[0] === null || typeof horseGroup[0] == "undefined"){
+                   socket.emit("getActiveCompetitionHorseJuryRes", {
+                       status: "NODATA"
+                   });
+                } else {
+                    socket.emit("getActiveCompetitionHorseJuryRes", {
+                        juryId: data.loggedUserId,
+                        horseId: horseGroup[0].horse,
+                        competitionId: competition._id,
+                        horseGroup: horseGroup[0],
+                        competition: competition,
+                        status: "OK"
+                    });
+                }
+            });
+        });
+        
     });
     
 });

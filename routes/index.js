@@ -16,7 +16,7 @@ exports.index = function (req, res) {
                         user: ent
                     });
                 } else {
-                    res.render("jury", {
+                    res.render("horseCompetition", {
                         loggedUser: ent
                     });
                 }
