@@ -15,6 +15,11 @@
         socket.emit("getActiveCompetitionHorseJuryReq", {
             loggedUserId: "<%= loggedUser._id %>"
         });
+        setInterval(function() {
+            socket.emit("getActiveCompetitionHorseJuryReq", {
+                loggedUserId: "<%= loggedUser._id %>"
+            });
+        }, 2000);
         
         socket.on("getActiveCompetitionHorseJuryRes", function(data) {
             if(data.status === "OK"){
@@ -33,13 +38,7 @@
                     horseId: horseId
                 });
 
-                setInterval(function() {
-                    socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
-                    competitionId: competitionId,
-                    juryId: juryId,
-                    horseId: horseId
-                    });
-                }, 1000);
+
                 //sprawdza czy admin nie deaktywował zawodów i jak tak to wywala ze strony
                 socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdRes", function(data) {
                     if(data.status == "NOK") {
@@ -68,8 +67,6 @@
                 });
 
                 socket.on("changeMarkRes", function(data) {
-
-                    console.log(data);
                     socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
                     competitionId: competitionId,
                     juryId: juryId,
@@ -77,14 +74,25 @@
                     });
                 });
 
+                var type = $("#type");
+                var head = $("#head");
+                var body = $("#body");
+                var legs = $("#legs");
+                var movement = $("#movement");
+                
+                type.empty().append("<p>Typ</p>");
+                head.empty().append("<p>Głowa</p>");
+                body.empty().append("<p>Kłoda</p>");
+                legs.empty().append("<p>Nogi</p>");
+                movement.empty().append("<p>Ruch</p>");
+                
                 for (var i=1; i<21; i++) {
-                    var type = $("#type");
                     var div = $("<div>").attr("id", "type"+i).addClass("box").val(i).text(i);
                     div.click(function(e) {
                         socket.emit("changeTypeMarkReq", {
-                    competitionId: competitionId,
-                    juryId: juryId,
-                    horseId: horseId,
+                            competitionId: competitionId,
+                            juryId: juryId,
+                            horseId: horseId,
                             type: $(this).val()
                         });
                     });
@@ -94,7 +102,6 @@
                         type.append($("<br>"));
                     }
 
-                    var head = $("#head");
                     var div = $("<div>").attr("id", "head"+i).addClass("box").val(i).text(i);
                     div.click(function(e) {
                         socket.emit("changeHeadMarkReq", {
@@ -109,7 +116,6 @@
                        if ( ($(window).width() <= 800) && (i==10)){
                         head.append($("<br>"));
                     }
-                    var body = $("#body");
                     var div = $("<div>").attr("id", "body"+i).addClass("box").val(i).text(i);
                     div.click(function(e) {
                         socket.emit("changeBodyMarkReq", {
@@ -124,7 +130,6 @@
                        if ( ($(window).width() <= 800) && (i==10)){
                         body.append($("<br>"));
                     }
-                    var legs = $("#legs");
                     var div = $("<div>").attr("id", "legs"+i).addClass("box").val(i).text(i);
                     div.click(function(e) {
                         socket.emit("changeLegsMarkReq", {
@@ -139,7 +144,6 @@
                        if ( ($(window).width() <= 800) && (i==10)){
                         legs.append($("<br>"));
                     }
-                    var movement = $("#movement");
                     var div = $("<div>").attr("id", "movement"+i).addClass("box").val(i).text(i);
                     div.click(function(e) {
                         socket.emit("changeMovementMarkReq", {

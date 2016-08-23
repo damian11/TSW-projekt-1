@@ -103,7 +103,7 @@ app.post("/newCompetitionStep2", routes.newCompetitionStep2);
 app.get("/newCompetitionStep2/:competitionId", routes.GETnewCompetitionStep2);
 app.post("/editProfile", routes.editProfile);
 app.get("/newCompetition/:competitionMasterId", routes.GETnewCompetitionMaster);
-
+app.get("/competitionMasterManager", routes.competitionMasterManager);
 
 app.get('/guzik', routes.guzik);
 
@@ -147,6 +147,7 @@ app.post("/newCompetitionMasterStep2", routes.newCompetitionMasterStep2);
 app.get("/newCompetitionMasterStep2/:competitionMasterId", routes.GETnewCompetitionMasterStep2);
 app.get("/horseManager", routes.horseManager);
 app.get("/competitionManager", routes.competitionManager);
+
 var privateKey = fs.readFileSync( "cert/server-key.pem" );
 var certificate = fs.readFileSync( "cert/server-cert.pem" );
 
@@ -434,9 +435,13 @@ sio.sockets.on('connection', function (socket) {
     }
     
     function regenerateHorseMarks(competitionId, horseId, horseEnt) {
+        console.log("competitionId: " + competitionId);
+        console.log("horseId: " + horseId);
+        console.log("horseEnt: " + horseEnt);
         db.JuryGroup.find({
             competition: competitionId
         }, function (err, juriesInCompetition) {
+        console.log("juriesInCompetition: " + juriesInCompetition);
             if (err) {
                 console.log(err);
             } else {
@@ -445,22 +450,25 @@ sio.sockets.on('connection', function (socket) {
                     competition: competitionId
                 })
                 .remove()
-                .exec();
+                .exec(function(err, data) {
+        console.log("remove: ");
 
-                for (var i=0;i<juriesInCompetition.length; i++) {
-                    var horseMark = new db.HorseMark({
-                        type: 0,
-                        head: 0,
-                        body: 0,
-                        legs: 0,
-                        movement: 0,
-                        competition: competitionId,
-                        horse: horseId,
-                        jury: juriesInCompetition[i].jury
-                    });
+                    for (var i=0;i<juriesInCompetition.length; i++) {
+                        var horseMark = new db.HorseMark({
+                            type: 0,
+                            head: 0,
+                            body: 0,
+                            legs: 0,
+                            movement: 0,
+                            competition: competitionId,
+                            horse: horseId,
+                            jury: juriesInCompetition[i].jury
+                        });
 
-                    horseMark.save();
-                }
+                        horseMark.save();
+            console.log("save: ");
+                    }
+                });
 
                 socket.emit("horseActivateInCompetitionRes", {
                     competitionId: competitionId,
@@ -601,18 +609,32 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
-        socket.on("competitionStopReq", function(data) {
+    socket.on("competitionStopReq", function(data) {
         db.Competition.findById(data.competitionId, function(err, ent) {
-            ent.isActive = false;
-            ent.save(function(err) {
-                if (err) {
-                    console.log(err);
-                } else {
+            db.HorseGroup.find({
+                competition: data.competitionId,
+                isActive: true
+            })
+            .exec(function(err, horseGroup) {
+                if(horseGroup.length != 0) {
                     socket.emit("competitionStopRes", {
-                        competitionId: ent._id
+                        status: "NOK",
+                        message: "Nie można zakończyć zawodów, gdyż istnieją w nich aktywne konie"
+                    });
+                } else {
+                    ent.isActive = false;
+                    ent.save(function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            socket.emit("competitionStopRes", {
+                                status: "OK",
+                                competitionId: ent._id
+                            });
+                        }
                     });
                 }
-            });
+            })
         });
     });
     
@@ -670,14 +692,14 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", function(data) {
-        console.log(data);
+//        console.log(data);
         db.HorseGroup.findOne({
             competition: data.competitionId,
             horse: data.horseId,
             isActive: true
         })
         .exec(function(err, horseGroup) {
-            console.log("//" + horseGroup);
+//            console.log("//" + horseGroup);
             if (err) {
                 console.log(err);
             } else {
@@ -978,27 +1000,33 @@ sio.sockets.on('connection', function (socket) {
                     break;
                 }
             }
-            
-            db.HorseGroup.find({
-                competition: competition._id,
-                isActive: true
-            })
-            .exec(function(err, horseGroup) {
-                if(horseGroup[0] === null || typeof horseGroup[0] == "undefined"){
+            if(competition == null){
                    socket.emit("getActiveCompetitionHorseJuryRes", {
                        status: "NODATA"
                    });
-                } else {
-                    socket.emit("getActiveCompetitionHorseJuryRes", {
-                        juryId: data.loggedUserId,
-                        horseId: horseGroup[0].horse,
-                        competitionId: competition._id,
-                        horseGroup: horseGroup[0],
-                        competition: competition,
-                        status: "OK"
-                    });
-                }
-            });
+            }
+            else{
+                    db.HorseGroup.find({
+                        competition: competition._id,
+                        isActive: true
+                    })
+                .exec(function(err, horseGroup) {
+                    if(horseGroup[0] === null || typeof horseGroup[0] == "undefined"){
+                       socket.emit("getActiveCompetitionHorseJuryRes", {
+                           status: "NODATA"
+                       });
+                    } else {
+                        socket.emit("getActiveCompetitionHorseJuryRes", {
+                            juryId: data.loggedUserId,
+                            horseId: horseGroup[0].horse,
+                            competitionId: competition._id,
+                            horseGroup: horseGroup[0],
+                            competition: competition,
+                            status: "OK"
+                        });
+                    }
+                });
+            }
         });
         
     });

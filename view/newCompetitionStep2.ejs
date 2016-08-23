@@ -215,8 +215,12 @@
             });
         });
         socket.on("competitionStopRes", function(data){
-            $("#competitionStatus").text("Nieaktywne");
-            window.location = "/newCompetitionStep2/" + data.competitionId;
+            if(data.status == "OK") {
+                $("#competitionStatus").text("Nieaktywne");
+                window.location = "/newCompetitionStep2/" + data.competitionId;
+            } else if(data.status == "NOK") {
+                alert(data.message);
+            }
             
       
         });
@@ -266,28 +270,6 @@
                 height: 'toggle'
             });
     //        $("horsev").toggle();
-        });
-
-
-
-
-        $("#competitionStop").click(function(){
-//            $("#juryInCompetition").animate({
-//                height: 'toggle'
-//            });
-//             $("#horsesInCompetition").animate({
-//                height: 'toggle'
-//            });
-        });
-
-        $("#competitionStart").click(function(){
-//            $("#juryInCompetition").animate({
-//                height: 'toggle'
-//            });
-//             $("#horsesInCompetition").animate({
-//                height: 'toggle'
-//            });
-    //        $("competitionv").toggle();
         });
 
             $("input[type=date]").datepicker();

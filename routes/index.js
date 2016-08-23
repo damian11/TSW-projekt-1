@@ -474,6 +474,25 @@ exports.competitionManager = function (req, res) {
     }
 }
 
+
+
+exports.competitionMasterManager = function(req, res) {
+    if (req.session.loggedUser !== null) {
+        if(req.session.loggedUser.isAdmin) {
+            res.render("competitionMasterManager");
+            }else {
+               res.render("unauthorized",{
+                   loggedUser: req.session.loggedUser
+               }); 
+            }
+    }   else{
+        res.render("unauthorized",{
+            loggedUser: req.session.loggedUser
+        });
+    }
+}
+
+
 exports.horseManager = function (req, res) {
     if (req.session.loggedUser !== null){
         if(req.session.loggedUser.isAdmin) {
