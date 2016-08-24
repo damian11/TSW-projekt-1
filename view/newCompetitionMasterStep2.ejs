@@ -22,9 +22,26 @@
                 row.append("<td>" + data.competitions[i].date + "</td>");
                 row.append("<td>" + data.competitions[i].comments + "</td>");
                 row.append("<td>" + ( data.competitions[i].isActive == true ? "TAK" : "NIE" ) + "</td>");
+                var buttons = $("<td>");
+                
+                var deleteButton = $("<span>");
+                deleteButton.attr("competitionId", data.competitions[i]._id);
+                var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
+                deleteButton.click(function(e){
+                    socket.emit("competitionDeleteByIDReq", {
+                        competitionId: $(this).attr("competitionId")
+                    });
+                });
+                buttons.append(deleteButton)
+                row.append(buttons);
                 competitionMasterList.append(row);
             }
         });
+            socket.on("competitionDeleteByIDRes", function(data){
+                socket.emit("competitionsByCompetitionMasterIdReq", {
+                    competitionMasterId: competitionMasterId
+                });
+            });
     });
     
     </script>
@@ -48,6 +65,7 @@
                 <td>Data</td>
                 <td>Komentarz</td>
                 <td>Aktywny</td>
+                <td>Operacje</td>
                 
             </tr>    
         </thead>

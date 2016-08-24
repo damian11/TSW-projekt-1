@@ -295,6 +295,19 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
+    
+    socket.on("competitionMasterReadByIDReq", function(data){
+       db.CompetitionMaster.findById(data.competitionMasterId, function(err,ent){
+          if(err) {
+              console.log(err);
+          } else{
+              socket.emit("competitionMasterReadByIDRes",{
+                 data: ent 
+              });
+          }
+       }); 
+    });
+    
     socket.on("juryDeleteByIDReq", function(data) {
         db.User.findById(data.userId, function(err, ent) {
             if (err) {
@@ -312,6 +325,44 @@ sio.sockets.on('connection', function (socket) {
             }
         });
     });
+    
+    
+    socket.on("competitionMasterDeleteByIDReq", function(data) {
+        db.CompetitionMaster.findById(data.competitionMasterId, function(err, ent) { console.log(ent);
+            if(err) {
+                console.log(err);
+            } else {
+                ent.remove(function(err){
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        socket.emit("competitionMasterDeleteByIDRes",{
+                            status: "OK"
+                         });
+                    }
+                });
+            }
+        });
+    });
+    
+    socket.on("competitionDeleteByIDReq", function(data){
+        db.Competition.findById(data.competitionId, function(err,ent) {
+            if(err) {
+                console.log(err);
+            }else {
+                ent.remove(function(err){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        socket.emit("competitionDeleteByIDRes",{
+                           status: "OK" 
+                        });
+                    }
+                });
+            }
+        });
+    });
+    
     
     socket.on("juryReadByIDReq", function(data) { 
         db.User.findById(data.userId, function(err, ent) {
@@ -845,6 +896,25 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
+    
+    
+    socket.on("competitionMasterActivateReq",function(data){
+       db.CompetitionMaster.findById(data.competitionMasterId, function(err, competitionMaster){
+           if(err){
+               console.log(err);
+           } else{
+               if(competitionMaster.isActive == true){
+                   competitionMaster.isActive = false;
+               }else {
+                   competitionMaster.isActive = true;
+               }
+               competitionMaster.save(function(err){
+                   socket.emit("competitionMasterActivateRes");
+               });
+           }
+       }); 
+    });
+    
     socket.on("horseMarkByCompetitionIdReq", function(data) {
         db.HorseMark.find({
             competition: data.competitionId,
@@ -999,6 +1069,7 @@ sio.sockets.on('connection', function (socket) {
     });
     
     
+    
     socket.on("getActiveCompetitionHorseJuryReq",function(data){
         db.JuryGroup.find({
             jury: data.loggedUserId
@@ -1047,7 +1118,13 @@ sio.sockets.on('connection', function (socket) {
         
     });
     
+    
+    
+
+    
+    
 });
+
 
     
 
