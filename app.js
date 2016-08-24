@@ -941,6 +941,22 @@ sio.sockets.on('connection', function (socket) {
        });
    }); 
     
+  socket.on("competitionMasterListReq", function(data){
+      db.CompetitionMaster
+      .find()
+      .exec(function(err, competitionsmasters){
+          if(err){
+              console.log(err);
+          }else {
+              socket.emit("competitionMasterListRes",{
+                 
+                  competitionmasters: competitionsmasters
+                  
+              });
+          }
+      });
+  });    
+    
     socket.on("juryHurryUpReq", function(data) {
         hurryUpTab.push({
             competitionId: data.competitionId,

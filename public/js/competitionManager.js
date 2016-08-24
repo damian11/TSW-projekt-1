@@ -2,6 +2,7 @@ $(function() {
      var socket = io.connect('//' + window.location.host, {secure: true});
         socket.emit("competitionListReq");
         socket.on("competitionListRes", function(data){
+            console.log("aaaaaaa" + data);
           var  competitionList = $("#competitionList table tbody");
             competitionList.empty();
             
