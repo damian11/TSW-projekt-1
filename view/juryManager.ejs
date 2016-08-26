@@ -8,6 +8,25 @@
     <%- include("header") %>
     <script type="application/javascript" src="/js/juryManager.js"></script>
 </head>
+
+<nav>
+    <div>
+        <a href="/logout">Wyloguj</a>
+    </div>
+    <div>
+            <a href="/admin" class="myButton">Panel administratora</a>
+            <a href="/horseManager" class="myButton">Zarzadzaj koniami</a>
+            <a href="/competitionMasterManager" class="myButton">Zarządzaj zawodami</a>
+            <a href="/newCompetitionMaster" class="myButton">Utwórz nowe zawody</a>
+    </div>
+    <div class="message">
+        <%  if(typeof message != 'undefined'){ %>
+        <%= message %>
+        <% } %>   
+        
+    </div>
+</nav>
+    
     <body>
     <juryv style="display: inline-table">
     <div id="juryContainer">

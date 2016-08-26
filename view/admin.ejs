@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>    
+<%- include("header") %>    
+    
+
+</head>
+
+<body>
+
+    <nav>
+        <div>
+            
+            <a href="/logout">Wyloguj</a>
+        </div>
+        <div>
+            <a href="/admin" class="myButton">Panel administratora</a>
+            <a href="/profile" class="myButton">Edycja profilu</a>
+            <a href="/registerAdmin" class="myButton">Utwórz administratora</a>
+            <a href="/juryManager" class="myButton">Zarządzaj sędziami</a>
+            <a href="/horseManager" class="myButton">Zarzadzaj koniami</a>
+            <a href="/competitionMasterManager" class="myButton">Zarządzaj zawodami</a>
+            <a href="/newCompetitionMaster" class="myButton">Utwórz nowe zawody</a>
+
+        </div>
+        <div class="message">
+        <%  if(typeof message != 'undefined'){ %>
+        <%= message %>
+        <% } %>   
+        
+        </div>
+    </nav>
+    
+    
+</body>    
+    
+    
+</html>

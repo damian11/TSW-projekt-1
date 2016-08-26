@@ -12,7 +12,7 @@ exports.index = function (req, res) {
                 console.log(err);
             } else {
                 if ( (typeof ent.isAdmin != "undefined") && (ent.isAdmin) ) {
-                    res.render("administrator", {
+                    res.render("admin", {
                         user: ent
                     });
                 } else {
@@ -43,7 +43,7 @@ exports.login = function (req, res) {
 
 exports.newHorse = function(req, res) {
     if (req.body.dateOfBirth === "") {
-        res.render("administrator", {
+        res.render("admin", {
             message: "Nie zapisano konia w bazie danych - brak daty urodzenia",
             showHorses: true
         });
@@ -61,7 +61,7 @@ exports.newHorse = function(req, res) {
                         if (err) {
                             console.log(err);
                         } else {
-                            res.render("administrator", {
+                            res.render("admin", {
                                 message: "Poprawnie zaktualizowano konia w bazie danych",
                                 showHorses: true
                             });
@@ -81,7 +81,7 @@ exports.newHorse = function(req, res) {
                 if (err) {
                     console.log(err);
                 } else {
-                    res.render("administrator", {
+                    res.render("admin", {
                         message: "Poprawnie zapisano konia w bazie danych",
                         showHorses: true
                     });
@@ -126,7 +126,7 @@ exports.newUser = function(req, res) {
                     if (err) {
                         console.log(err);
                     } else {
-                        res.render("administrator", {
+                        res.render("admin", {
                             message: "Poprawnie zaktualizowano użytkownika w bazie danych",
                             showJuries: true
                         });
@@ -155,7 +155,7 @@ exports.newUser = function(req, res) {
                 console.log(err);
             } else {
                 if (req.user) {
-                    res.render("administrator", {
+                    res.render("admin", {
                         message: "Poprawnie zapisano użytkownika w bazie danych",
                         showJuries: true
                     });
@@ -270,6 +270,31 @@ exports.logout = function (req, res) {
     req.logout();
     res.redirect('/login');
 };
+
+
+exports.admin = function (req, res) {
+    if( (typeof req.session.loggedUser != "undefined") && (req.session.loggedUser !== null) ) {
+        if( (typeof req.session.loggedUser.isAdmin != "undefined") && (req.session.loggedUser.isAdmin !== null) ) {
+            if(req.session.loggedUser.isAdmin){
+                res.render("admin",{
+                    loggedUser: req.session.loggedUser
+                });
+            } else {
+                res.render("unauthorized",{
+                  loggedUser: req.session.loggedUser  
+                });
+            }
+        }else {
+            res.render("unauthorized",{
+                loggedUser: req.session.loggedUser
+            });
+        }
+    }else {
+        res.render("unauthorized", {
+            loggedUser: req.session.loggedUser
+        });
+    }
+}
 
 exports.administrator = function (req, res) {
     if ( (typeof req.session.loggedUser != "undefined") && (req.session.loggedUser !== null) ) {

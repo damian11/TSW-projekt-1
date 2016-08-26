@@ -10,15 +10,36 @@
 <body>
     <div>
      <% if(loggedUser.isAdmin = true) { %>
-    <a href="/administrator">Strona administratora</a>
+   <nav>
+        <div>
+            
+            <a href="/logout">Wyloguj</a>
+        </div>
+        <div>
+            <a href="/admin" class="myButton">Panel administratora</a>
+            <a href="/juryManager" class="myButton">Zarządzaj sędziami</a>
+            <a href="/horseManager" class="myButton">Zarzadzaj koniami</a>
+            <a href="/competitionMasterManager" class="myButton">Zarządzaj zawodami</a>
+            <a href="/newCompetitionMaster" class="myButton">Utwórz nowe zawody</a>
+
+        </div>
+
+    </nav>
        <% } else { %>
     <a href="/jury">Strona sędziego</a>
         <% } %>
-     <a href="/logout">Wyloguj</a>
+     
     </div>  
     
     <h1>Profil użytkownika</h1>
- 
+    
+         <div class="message">
+        <%  if(typeof message != 'undefined'){ %>
+        <%= message %>
+        <% } %>   
+        
+        </div>
+    
     <form action="/editProfile" method="post" class="form-style-6">
         <input type="hidden" name="isAdmin" value="<%= loggedUser.isAdmin %>" />
         <table>

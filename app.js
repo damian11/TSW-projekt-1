@@ -104,6 +104,7 @@ app.get("/newCompetitionStep2/:competitionId", routes.GETnewCompetitionStep2);
 app.post("/editProfile", routes.editProfile);
 app.get("/newCompetition/:competitionMasterId", routes.GETnewCompetitionMaster);
 app.get("/competitionMasterManager", routes.competitionMasterManager);
+app.get("/admin", routes.admin);
 
 app.get('/guzik', routes.guzik);
 
