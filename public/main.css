@@ -158,6 +158,49 @@ div.inline-block {
     background: #BBA30A;
 }
 
+.myButton1 {
+	-moz-box-shadow: 0px 10px 14px -7px #bdba00;
+	-webkit-box-shadow: 0px 10px 14px -7px #bdba00;
+	box-shadow: 0px 10px 14px -7px #bdba00;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #d9bf2b), color-stop(1, #edd500));
+	background:-moz-linear-gradient(top, #d9bf2b 5%, #edd500 100%);
+	background:-webkit-linear-gradient(top, #d9bf2b 5%, #edd500 100%);
+	background:-o-linear-gradient(top, #d9bf2b 5%, #edd500 100%);
+	background:-ms-linear-gradient(top, #d9bf2b 5%, #edd500 100%);
+	background:linear-gradient(to bottom, #d9bf2b 5%, #edd500 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d9bf2b', endColorstr='#edd500',GradientType=0);
+	background-color:#d9bf2b;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	border:1px solid #fceb00;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:19px;
+	font-weight:bold;
+	padding:10px 15px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #fcd600;
+}
+.myButton1:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #edd500), color-stop(1, #d9bf2b));
+	background:-moz-linear-gradient(top, #edd500 5%, #d9bf2b 100%);
+	background:-webkit-linear-gradient(top, #edd500 5%, #d9bf2b 100%);
+	background:-o-linear-gradient(top, #edd500 5%, #d9bf2b 100%);
+	background:-ms-linear-gradient(top, #edd500 5%, #d9bf2b 100%);
+	background:linear-gradient(to bottom, #edd500 5%, #d9bf2b 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#edd500', endColorstr='#d9bf2b',GradientType=0);
+	background-color:#edd500;
+}
+.myButton1:active {
+	position:relative;
+	top:1px;
+}
+
+
+
 .myButton {
 	-moz-box-shadow: 0px 10px 14px -7px #bdba00;
 	-webkit-box-shadow: 0px 10px 14px -7px #bdba00;
@@ -198,6 +241,13 @@ div.inline-block {
 	position:relative;
 	top:1px;
 }
+
+
+
+
+
+
+
 
 .newCompetitionStep1 {
  
