@@ -107,6 +107,7 @@ app.get("/competitionMasterManager", routes.competitionMasterManager);
 app.get("/admin", routes.admin);
 
 app.get('/guzik', routes.guzik);
+app.get("/showCompetitionNew", function(req, res) {res.render("showCompetitionNew");});
 
 
 app.post('/login',
@@ -953,6 +954,7 @@ sio.sockets.on('connection', function (socket) {
                 }
 
                 socket.emit("horseMarkByCompetitionIdRes", {
+                    competitionId: data.competitionId,
                     horseMarks: doneHorseMarks
                 });
             });
@@ -1094,10 +1096,10 @@ sio.sockets.on('connection', function (socket) {
                    });
             }
             else{
-                    db.HorseGroup.find({
-                        competition: competition._id,
-                        isActive: true
-                    })
+                db.HorseGroup.find({
+                    competition: competition._id,
+                    isActive: true
+                })
                 .exec(function(err, horseGroup) {
                     if(horseGroup[0] === null || typeof horseGroup[0] == "undefined"){
                        socket.emit("getActiveCompetitionHorseJuryRes", {
@@ -1119,10 +1121,40 @@ sio.sockets.on('connection', function (socket) {
         
     });
     
+    socket.on("getActiveCompetitionMasterAndCompetitionReq", function(data) {
+        db.Competition.find()
+        .populate({
+            path: "competitionMaster",
+            match: {isActive: true}
+        })
+        .exec(function(err, competitions) {
+            if (err) {
+                console.log(err);
+            } else {
+                for (var i in competitions) {
+                    if (competitions[i].competitionMaster == null) {
+                        competitions.splice(i);
+                    }
+                }
+                socket.emit("getActiveCompetitionMasterAndCompetitionRes", {
+                    competitions: competitions
+                });
+            }
+        });
+    });
     
-    
-
-    
+    socket.on("getHorseStartNumberByCompetitionReq", function(data) {
+        db.HorseGroup.find({
+            horse: data.horseId,
+            competition: data.competitionId
+        })
+        .exec(function(err, horseGroupsTable) {
+            socket.emit("getHorseStartNumberByCompetitionRes", {
+                horseGroup: horseGroupsTable[0]
+            });
+        });
+    });
+        
     
 });
 
