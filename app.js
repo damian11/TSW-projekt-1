@@ -905,13 +905,33 @@ sio.sockets.on('connection', function (socket) {
            if(err){
                console.log(err);
            } else{
+            
                if(competitionMaster.isActive == true){
                    competitionMaster.isActive = false;
                }else {
-                   competitionMaster.isActive = true;
+                    db.CompetitionMaster.find({
+                          isActive: true
+                    })
+                    .exec(function(err,competitionmasters){console.log(competitionmasters);
+                        if(competitionmasters.length == 0){
+                            competitionMaster.isActive = true;
+                            competitionMaster.save(function(err){
+                                socket.emit("competitionMasterActivateRes",{
+                                    message: ""
+                                });
+                            });
+                        }else{
+                            socket.emit('competitionMasterActivateRes',{
+                                message: "Nie można aktywować zawodów dopóki inne sa aktywne"
+                            })
+                        }
+                    })
+                    
                }
                competitionMaster.save(function(err){
-                   socket.emit("competitionMasterActivateRes");
+                   socket.emit("competitionMasterActivateRes",{
+                       message: ""
+                   });
                });
            }
        }); 

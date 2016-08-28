@@ -55,6 +55,11 @@ $(function() {
         socket.emit("competitionMasterListReq")
     });
     socket.on("competitionMasterActivateRes", function(data){
-        socket.emit("competitionMasterListReq")
+        if(data.message != "" ){
+         alert(data.message);
+        }else{
+            socket.emit("competitionMasterListReq");
+        }
+        
     });
 });
