@@ -937,6 +937,41 @@ sio.sockets.on('connection', function (socket) {
        }); 
     });
     
+    socket.on("horseMarkReq", function(data) {
+        //data.gender  MALE | FEMALE
+        
+        db.HorseMark.find({
+            type: {$ne: 0},
+            head: {$ne: 0},
+            body: {$ne: 0},
+            legs: {$ne: 0},
+            movement: {$ne: 0}
+        })
+        .populate({
+            path: "horse",
+            match: {gender: data.gender}
+        })
+        .populate("competition jury")
+        .exec(function(err, horseMarks) {
+            var doneHorseMarks = [];
+            var horsesIds = [];
+            
+            for (var i=horseMarks.length-1; i>=0; i--) {
+                if (horseMarks[i].horse == null) {
+                    horseMarks.splice(i)
+                }
+            }
+            
+            for (var i in horseMarks) {
+                doneHorseMarks.push(horseMarks[i]);
+            }
+            
+            socket.emit("horseMarkRes", {
+                horseMarks: doneHorseMarks
+            });
+        });
+    });
+    
     socket.on("horseMarkByCompetitionIdReq", function(data) {
         db.HorseMark.find({
             competition: data.competitionId,
@@ -1151,9 +1186,9 @@ sio.sockets.on('connection', function (socket) {
             if (err) {
                 console.log(err);
             } else {
-                for (var i in competitions) {
+                for (var i=competitions.length-1; i>=0; i--) {
                     if (competitions[i].competitionMaster == null) {
-                        competitions.splice(i);
+                        competitions.splice(i, 1);
                     }
                 }
                 socket.emit("getActiveCompetitionMasterAndCompetitionRes", {

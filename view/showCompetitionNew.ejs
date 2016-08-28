@@ -9,6 +9,11 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io.connect('//' + window.location.host, {secure: true});
+        
+        socket.emit("horseMarkReq", {gender: "MALE"});
+        socket.on("horseMarkRes", function(data) {
+            console.log(data);
+        });
 
         socket.emit("getActiveCompetitionMasterAndCompetitionReq");
         
