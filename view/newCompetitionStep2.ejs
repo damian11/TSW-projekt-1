@@ -19,6 +19,11 @@
             <a href="/competitionMasterManager" class="myButton">Zarządzaj zawodami</a>
             <a href="/newCompetitionMaster" class="myButton">Utwórz nowe zawody</a>
 
+
+
+
+            
+            
         </div>
         <div class="message">
         <%  if(typeof message != 'undefined'){ %>
@@ -453,11 +458,11 @@
         <h1>Grupa: <%= competition.name %></h1>
  <div>
     
-    <a id="horseVbtn" class="myButton" style="margin: 0px;">Zarzadzaj grupą koni</a>
-    <a  id="juryVbtn" class="myButton" style="margin: 0px;">Zarzadzaj grupą sędziów</a>
-    <a id="competitionStart" class="myButton">Rozpocznij ocenianie</a>
-    <a id="competitionStop" class="myButton">Zakończ ocenianie</a>
-     <a id="editCompetitionButton" class="myButton">Edytuj grupę</a> 
+    <a id="horseVbtn" class="myButton1">Zarzadzaj grupą koni</a>
+    <a id="juryVbtn" class="myButton1">Zarzadzaj grupą sędziów</a>
+    <a id="competitionStart" class="myButton1">Rozpocznij ocenianie</a>
+    <a id="competitionStop" class="myButton1">Zakończ ocenianie</a>
+     <a id="editCompetitionButton" class="myButton1">Edytuj grupę</a> 
 
  </div>
       <div id="competitionStatus">Status grupy: <%= competition.isActive ? "Aktywne" : "Nieaktywne" %></div> 

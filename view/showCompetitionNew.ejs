@@ -9,16 +9,12 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io.connect('//' + window.location.host, {secure: true});
-        
-        socket.emit("horseMarkReq", {gender: "MALE"});
-        socket.on("horseMarkRes", function(data) {
-            console.log(data);
-        });
 
         socket.emit("getActiveCompetitionMasterAndCompetitionReq");
         
         socket.on("getActiveCompetitionMasterAndCompetitionRes", function(data) {
             var title = "";
+            var competitionMasterId = "";
             
             for (var i in data.competitions) {
                 var horseMarksTable = buildHorseMarksInGroupTable(data.competitions[i]._id);
@@ -28,6 +24,7 @@
                 
                 if (data.competitions[i].competitionMaster != null) {
                     title = data.competitions[i].competitionMaster.name;
+                    competitionMasterId = data.competitions[i].competitionMaster._id;
                 }
             }
             if (title == "") {
@@ -35,6 +32,25 @@
             } else {
                 $("#title").text("Obecnie trwają zawody: " + title);   
             }
+        
+            socket.emit("horseMarkReq", {gender: "MALE", competitionMasterId: competitionMasterId});
+            socket.emit("horseMarkReq", {gender: "FEMALE", competitionMasterId: competitionMasterId});
+            socket.on("horseMarkRes", function(data) {
+                var horsesGRAvg = evalHorsesGRAvg(data);
+
+                var tbody = $("<tbody>");
+                for (var i=0; i<horsesGRAvg.length; i++) {
+                    var tr = $("<tr>");
+                    tr.append("<td>"+(i+1)+".</td>").append("<td>"+horsesGRAvg[i].name+"</td>").append("<td>"+horsesGRAvg[i].avg.toFixed(2)+"</td>");
+                    tr.appendTo(tbody);
+                }
+
+                if (data.gender == "MALE") {
+                    $("#horseMarksGRMale").append(tbody);
+                } else {
+                    $("#horseMarksGRFemale").append(tbody);
+                }
+            });
         });
 
         socket.on("horseMarkByCompetitionIdRes", function(data) {
@@ -164,12 +180,78 @@
             });
         }
         
+        function evalHorsesGRAvg(data) {
+            var horsesGRAvg = {};
+
+            //unikalna mapa koni z inicjalnymi wartościami średnich ocen
+            for (var i=0; i<data.horseMarks.length; i++) {
+                horsesGRAvg[data.horseMarks[i].horse._id] = {
+                    id: data.horseMarks[i].horse._id,
+                    name: data.horseMarks[i].horse.horseName,
+                    type: 0,
+                    head: 0,
+                    body: 0,
+                    legs: 0,
+                    movement: 0,
+                    marksCount: 0,
+                    avg: 0
+                };
+            }
+            
+            //sumowanie ocen
+            for (var i=0; i<data.horseMarks.length; i++ ) {
+                horsesGRAvg[data.horseMarks[i].horse._id].type     += data.horseMarks[i].type;
+                horsesGRAvg[data.horseMarks[i].horse._id].head     += data.horseMarks[i].head;
+                horsesGRAvg[data.horseMarks[i].horse._id].body     += data.horseMarks[i].body;
+                horsesGRAvg[data.horseMarks[i].horse._id].legs     += data.horseMarks[i].legs;
+                horsesGRAvg[data.horseMarks[i].horse._id].movement += data.horseMarks[i].movement;
+                horsesGRAvg[data.horseMarks[i].horse._id].marksCount++;
+            }
+            
+            //obliczenie średnich
+            for(var key in horsesGRAvg) {
+                horsesGRAvg[key].avg = (horsesGRAvg[key].type+horsesGRAvg[key].head+horsesGRAvg[key].body+horsesGRAvg[key].legs+horsesGRAvg[key].movement) / (horsesGRAvg[key].marksCount * 5);
+            }
+                
+            var horsesSorted = [];
+            for(var key in horsesGRAvg) {
+                horsesSorted.push(horsesGRAvg[key]);
+            }
+            horsesSorted.sort(function(a, b) {
+                return b.avg - a.avg;
+            });
+            
+            return horsesSorted;
+        }
+        
     </script>
 </head>
 
 <body>
     <h1 id="title"></h1>
     <div id="horseMarksInGroups"></div>
+    <div id="horseMarksGR">
+        <h2>Klasyfikacja ogierów</h2>
+        <table id="horseMarksGRMale">
+            <thead>
+                <tr>
+                    <td>Lp</td>
+                    <td>Koń</td>
+                    <td>Ocena</td>
+                </tr>
+            </thead>
+        </table>
+        <h2>Klasyfikacja klaczy</h2>
+        <table id="horseMarksGRFemale">
+            <thead>
+                <tr>
+                    <td>Lp</td>
+                    <td>Koń</td>
+                    <td>Ocena</td>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
 </body>
 

@@ -183,6 +183,7 @@ div.inline-block {
 	padding:10px 15px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #fcd600;
+    margin: 5px;
 }
 .myButton1:hover {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #edd500), color-stop(1, #d9bf2b));
@@ -202,9 +203,11 @@ div.inline-block {
 
 
 .myButton {
+/*
 	-moz-box-shadow: 0px 10px 14px -7px #bdba00;
 	-webkit-box-shadow: 0px 10px 14px -7px #bdba00;
 	box-shadow: 0px 10px 14px -7px #bdba00;
+*/
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #d9bf2b), color-stop(1, #edd500));
 	background:-moz-linear-gradient(top, #d9bf2b 5%, #edd500 100%);
 	background:-webkit-linear-gradient(top, #d9bf2b 5%, #edd500 100%);
@@ -216,7 +219,7 @@ div.inline-block {
 	-moz-border-radius:4px;
 	-webkit-border-radius:4px;
 	border-radius:4px;
-	border:1px solid #fceb00;
+	border:0px solid #fceb00;
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
@@ -256,4 +259,64 @@ div.inline-block {
   align-items: center;
   justify-content: center;
     
+}
+
+/*///suwak*/
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

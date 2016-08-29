@@ -938,8 +938,6 @@ sio.sockets.on('connection', function (socket) {
     });
     
     socket.on("horseMarkReq", function(data) {
-        //data.gender  MALE | FEMALE
-        
         db.HorseMark.find({
             type: {$ne: 0},
             head: {$ne: 0},
@@ -951,14 +949,24 @@ sio.sockets.on('connection', function (socket) {
             path: "horse",
             match: {gender: data.gender}
         })
-        .populate("competition jury")
+        .populate({
+            path: "competition",
+            match: {competitionMaster: data.competitionMasterId}
+        })
+        .populate("jury")
+//        .populate("competition jury")
         .exec(function(err, horseMarks) {
             var doneHorseMarks = [];
-            var horsesIds = [];
             
             for (var i=horseMarks.length-1; i>=0; i--) {
                 if (horseMarks[i].horse == null) {
-                    horseMarks.splice(i)
+                    horseMarks.splice(i, 1);
+                }
+            }
+            
+            for (var i=horseMarks.length-1; i>=0; i--) {
+                if (horseMarks[i].competition == null) {
+                    horseMarks.splice(i, 1);
                 }
             }
             
@@ -967,7 +975,8 @@ sio.sockets.on('connection', function (socket) {
             }
             
             socket.emit("horseMarkRes", {
-                horseMarks: doneHorseMarks
+                horseMarks: doneHorseMarks,
+                gender: data.gender 
             });
         });
     });
@@ -1095,7 +1104,7 @@ sio.sockets.on('connection', function (socket) {
     socket.on("shouldIHurryUpReq", function(data) {
         for (var i in hurryUpTab) {
             if ( (hurryUpTab[i].competitionId == data.competitionId) && (hurryUpTab[i].juryId == data.juryId) ) {
-                hurryUpTab.splice(hurryUpTab.indexOf(i));
+                hurryUpTab.splice(hurryUpTab.indexOf(i), 1);
                 db.HorseMark.findOne({
                     competition: data.competitionId,
                     horse: data.horseId,
