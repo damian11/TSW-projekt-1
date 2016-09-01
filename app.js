@@ -105,6 +105,7 @@ app.post("/editProfile", routes.editProfile);
 app.get("/newCompetition/:competitionMasterId", routes.GETnewCompetitionMaster);
 app.get("/competitionMasterManager", routes.competitionMasterManager);
 app.get("/admin", routes.admin);
+app.get("/competitionMasterArch", routes.competitionMasterArch);
 
 app.get('/guzik', routes.guzik);
 app.get("/showCompetitionNew", function(req, res) {res.render("showCompetitionNew");});
@@ -129,7 +130,7 @@ app.post('/login',
 //    console.log("znaleziony użytkownik");
                 if(req.session.loggedUser.isAdmin) {
 //    console.log("przekierowanie administrator");
-                    res.redirect('/administrator');
+                    res.redirect('/admin');
                 } else {
 //    console.log("przekierowanie jury");
                     res.redirect('/');
@@ -907,7 +908,27 @@ sio.sockets.on('connection', function (socket) {
            } else{
             
                if(competitionMaster.isActive == true){
-                   competitionMaster.isActive = false;
+                   db.Competition.find({
+                       isActive: true,
+                       competitionMaster: data.competitionMasterId
+                   })
+                   .exec(function(err,competitions){
+                       if(competitions.length == 0){
+                            competitionMaster.isActive = false;
+                            competitionMaster.save(function(err){
+                                   socket.emit("competitionMasterActivateRes",{
+                                       message: ""
+                                   });
+                            });
+                   
+                       }else{
+                             socket.emit('competitionMasterActivateRes',{
+                                message: "Nie można dezaktywować zawodów dopóki wszystkie grupy nie zostaną ocenione"
+                             });
+                        }
+                   });
+            
+                  
                }else {
                     db.CompetitionMaster.find({
                           isActive: true
@@ -1218,8 +1239,25 @@ sio.sockets.on('connection', function (socket) {
             });
         });
     });
+       
+    socket.on("competitionMasterArchReq", function(data){
+        db.CompetitionMaster.findById(data.competitionMasterId, function(err, ent){
+         ent.isArch = true,
+         ent.save(function(err){
+            if(err){
+                console.log(err);
+            }else{
+                socket.emit("competitionMasterArchRes",{
+                 competitionMaster: ent   
+                });
+            }   
+         });
+            
+        });
         
-    
+            
+    });
+ 
 });
 
 

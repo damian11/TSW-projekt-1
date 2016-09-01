@@ -12,7 +12,7 @@ $(function() {
                 row.append("<td>" + data.competitionmasters[i].date + "</td>");
                 row.append("<td>" + data.competitionmasters[i].comments + "</td>");
                 row.append("<td>" + (data.competitionmasters[i].isActive == true ? "TAK" : "NIE") + "</td>");
-                
+                row.append("<td>" + (data.competitionmasters[i].isArch == true ? "TAK" : "NIE") + "</td>")
                 var buttons = $("<td>");
                 
                 var editButton = $("<span>");
@@ -45,6 +45,18 @@ $(function() {
                     });
                 });
                 buttons.append(activateButton);
+                
+                
+                var archButton = $("<span>");
+                archButton.attr("competitionMasterId", data.competitionmasters[i]._id);
+                var archIcon = $("<i class='material-icons'>done_all</i>").appendTo(archButton);
+                archButton.click(function(e){
+                    socket.emit("competitionMasterArchReq",{
+                        competitionMasterId:  $(this).attr("competitionMasterId")
+                    });
+                });
+                buttons.append(archButton);
+                
                 row.append(buttons);
                 competitionMasterList.append(row);
             }
@@ -52,7 +64,7 @@ $(function() {
     
     
     socket.on("competitionMasterDeleteByIDRes", function(data){
-        socket.emit("competitionMasterListReq")
+        socket.emit("competitionMasterListReq");
     });
     socket.on("competitionMasterActivateRes", function(data){
         if(data.message != "" ){
@@ -60,6 +72,8 @@ $(function() {
         }else{
             socket.emit("competitionMasterListReq");
         }
-        
+    });
+    socket.on("competitionMasterArchRes",function(data){
+       socket.emit("competitionMasterListReq"); 
     });
 });

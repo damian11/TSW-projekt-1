@@ -30,7 +30,8 @@ var CompetitionMaster = mongoose.model("CompetitionMaster", { //zawody
     name: String,
     date: Date,
     comments: String,
-    isActive: Boolean
+    isActive: Boolean,
+    isArch: Boolean
 });
 
 var Competition = mongoose.model("Competition", {//grupa
