@@ -28,7 +28,9 @@ exports.index = function (req, res) {
 };
 
 
-
+exports.competitionMasterArch = function (req, res){
+    res.render("competitionMasterArch");
+}
 
 
 exports.guzik = function (req, res){
@@ -126,10 +128,19 @@ exports.newUser = function(req, res) {
                     if (err) {
                         console.log(err);
                     } else {
-                        res.render("admin", {
-                            message: "Poprawnie zaktualizowano użytkownika w bazie danych",
-                            showJuries: true
-                        });
+                        console.log(ent.isAdmin);
+                        if(ent.isAdmin == true){
+                                
+                                res.render("admin", {
+                                    message: "Poprawnie zaktualizowano użytkownika w bazie danych",
+                                    showJuries: true
+                                });
+                        
+                        }else{
+                            res.render("juryManager")
+                        }
+                        
+                        
                     }
                 });
             }
@@ -155,10 +166,7 @@ exports.newUser = function(req, res) {
                 console.log(err);
             } else {
                 if (req.user) {
-                    res.render("admin", {
-                        message: "Poprawnie zapisano użytkownika w bazie danych",
-                        showJuries: true
-                    });
+                    res.render("juryManager");
                 } else {
                     res.render("login");
                 }
