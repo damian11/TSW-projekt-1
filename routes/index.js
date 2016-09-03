@@ -23,7 +23,9 @@ exports.index = function (req, res) {
             }
         });
     } else {
-        res.render("index");
+        res.render("showCompetitionNew", {
+            competitionMasterArchId: req.params.competitionMasterArchId
+        });
     }
 };
 

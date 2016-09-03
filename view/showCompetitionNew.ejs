@@ -8,6 +8,7 @@
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        $(function(){
         var competitionMasterArchId = "<%= competitionMasterArchId %>";
         var socket = io.connect('//' + window.location.host, {secure: true});
 
@@ -37,7 +38,11 @@
             if (title == "") {
                 $("#title").text("Obecnie nie trwają żadne zawody");   
             } else {
-                $("#title").text("Obecnie trwają zawody: " + title);   
+                if(competitionMasterArchId != "") {
+                    $("#title").text(title); 
+                } else {
+                    $("#title").text("Obecnie trwają zawody: " + title); 
+                }
             }
         
             socket.emit("horseMarkReq", {gender: "MALE", competitionMasterId: competitionMasterId});
@@ -230,13 +235,25 @@
             
             return horsesSorted;
         }
+            
+            
+    if(competitionMasterArchId != ""){
+        $("#ButtonArchCompetition").hide();
+       
+    }
+   
         
+});     
     </script>
 </head>
 
 <body>
-    <div><%= competitionMasterArchId %></div>
-    <a href="/competitionMasterArch" class="myButton">Zawody archiwalne</a>
+  <div>
+    <a href="/" class="myButton">Strona główna</a>  
+    <a id="ButtonArchCompetition" href="/competitionMasterArch" class="myButton">Zawody archiwalne</a>  
+  </div>
+    
+    
     <h1 id="title"></h1>
     <div id="horseMarksInGroups"></div>
     <div id="horseMarksGR">

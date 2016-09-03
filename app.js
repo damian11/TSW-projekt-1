@@ -1249,6 +1249,30 @@ sio.sockets.on('connection', function (socket) {
         });
     });
     
+        socket.on("getArchCompetitionMasterAndCompetitionReq", function(data) {
+        db.Competition.find()
+        .populate({
+            path: "competitionMaster",
+            match: {isArch: true,
+                    _id: data.competitionMasterArchId
+                   }
+        })
+        .exec(function(err, competitions) {
+            if (err) {
+                console.log(err);
+            } else {
+                for (var i=competitions.length-1; i>=0; i--) {
+                    if (competitions[i].competitionMaster == null) {
+                        competitions.splice(i, 1);
+                    }
+                }
+                socket.emit("getActiveCompetitionMasterAndCompetitionRes", {
+                    competitions: competitions
+                });
+            }
+        });
+    });
+    
     socket.on("getHorseStartNumberByCompetitionReq", function(data) {
         db.HorseGroup.find({
             horse: data.horseId,
