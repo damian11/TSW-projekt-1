@@ -1287,7 +1287,12 @@ sio.sockets.on('connection', function (socket) {
        
     socket.on("competitionMasterArchReq", function(data){
         db.CompetitionMaster.findById(data.competitionMasterId, function(err, ent){
-         ent.isArch = true,
+            if(ent.isArch == true){
+                ent.isArch = false
+            } else{
+                ent.isArch = true
+              }
+        
          ent.save(function(err){
             if(err){
                 console.log(err);
