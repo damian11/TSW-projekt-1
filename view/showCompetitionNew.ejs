@@ -8,10 +8,17 @@
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        var competitionMasterArchId = "<%= competitionMasterArchId %>";
         var socket = io.connect('//' + window.location.host, {secure: true});
 
+        if(competitionMasterArchId == ""){
         socket.emit("getActiveCompetitionMasterAndCompetitionReq");
-        
+        } else{
+        socket.emit("getArchCompetitionMasterAndCompetitionReq",{
+            competitionMasterArchId: competitionMasterArchId
+        });
+            
+        }
         socket.on("getActiveCompetitionMasterAndCompetitionRes", function(data) {
             var title = "";
             var competitionMasterId = "";
@@ -228,6 +235,7 @@
 </head>
 
 <body>
+    <div><%= competitionMasterArchId %></div>
     <a href="/competitionMasterArch" class="myButton">Zawody archiwalne</a>
     <h1 id="title"></h1>
     <div id="horseMarksInGroups"></div>

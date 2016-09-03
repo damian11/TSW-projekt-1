@@ -647,3 +647,10 @@ exports.GETnewCompetitionMasterStep2 = function(req, res) {
         });
     }
 };
+
+
+exports.showCompetitionNew = function(req, res) {
+    res.render("showCompetitionNew", {
+        competitionMasterArchId: req.params.competitionMasterArchId
+    });
+};

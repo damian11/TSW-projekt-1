@@ -108,7 +108,8 @@ app.get("/admin", routes.admin);
 app.get("/competitionMasterArch", routes.competitionMasterArch);
 
 app.get('/guzik', routes.guzik);
-app.get("/showCompetitionNew", function(req, res) {res.render("showCompetitionNew");});
+app.get("/showCompetitionNew", routes.showCompetitionNew);
+app.get("/showCompetitionNew/:competitionMasterArchId", routes.showCompetitionNew);
 
 
 app.post('/login',
@@ -1114,6 +1115,26 @@ sio.sockets.on('connection', function (socket) {
           }
       });
   });    
+    
+    
+    socket.on("competitionMasterArchListReq", function(data){
+        db.CompetitionMaster.find({
+          isArch: true  
+         
+        })
+        .exec(function(err, competitionsmasters){
+            if(err){
+                console.log(err);
+            }else {
+                socket.emit("competitionMasterArchListRes",{
+                   
+                    competitionmasters: competitionsmasters
+                    
+                    
+                }); 
+            }
+        });
+    });    
     
     socket.on("juryHurryUpReq", function(data) {
         hurryUpTab.push({
