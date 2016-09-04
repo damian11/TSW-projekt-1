@@ -63,6 +63,15 @@ $(function() {
     });
     
     
+    socket.on("competitionMasterReadByIDRes", function(data){
+        console.log(data);
+        $("#competitionMasterId").val(data.data._id);
+        $("#name").val(data.data.name);
+        $("#date").val(data.data.date);
+        $("#comments").val(data.data.comments);
+        
+    });
+    
     socket.on("competitionMasterDeleteByIDRes", function(data){
         socket.emit("competitionMasterListReq");
     });

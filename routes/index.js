@@ -115,6 +115,31 @@ exports.registerAdmin = function(req, res) {
    
 };
 
+exports.newCompetitionMasterManager = function(req, res) {
+    if( (typeof req.body.competitionMasterId != "undefined")  && (req.body.userId !== "")){
+        db.CompetitionMaster.findById(req.body.competitionMasterId, function(err,ent) {
+            if(err){
+                console.log(err);
+            } else {
+                ent.name = req.body.name;
+                ent.date = req.body.date;
+                ent.comments = req.body.comments;
+                ent.save(function(err){
+                    if(err){
+                        console.log(err);
+                    } else{
+                        console.log(ent);
+                        res.render("competitionMasterManager",{
+                            message: "Poprawnie zaktualizowano zawody w bazie danych"
+                        });
+                    }
+                })
+            }
+        });
+    }
+}
+
+
 exports.newUser = function(req, res) {
     if ( (typeof req.body.userId != "undefined") && (req.body.userId !== "")) {
         db.User.findById(req.body.userId, function(err, ent) {
@@ -135,7 +160,7 @@ exports.newUser = function(req, res) {
                                 
                                 res.render("admin", {
                                     message: "Poprawnie zaktualizowano użytkownika w bazie danych",
-                                    showJuries: true
+                                   // showJuries: true
                                 });
                         
                         }else{

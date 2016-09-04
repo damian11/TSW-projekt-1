@@ -27,7 +27,29 @@
         
     </div>
 </nav>
-    
+     <form action="/newCompetitionMasterManager" method="post" class="form-style-6">
+ 
+           
+            <table>
+                <input type="hidden" name="competitionMasterId" id="competitionMasterId" value="" />
+                <tr>
+                    <td><label for="name">Nazwa zawodów</label></td>
+                    <td><input type="text" name="name" id="name"/></td>
+                </tr>
+                <tr>
+                    <td><label for="date">Data</label></td>
+                    <td><input type="date" name="date" id="date" /></td>
+                </tr>
+                <tr>
+                    <td><label for="comments">Uwagi</label></td>
+                    <td><input type="text" name="comments" id="comments"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Aktualizuj zawody" /></td>
+                </tr>
+            </table>
+        </form>
     <body>
         <div style="display: inline-table">
             <div id="competitionMasterList">
