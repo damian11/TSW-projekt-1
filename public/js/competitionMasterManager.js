@@ -3,6 +3,7 @@ $(function() {
     socket.emit("competitionMasterListReq");
     socket.on("competitionMasterListRes", function(data){
         //console.log("aaaaaaa" + data.competitionmasters[2].name);
+        $("#editForm").hide();
         var competitionMasterList = $("#competitionMasterList table tbody");
          competitionMasterList.empty();
             
@@ -19,6 +20,7 @@ $(function() {
                 editButton.attr("competitionMasterId", data.competitionmasters[i]._id);
                 var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
                 editButton.click(function(e){
+                    $("#editForm").show();
                     socket.emit("competitionMasterReadByIDReq",{
                     competitionMasterId: $(this).attr("competitionMasterId")
                     });    

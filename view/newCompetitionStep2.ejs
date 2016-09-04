@@ -428,12 +428,12 @@
             <% } %>   
         </div>
     </nav>
-
+<div class="myButton">
     <label class="switch">
       <input id="startStopCompetition" type="checkbox" <%= competition.isActive ? "checked":""%>/>
       <div class="slider"></div>
     </label>
-    
+</div>  
     <% if (typeof message != "undefined") { %>
         <div class="message"></div>
     <%}%>

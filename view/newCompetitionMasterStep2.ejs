@@ -29,6 +29,22 @@
 
                 var buttons = $("<td>");
                 
+                
+                
+                
+                  var editButton = $("<span>");
+                editButton.attr("competitionId", data.competitions[i]._id);
+                var editIcon = $("<i class='material-icons'>mode_edit</i>").appendTo(editButton);
+                editButton.click(function(e){
+                    $("#editForm").show();
+                    socket.emit("competitionReadByIDReq",{
+                        competitionId: $(this).attr("competitionId")
+                    });
+                });
+                buttons.append(editButton);
+                
+                
+                
                 var deleteButton = $("<span>");
                 deleteButton.attr("competitionId", data.competitions[i]._id);
                 var deleteIcon = $("<i class='material-icons'>remove_circle_outline</i>").appendTo(deleteButton);
@@ -37,7 +53,14 @@
                         competitionId: $(this).attr("competitionId")
                     });
                 });
-                buttons.append(deleteButton)
+                buttons.append(deleteButton);
+                
+                
+                
+              
+                
+                
+                
                 row.append(buttons);
            
                 competitionMasterList.append(row);
@@ -47,6 +70,14 @@
                 socket.emit("competitionsByCompetitionMasterIdReq", {
                     competitionMasterId: competitionMasterId
                 });
+            });
+        
+            socket.on("competitionReadByIDRes", function(data){
+                console.log(data);
+                $("#competitionId").val(data.data._id);
+                $("#name").val(data.data.name);
+                $("#date").val(data.data.date);
+                $("#comments").val(data.data.comments);
             });
     });
     
@@ -76,10 +107,36 @@
 <body>
  
         <div>
-        <input type="hidden" id="competitionMasterId" value="<%= competitionMaster._id %>" />   
+        
             <h1>Zawody: <%= competitionMaster.name %></h1>    
         <a href="/newCompetition/<%= competitionMaster._id %>" class="myButton1" >Utwórz nową grupę</a>
         </div>
+<div id="editFormG">
+    <form action="/editCompetitionManager" method="post" class="form-style-6"> 
+          <table>
+                <input type="hidden" name="competitionMasterId" id="competitionMasterId" value="<%= competitionMaster._id %>" />  
+                <input type="hidden" name="competitionId" id="competitionId" value="" />
+                <tr>
+                    <td><label for="name">Nazwa grupy</label></td>
+                    <td><input type="text" name="name" id="name"/></td>
+                </tr>
+                <tr>
+                    <td><label for="date">Data</label></td>
+                    <td><input type="date" name="date" id="date" /></td>
+                </tr>
+                <tr>
+                    <td><label for="comments">Uwagi</label></td>
+                    <td><input type="text" name="comments" id="comments"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Aktualizuj grupę" /></td>
+                </tr>
+            </table>
+    
+    </form>
+</div>  
+    
     <div id="competitionMasterList">
     <h1>Lista grup</h1>
     <table>

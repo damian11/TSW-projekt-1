@@ -14,6 +14,9 @@ $(function() {
                 row.append("<td>" + data.competitions[i].comments + "</td>");
                 row.append("<td>" + ( data.competitions[i].gender == "MALE" ? "Ogier" : "Klacz" ) + "</td>");
                 row.append("<td>" + ( data.competitions[i].isActive == true ? "TAK" : "NIE" ) + "</td>");
+                
+                
+                
                 competitionList.append(row);
             }
         });

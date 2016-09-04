@@ -115,8 +115,43 @@ exports.registerAdmin = function(req, res) {
    
 };
 
+exports.editCompetitionManager = function(req, res){ console.log("req.body: \n" + req.body); console.log(req.body);
+        if( (typeof req.body.competitionId != "undefined")  && (req.body.competitionId !== "")){
+       
+        db.Competition.findById(req.body.competitionId, function(err,ent) {
+            if(err){
+                console.log(err);
+            } else {
+                ent.name = req.body.name;
+                ent.date = req.body.date;
+                ent.comments = req.body.comments;
+                ent.save(function(err){
+                    if(err){
+                        console.log(err);
+                    } else{
+                        console.log(ent);
+                        
+                        db.CompetitionMaster.findById(req.body.competitionMasterId, function(err, competitionMaster) {
+                            res.render("newCompetitionMasterStep2",{
+                                competitionMaster: competitionMaster,
+                                
+                                message: "Poprawnie zaktualizowano grupę w bazie danych"
+                            });
+                            
+                        });                        
+                    }
+                });
+            }
+        });
+    }
+    
+    
+}
+
+
+
 exports.newCompetitionMasterManager = function(req, res) {
-    if( (typeof req.body.competitionMasterId != "undefined")  && (req.body.userId !== "")){
+    if( (typeof req.body.competitionMasterId != "undefined")  && (req.body.competitionMasterId !== "")){
         db.CompetitionMaster.findById(req.body.competitionMasterId, function(err,ent) {
             if(err){
                 console.log(err);
