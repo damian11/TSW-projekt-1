@@ -428,12 +428,7 @@
             <% } %>   
         </div>
     </nav>
-<div class="myButton">
-    <label class="switch">
-      <input id="startStopCompetition" type="checkbox" <%= competition.isActive ? "checked":""%>/>
-      <div class="slider"></div>
-    </label>
-</div>  
+ 
     <% if (typeof message != "undefined") { %>
         <div class="message"></div>
     <%}%>
@@ -468,9 +463,17 @@
     
     <a id="horseVbtn" class="myButton1">Zarzadzaj grupą koni</a>
     <a id="juryVbtn" class="myButton1">Zarzadzaj grupą sędziów</a>
+<!--
     <a id="competitionStart" class="myButton1">Rozpocznij ocenianie</a>
     <a id="competitionStop" class="myButton1">Zakończ ocenianie</a>
-     <a id="editCompetitionButton" class="myButton1">Edytuj grupę</a> 
+    <a id="editCompetitionButton" class="myButton1">Edytuj grupę</a> 
+-->
+    <a class="myButton1" >
+    <label class="switch">
+      <input id="startStopCompetition" type="checkbox" <%= competition.isActive ? "checked":""%>/>
+      <div class="slider"></div>
+    </label>
+    </a> 
 
  </div>
       <div id="competitionStatus">Status grupy: <%= competition.isActive ? "Aktywne" : "Nieaktywne" %></div> 

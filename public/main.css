@@ -267,7 +267,7 @@ div.inline-block {
   position: relative;
   display: inline-block;
   width: 60px;
-  height: 34px;
+  height: 19px;
 }
 
 /* Hide default HTML checkbox */
@@ -281,7 +281,7 @@ div.inline-block {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: red;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -289,7 +289,7 @@ div.inline-block {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
+  height: 12px;
   width: 26px;
   left: 4px;
   bottom: 4px;
@@ -299,7 +299,7 @@ div.inline-block {
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: lawngreen;
 }
 
 input:focus + .slider {
