@@ -1,14 +1,3 @@
-<!doctype html>
-<html lang="pl">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Ocena konia</title>
-    <%- include("header") %>
-</head>
-
-<body>
-    <script>
     $(function() {
         var socket = io.connect('//' + window.location.host, {secure: true});
         
@@ -30,8 +19,8 @@
                 var horseStartNumber = data.horseGroup.startNumber;
                 var competition = data.competition;
 
-                $("#horseStartNumber").text("Ocena konia o numerze startowym: " + horseStartNumber);
-//.append( $("<h4>Zawody: " + competition.name + " </h4>") )
+                $("#horseStartNumber").text("Ocena konia o numerze startowym: " + horseStartNumber).append( $("<h4>Zawody: " + competition.name + " </h4>") );
+
                 socket.emit("horseMarkByCompetitionIdAndJuryIdAndHorseIdReq", {
                     competitionId: competitionId,
                     juryId: juryId,
@@ -182,31 +171,3 @@
         });
         
     });
-    </script>
-    <div>
-        <a href="/logout">Wyloguj</a>
-    </div>
-    <div id="message"></div>
-    <div id="dataMark">
-        <h1 id="horseStartNumber">Ocena konia</h1>
-        <div>
-            <div id="type">
-                <p>Typ</p>
-            </div>
-            <div id="head">
-                <p>Głowa</p>
-            </div>
-            <div id="body">
-                <p>Kłoda</p>
-            </div>
-            <div id="legs">
-                <p>Nogi</p>
-            </div>
-            <div id="movement">
-                <p>Ruch</p>
-            </div>
-        </div>
-    </div>    
-</body>
-
-</html>
